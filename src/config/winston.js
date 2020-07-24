@@ -4,7 +4,7 @@ const path = require('path');
 const options = {
   file: {
     level: 'info',
-    filename: `${path.join(__dirname, 'logs')}/app.log`,
+    filename: `${path.join(__dirname, '/../../', 'logs')}/app.log`,
     handleExceptions: true,
     json: true,
     maxsize: 5242880, // 5MB
