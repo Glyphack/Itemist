@@ -1,0 +1,9 @@
+kind: ExternalService
+name: itemist
+spec:
+  image_pull_policy: Always
+  port: 4000
+  source:
+    context: ../.
+    node_version: '12'
+    project_type: nodejs
