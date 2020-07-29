@@ -13,7 +13,6 @@ router.get(
     const token = jwt.sign(
       {
         userName: req.user.name,
-        steamId: req.user.steam_id,
       },
       process.env.SECRET_KEY,
       { expiresIn: '2h' },
