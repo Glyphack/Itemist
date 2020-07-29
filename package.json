@@ -8,12 +8,14 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.3",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-steam": "^1.0.12",
+    "pm2": "^4.4.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -23,7 +25,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "node src/bin/www",
+    "start": "pm2 start src/bin/www -i max",
     "dev": "nodemon src/bin/www"
   },
   "engines": {
