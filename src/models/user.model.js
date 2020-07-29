@@ -4,13 +4,13 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  steamId: {
+    type: String,
+  },
   avatar: {
     type: String,
   },
   profileUrl: {
-    type: String,
-  },
-  steamId: {
     type: String,
   },
   tradeUrl: {
