@@ -16,6 +16,11 @@
     "passport": "^0.4.1",
     "passport-steam": "^1.0.12",
     "pm2": "^4.4.0",
+    "steam": "^1.4.1",
+    "steam-totp": "^2.1.1",
+    "steam-tradeoffer-manager": "^2.10.2",
+    "steam-user": "^4.17.1",
+    "steamcommunity": "^3.41.6",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -25,7 +30,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "pm2 start src/bin/www -i max",
+    "start": "node src/bin/www",
     "dev": "nodemon src/bin/www"
   },
   "engines": {
