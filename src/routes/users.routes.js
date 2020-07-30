@@ -1,5 +1,8 @@
 const express = require('express');
+
+const winston = require('../config/winston');
 const User = require('../models/user.model');
+const { manager } = require('../utils/trade_offer_manager');
 
 const router = express.Router();
 
@@ -15,6 +18,20 @@ router.put('/:userId', async (req, res) => {
     { new: true },
   );
   res.json({ user });
+});
+
+router.get('/:userId/inventory', async (req, res) => {
+  const user = await User.findById(
+    req.params.userId,
+  );
+  manager.loadUserInventory(user.steamId, 570, 2, true, (err, inventory) => {
+    if (err) {
+      winston.error(err);
+      res.json(inventory);
+    } else {
+      res.json({ inventory });
+    }
+  });
 });
 
 module.exports = router;
