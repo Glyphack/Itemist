@@ -15,7 +15,7 @@ router.get(
         userName: req.user.name,
       },
       process.env.SECRET_KEY,
-      { expiresIn: '2h' },
+      { expiresIn: '5d' },
     );
     res.render('authenticated', {
       jwtToken: token,
