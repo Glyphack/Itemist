@@ -1,0 +1,31 @@
+kind: ExternalService
+name: itemist
+spec:
+  image_pull_policy: Always
+  image: glyphack/itemist:v1
+  port: 4000
+  source:
+    context: ../.
+    node_version: '12'
+    project_type: nodejs
+  env:
+    - name: PORT
+      secret: PORT
+    - name: BASE_URL
+      secret: BASE_URL
+    - name: FRONTEND_URL
+      secret: FRONTEND_URL
+    - name: STEAM_API_KEY
+      secret: STEAM_API_KEY
+    - name: STEAM_ACCOUNT_NAME
+      secret: STEAM_ACCOUNT_NAME
+    - name: STEAM_ACCOUNT_PASSWORD
+      secret: STEAM_ACCOUNT_PASSWORD
+    - name: STEAM_ACCOUNT_SHARED_SECRET
+      secret: STEAM_ACCOUNT_SHARED_SECRET
+    - name: MONGO_URI
+      secret: MONGO_URI
+    - name: SECRET_KEY
+      secret: SECRET_KEY
+    - name: NODE_ENV
+      value: production

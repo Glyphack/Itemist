@@ -42,3 +42,4 @@ lerna-debug.log*
 .node_repl_history
 bower_components
 typings/
+logs
