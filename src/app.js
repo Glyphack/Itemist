@@ -11,6 +11,7 @@ const jwtMiddleWare = require('./middlewares/auth.js');
 
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/users.routes');
+const sellOrdersRoutes = require('./routes/sell_orders');
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -37,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRoutes);
 app.use('/user', jwtMiddleWare, userRoutes);
+app.use('/sell-entries', jwtMiddleWare, sellOrdersRoutes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -51,7 +53,7 @@ app.use((err, req, res) => {
 
   winston.error(
     `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${
-      req.method
+    req.method
     } - ${req.ip}`,
   );
 
