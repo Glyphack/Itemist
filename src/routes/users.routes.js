@@ -27,7 +27,6 @@ router.get('/:userId/inventory', async (req, res) => {
   manager.loadUserInventory(user.steamId, 570, 2, true, (err, inventory) => {
     if (err) {
       winston.error(err);
-      res.json(inventory);
     } else {
       res.json({ inventory });
     }
