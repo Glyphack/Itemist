@@ -12,6 +12,7 @@ const jwtMiddleWare = require('./middlewares/auth.js');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/users.routes');
 const sellOrdersRoutes = require('./routes/sell_orders');
+const productRoutes = require('./routes/products');
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -39,8 +40,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', authRoutes);
 app.use('/user', jwtMiddleWare, userRoutes);
 app.use('/sell-entries', jwtMiddleWare, sellOrdersRoutes);
+app.use('/products', productRoutes);
 
-// catch 404 and forward to error handler
+// catch 404 a)nd forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
@@ -52,9 +54,7 @@ app.use((err, req, res) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   winston.error(
-    `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${
-    req.method
-    } - ${req.ip}`,
+    `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
   );
 
   // render the error page
