@@ -1,0 +1,17 @@
+kind: ExternalService
+name: itemist
+spec:
+  env:
+    - hidden: false
+      name: PORT
+      secret: port
+    - hidden: false
+      name: BASE_URL
+      secret: base-url
+  image_pull_policy: Always
+  image: glyphack/itemist:<tag>
+  port: 4000
+  source:
+    context: ../.
+    node_version: '12'
+    project_type: nodejs
