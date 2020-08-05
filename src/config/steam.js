@@ -12,7 +12,7 @@ const strategyOptions = {
 module.exports = (app) => {
   passport.use(
     new Strategy(strategyOptions, async (identifier, profile, done) => {
-      let user = await User.findOne({ steam_id: profile._json.steamid });
+      let user = await User.findOne({ steamId: profile._json.steamid });
       if (!user) {
         user = await new User({
           name: profile._json.personaname,
