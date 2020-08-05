@@ -8,8 +8,11 @@ spec:
     - hidden: false
       name: BASE_URL
       secret: base-url
+    - hidden: false
+      name: FRONTEND_URL
+      secret: frontend-url
   image_pull_policy: Always
-  image: glyphack/itemist:<tag>
+  image: itemist:<tag>
   port: 4000
   source:
     context: ../.
