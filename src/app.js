@@ -7,19 +7,17 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const winston = require('./config/winston');
-const jwtMiddleWare = require('./middlewares/auth.js');
-
-const authRoutes = require('./routes/auth.routes');
-const userRoutes = require('./routes/users.routes');
-const sellOrdersRoutes = require('./routes/sell_orders');
-const productRoutes = require('./routes/products');
+const routesV1 = require('./api/routes');
 
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => winston.info('Connected to MongoDB 🔥'));
+  .then(() => winston.info('Connected to MongoDB 🔥'))
+  .catch((err) => {
+    throw new Error(`Could not connect to database ${err}`);
+  });
 
 const app = express();
 
@@ -35,12 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(jwtMiddleWare);
-
-app.use('/auth', authRoutes);
-app.use('/user', jwtMiddleWare, userRoutes);
-app.use('/sell-entries', jwtMiddleWare, sellOrdersRoutes);
-app.use('/products', productRoutes);
+app.use('/v1', routesV1);
 
 // catch 404 a)nd forward to error handler
 app.use((req, res, next) => {
