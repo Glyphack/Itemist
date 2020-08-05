@@ -36,6 +36,7 @@ router.post('/', async (req, res) => {
           contextId: item.contextid,
           assetId: item.assetid,
         });
+        // TODO: send trade offer
         res.json(sellOrder);
       }
     },
