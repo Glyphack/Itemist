@@ -3,28 +3,26 @@ const express = require('express');
 const winston = require('../config/winston');
 const User = require('../models/user.model');
 const { manager } = require('../utils/trade_offer_manager');
+const isOwner = require('../middlewares/permission');
 
 const router = express.Router();
 
-router.get('/:userId', async (req, res) => {
-  const user = await User.findOne({ steamId: req.user.steam_id });
+router.get('/:steamId', isOwner, async (req, res) => {
+  const user = await User.findOne({ steamId: req.params.steamId });
   res.json({ tradeUrl: user.tradeUrl });
 });
 
-router.put('/:userId', async (req, res) => {
+router.put('/:steamId', isOwner, async (req, res) => {
   const user = await User.findOneAndUpdate(
-    { steamId: req.user.steamId },
+    { steamId: req.params.steamId },
     { tradeUrl: req.body.trade_url },
     { new: true },
   );
   res.json({ user });
 });
 
-router.get('/:userId/inventory', async (req, res) => {
-  const user = await User.findById(
-    req.params.userId,
-  );
-  manager.loadUserInventory(user.steamId, 570, 2, true, (err, inventory) => {
+router.get('/:steamId/inventory', isOwner, async (req, res) => {
+  manager.loadUserInventory(req.params.steamId, 570, 2, true, (err, inventory) => {
     if (err) {
       winston.error(err);
     } else {
