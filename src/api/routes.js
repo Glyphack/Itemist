@@ -1,10 +1,10 @@
 const express = require('express');
 
 const jwtMiddleWare = require('../middlewares/auth.js');
-const authRoutes = require('../routes/auth');
-const userRoutes = require('../routes/users');
-const sellOrdersRoutes = require('../routes/sell_orders');
-const productRoutes = require('../routes/products');
+const authRoutes = require('./auth/steam');
+const userRoutes = require('./users/users.routes');
+const sellOrdersRoutes = require('./sell/sell.routes');
+const productRoutes = require('./products/products');
 
 const router = express.Router();
 

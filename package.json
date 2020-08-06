@@ -35,8 +35,8 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "node src/bin/www",
-    "dev": "nodemon src/bin/www"
+    "start": "node bin/www",
+    "dev": "nodemon bin/www"
   },
   "engines": {
     "node": "~12.18.2"
