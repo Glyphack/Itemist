@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { walletSchema } = require('./wallet');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,8 +15,14 @@ const userSchema = new mongoose.Schema({
   },
   tradeUrl: {
     type: String,
+    default: '',
   },
-  wallet: walletSchema,
+  wallet: {
+    balance: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);
