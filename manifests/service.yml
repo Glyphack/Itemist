@@ -1,6 +1,8 @@
 kind: ExternalService
 name: itemist
 spec:
+  domains:
+    - name: api.itemist.ir
   env:
     - hidden: false
       name: PORT
@@ -11,8 +13,11 @@ spec:
     - hidden: false
       name: FRONTEND_URL
       secret: frontend-url
+    - hidden: false
+      name: NODE_ENV
+      secret: node-env
   image_pull_policy: Always
-  image: itemist:<tag>
+  image: itemist:v0.1.0-alpha2
   port: 4000
   source:
     context: ../.
