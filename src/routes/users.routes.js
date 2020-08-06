@@ -9,7 +9,10 @@ const router = express.Router();
 
 router.get('/:steamId', isOwner, async (req, res) => {
   const user = await User.findOne({ steamId: req.params.steamId });
-  res.json({ tradeUrl: user.tradeUrl });
+  res.json({
+    tradeUrl: user.tradeUrl,
+    wallet: user.wallet,
+  });
 });
 
 router.put('/:steamId', isOwner, async (req, res) => {
