@@ -1,9 +1,8 @@
-const passport = require('passport');
 const express = require('express');
 
 const jwtMiddleWare = require('../middlewares/auth.js');
-const authRoutes = require('../routes/auth.routes');
-const userRoutes = require('../routes/users.routes');
+const authRoutes = require('../routes/auth');
+const userRoutes = require('../routes/users');
 const sellOrdersRoutes = require('../routes/sell_orders');
 const productRoutes = require('../routes/products');
 
