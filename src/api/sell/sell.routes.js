@@ -1,8 +1,8 @@
 const express = require('express');
-const SellOrder = require('../models/sell_order');
-const User = require('../models/user.model');
-const { manager } = require('../utils/trade_offer_manager');
-const winston = require('../config/winston');
+const SellOrder = require('../../models/sell_order');
+const User = require('../../models/user.model');
+const { manager } = require('../../utils/trade_offer_manager');
+const winston = require('../../config/winston');
 
 const router = express.Router();
 

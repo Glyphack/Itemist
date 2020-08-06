@@ -1,9 +1,9 @@
 const express = require('express');
 
-const winston = require('../config/winston');
-const User = require('../models/user.model');
-const { manager } = require('../utils/trade_offer_manager');
-const isOwner = require('../middlewares/permission');
+const winston = require('../../config/winston');
+const User = require('../../models/user.model');
+const { manager } = require('../../utils/trade_offer_manager');
+const isOwner = require('../../middlewares/permission');
 
 const router = express.Router();
 
