@@ -6,11 +6,9 @@ async function editSellOrder(req, res) {
   if (result.n !== 1) {
     res.statusCode = 400;
     res.json({ detail: 'cannot find sell order with that id' });
-  } else if (result.nModified !== 1) {
-    res.statusCode = 500;
-    res.json({});
+    return;
   }
-  const editedSellOrder = await SellOrder.findById(req.body.id).exec();
+  const editedSellOrder = await SellOrder.findById(req.body.id).populate('seller', 'name').exec();
   res.json(editedSellOrder);
 }
 
