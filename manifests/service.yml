@@ -16,6 +16,25 @@ spec:
     - hidden: false
       name: NODE_ENV
       secret: node-env
+    - hidden: true
+      name: SECRET_KEY
+      secret: secret-key
+    - hidden: true
+      name: STEAM_API_KEY
+      secret: steam-api-key
+    - hidden: true
+      name: STEAM_ACCOUNT_NAME
+      secret: steam-account-name
+    - hidden: true
+      name: STEAM_ACCOUNT_PASSWORD
+      secret: steam-account-password
+    - hidden: true
+      name: STEAM_ACCOUNT_SHARED_SECRET
+      secret: steam-account-shared-secret
+    - hidden: true
+      name: MONGO_URI
+      secret: mongo-uri
+
   image_pull_policy: Always
   image: itemist:v0.1.0-alpha2
   port: 4000
