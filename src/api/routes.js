@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/auth', authRoutes);
 router.use('/user', jwtMiddleWare, userRoutes);
-router.use('/sell-entries', jwtMiddleWare, sellOrdersRoutes);
+router.use('/sell', jwtMiddleWare, sellOrdersRoutes);
 router.use('/products', productRoutes);
 
 module.exports = router;
