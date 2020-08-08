@@ -9,14 +9,13 @@ const mongoose = require('mongoose');
 const winston = require('./config/winston');
 const routesV1 = require('./api/routes');
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => winston.info('Connected to MongoDB 🔥'))
-  .catch((err) => {
-    throw new Error(`Could not connect to database ${err}`);
+  .catch(() => {
+    throw new Error('Could not connect to database');
   });
 
 const app = express();
