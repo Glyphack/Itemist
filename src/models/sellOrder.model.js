@@ -4,7 +4,7 @@ const createProductFromSellOrder = require('../api/products/products.services');
 const sellOrderSchema = new mongoose.Schema({
   seller: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   price: {
     type: Number,
@@ -25,10 +25,6 @@ const sellOrderSchema = new mongoose.Schema({
   },
 });
 
-sellOrderSchema.post('save', async (doc) => {
-  if (doc.tradeStatus === 'Succesful') {
-    createProductFromSellOrder(doc);
-  }
-});
+sellOrderSchema.index({ seller: 1, assetId: 1 }, { unique: true });
 
-module.exports = mongoose.model('sellEntry', sellOrderSchema);
+module.exports = mongoose.model('sellOrder', sellOrderSchema);
