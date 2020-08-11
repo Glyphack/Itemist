@@ -1,23 +1,25 @@
 const express = require('express');
 
-const router = express.Router();
+const cartRouter = express.Router();
 
 /**
  * initialize cart or get last cart
  */
-router.get('/');
+cartRouter.get('/');
 
 /**
  * add items to cart
  */
-router.post('/');
+cartRouter.post('/');
 
 /**
  * delete product from cart
  */
-router.delete('/:cartId/:productId');
+cartRouter.delete('/:cartId/:productId');
 
 /**
  * empty cart
  */
-router.delete('/:cartId/empty');
+cartRouter.delete('/:cartId/empty');
+
+module.exports = {cartRoutes: cartRouter};
