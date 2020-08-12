@@ -1,25 +1,30 @@
 const express = require('express');
-
+const jwtMiddleWare = require("../../middlewares/auth");
+const {emptyCart} = require("./cart.controllers");
+const {removeFromCart} = require("./cart.controllers");
+const {getCart, addToCart} = require("./cart.controllers");
 const cartRouter = express.Router();
 
-/**
- * initialize cart or get last cart
- */
-cartRouter.get('/');
+cartRouter.use(jwtMiddleWare)
 
 /**
- * add items to cart
+ * get cart
  */
-cartRouter.post('/');
+cartRouter.get('/', getCart);
+
+/**
+ * add item to cart
+ */
+cartRouter.post('/:cartId', addToCart);
 
 /**
  * delete product from cart
  */
-cartRouter.delete('/:cartId/:productId');
+cartRouter.delete('/:cartId', removeFromCart);
 
 /**
  * empty cart
  */
-cartRouter.delete('/:cartId/empty');
+cartRouter.delete('/:cartId/empty', emptyCart);
 
 module.exports = {cartRoutes: cartRouter};
