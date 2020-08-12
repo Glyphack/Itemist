@@ -3,7 +3,7 @@ const {removeProductFromCart} = require("./cart.services");
 const {addProductToCart} = require("./cart.services");
 const {getOrCreateCart} = require("./cart.services");
 
-async function getCart(req, res){
+async function getCart(req, res) {
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
@@ -11,13 +11,15 @@ async function getCart(req, res){
  * @param {string}  req.params.cartId
  * @param {string} req.body.productId
  */
-async function addToCart(req, res){
+async function addToCart(req, res) {
   await addProductToCart(req.params.cartId, req.body.productId);
   res.json(await getOrCreateCart(req.user.steamId));
 }
+
 /**
  * @param {string}  req.params.cartId
  * @param {string} req.body.productId
+ * @param {Object} req.user
  */
 async function removeFromCart(req, res) {
   await removeProductFromCart(req.params.cartId, req.body.productId);
