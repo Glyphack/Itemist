@@ -4,6 +4,7 @@
   "main": "src/app.js",
   "license": "MIT",
   "dependencies": {
+    "@sentry/node": "^5.20.1",
     "cookie-parser": "~1.4.4",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",

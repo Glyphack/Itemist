@@ -6,8 +6,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const Sentry = require('@sentry/node');
+
 const winston = require('./config/winston');
 const routesV1 = require('./api/routes');
+
+const app = express();
+
+Sentry.init({ dsn: process.env.SENTRY_DSN });
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -18,21 +24,20 @@ mongoose.connect(process.env.MONGO_URI, {
     throw new Error('Could not connect to database');
   });
 
-const app = express();
-
-app.use(morgan('combined', { stream: winston.stream }));
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
 require('./config/steam')(app);
 
+app.use(Sentry.Handlers.requestHandler());
+app.use(morgan('combined', { stream: winston.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/v1', routesV1);
+
+app.use(Sentry.Handlers.errorHandler());
 
 // catch 404 a)nd forward to error handler
 app.use((req, res, next) => {
