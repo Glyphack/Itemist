@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const createProductFromSellOrder = require('../api/products/products.services');
 
 const sellOrderSchema = new mongoose.Schema({
   seller: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'User',
   },
   price: {
     type: Number,
@@ -27,4 +26,4 @@ const sellOrderSchema = new mongoose.Schema({
 
 sellOrderSchema.index({ seller: 1, assetId: 1 }, { unique: true });
 
-module.exports = mongoose.model('sellOrder', sellOrderSchema);
+module.exports = mongoose.model('SellOrder', sellOrderSchema);

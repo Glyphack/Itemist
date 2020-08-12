@@ -1,6 +1,6 @@
 const express = require('express');
 const SellOrder = require('../../models/sellOrder.model');
-const User = require('../../models/user.model');
+const {User} = require('../../models/user.model');
 const { manager } = require('../../utils/trade_offer_manager');
 const winston = require('../../config/winston');
 const { editSellOrder } = require('./sell.controllers');
