@@ -34,9 +34,12 @@ spec:
     - hidden: true
       name: MONGO_URI
       secret: mongo-uri
+    - hidden: true
+      name: SENTRY_DSN
+      secret: sentry-dsn
 
   image_pull_policy: Always
-  image: itemist:v0.1.0-alpha2
+  image: itemist:v0.1.0-alpha5
   port: 4000
   source:
     context: ../.
