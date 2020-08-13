@@ -37,9 +37,15 @@ spec:
     - hidden: true
       name: SENTRY_DSN
       secret: sentry-dsn
+    - hidden: false
+      name: FRONTEND_PAYMENT_CALLBACK
+      secret: frontend-payment-callback
+    - hidden: true
+      name: ZARINPAL_MERCHANT
+      secret: zarinpal-merchant
 
   image_pull_policy: Always
-  image: itemist:v0.1.0-alpha5
+  image: itemist:<tag>
   port: 4000
   source:
     context: ../.

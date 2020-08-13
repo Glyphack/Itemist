@@ -26,7 +26,8 @@
     "steamcommunity": "^3.41.6",
     "swagger-ui-express": "^4.1.4",
     "winston": "^3.3.3",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
