@@ -1,3 +1,6 @@
+const {Transaction} = require('../../models/transaction.model');
+const {User} = require('../../models/user.model');
+const {start_payment} = require("../payment/payment.services");
 const {emptyCartProducts} = require("./cart.services");
 const {removeProductFromCart} = require("./cart.services");
 const {addProductToCart} = require("./cart.services");
@@ -8,29 +11,27 @@ async function getCart(req, res) {
 }
 
 /**
- * @param {string}  req.params.cartId
  * @param {string} req.body.productId
  */
 async function addToCart(req, res) {
-  await addProductToCart(req.params.cartId, req.body.productId);
+  const cart = await getOrCreateCart(req.user.steamId);
+  await addProductToCart(cart._id, req.body.productId);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
 /**
- * @param {string}  req.params.cartId
  * @param {string} req.body.productId
  * @param {Object} req.user
  */
 async function removeFromCart(req, res) {
-  await removeProductFromCart(req.params.cartId, req.body.productId);
+  const cart = await getOrCreateCart(req.user.steamId);
+  await removeProductFromCart(cart._id, req.body.productId);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-/**
- * @param {string} req.params.cartId
- */
 async function emptyCart(req, res) {
-  await emptyCartProducts(req.params.cartId);
+  const cart = await getOrCreateCart(req.user.steamId);
+  await emptyCartProducts(cart._id);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
