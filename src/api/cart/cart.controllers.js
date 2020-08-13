@@ -35,4 +35,12 @@ async function emptyCart(req, res) {
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-module.exports = {getCart, addToCart, removeFromCart, emptyCart}
+async function checkOut(req, res) {
+  const user = await User.findOne({steamId: req.user.steamId});
+  const cart = await getOrCreateCart(req.user.steamId);
+  const {url, authority} = await start_payment(1000);
+  Transaction.create({user: user, authority: authority, status: 'pending', products: cart.products, amount: 1000});
+  res.json({paymentUrl: url});
+}
+
+module.exports = {getCart, addToCart, removeFromCart, emptyCart, checkOut}
