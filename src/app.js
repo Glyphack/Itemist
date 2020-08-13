@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Sentry = require('@sentry/node');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 const winston = require('./config/winston');
 const routesV1 = require('./api/routes');
@@ -28,8 +30,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
 require('./config/steam')(app);
+const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
 app.use(Sentry.Handlers.requestHandler());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(morgan('combined', { stream: winston.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
