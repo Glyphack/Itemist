@@ -45,7 +45,7 @@ spec:
       secret: zarinpal-merchant
 
   image_pull_policy: Always
-  image: itemist:test-payment
+  image: itemist:<tag>
   port: 4000
   source:
     context: ../.
