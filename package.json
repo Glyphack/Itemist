@@ -24,7 +24,8 @@
     "steam-tradeoffer-manager": "^2.10.2",
     "steam-user": "^4.17.1",
     "steamcommunity": "^3.41.6",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
