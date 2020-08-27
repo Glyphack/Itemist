@@ -1,20 +1,20 @@
-const { manager } = require('../../utils/trade_offer_manager');
-const winston = require('../../config/winston');
+const { steamBot } = require('../../utils/bot');
+const {logger} = require('../../config/winston');
 const Product = require('../../models/product.model');
 
 async function createProductFromSellOrder(sellOrder) {
-  manager.getInventoryContents(
+  steamBot.getBotInventory(
     sellOrder.appId,
     sellOrder.contextId,
     true,
     async (error, inventory) => {
       if (error) {
-        winston.log(error);
+        logger.log(error);
         throw Error(error);
       } else {
         const item = inventory.find((i) => i.assetid === sellOrder.assetId);
         if (item === undefined) {
-          winston.error(`Could not find Item from sellOrder ${sellOrder} in inventory`);
+          logger.error(`Could not find Item from sellOrder ${sellOrder} in inventory`);
         } else {
           Product.create({
             seller: sellOrder.seller,

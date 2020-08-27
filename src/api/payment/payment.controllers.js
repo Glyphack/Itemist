@@ -1,6 +1,6 @@
 const {Transaction} = require('../../models/transaction.model');
 const {zarinpal} = require("../../config/zarinpal");
-const winston = require('../../config/winston');
+const {logger} = require('../../config/winston');
 
 async function verifyPayment(req, res) {
   const transaction = await Transaction.findOne({authority: req.query.Authority});
@@ -10,7 +10,7 @@ async function verifyPayment(req, res) {
       Amount: transaction.amount,
       Authority: req.query.Authority,
     });
-    let status = '';
+    let status;
     if (response.status === 101 || response.status === 100) {
       status = 'successful';
     } else {
@@ -24,7 +24,7 @@ async function verifyPayment(req, res) {
       `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=${transactionStatus}?refId=${response.RefID}`
     );
   } catch (err) {
-    winston.error(err);
+    logger.error(err);
     transaction.status = 'Error Occured';
     transaction.save();
     res.redirect(301, `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=Error`);
