@@ -31,6 +31,9 @@ spec:
     - hidden: true
       name: STEAM_ACCOUNT_SHARED_SECRET
       secret: steam-account-shared-secret
+  - hidden: true
+      name: STEAM_ACCOUNT_IDENTITY_SECRET
+      secret: steam-account-identity-secret
     - hidden: true
       name: MONGO_URI
       secret: mongo-uri

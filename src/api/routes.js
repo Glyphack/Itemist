@@ -11,7 +11,7 @@ const {cartRoutes} = require("./cart/cart.routes");
 const router = express.Router();
 
 router.use('/auth', authRoutes);
-router.use('/user', jwtMiddleWare, userRoutes);
+router.use('/users', jwtMiddleWare, userRoutes);
 router.use('/sell', jwtMiddleWare, sellOrdersRoutes);
 router.use('/products', productRoutes);
 router.use('/cart', cartRoutes);
