@@ -3,16 +3,20 @@ info:
   version: 1.0.0
   title: Itemist
 servers:
-  - url: 'https://api.itemist.ir'
+  - url: 'https://api.itemist.ir/v1'
+
+security:
+  - bearerAuth: []
+
 paths:
-  /users/{userId}:
+  /users/{steamId}:
     get:
       summary: 'get user profile: Returns details about a particular user'
       operationId: getUser
       tags:
         - user
       parameters:
-        - name: userId
+        - name: steamId
           in: path
           description: ID of the user
           required: true
@@ -22,17 +26,97 @@ paths:
       responses:
         '200':
           description: 'Sample response: Details about a user by ID'
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         default:
           description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: 'update users profile'
+      operationId: updateProfile
+      tags:
+        - user
+      requestBody:
+        $ref: '#/components/requestBodies/updateProfile'
+      responses:
+        '200':
+          description: 'Profile updated'
+  /users/{steamId}/inventory:
+    get:
+      summary: 'get user inventory: Returns user steam inventory'
+      operationId: getUserInventory
+      tags:
+        - user
+      parameters:
+        - name: steamId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: 'Sample response: Details about a user by ID'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sell:
+    get:
+      summary: 'get user submitted sell orders'
+      operationId: getSells
+      tags:
+        - sell
+      responses:
+        '200':
+          description: 'Sample response: return list of sell orders submitted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellOrder'
+    post:
+      summary: 'submit a new sell order'
+      operationId: newSellOrder
+      tags:
+        - sell
+      security:
+        - bearerAuth: [jnh]
+      requestBody:
+        $ref: '#/components/requestBodies/submitSellOrder'
+      responses:
+        '200':
+          description: 'Sample response: return sellOrder, trade offer id, trade success or not'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellOrder'
+  /products:
+    get:
+      summary: 'get products for sell: Returns list of products'
+      operationId: getProducts
+      tags:
+        - product
+      responses:
+        '200':
+          description: 'Sample response: Details about a user by ID'
+
+  /cart:
+    get:
+      summary: 'get user cart'
+      operationId: getCart
+      tags:
+        - cart
+      responses:
+        '200':
+          description: 'Sample response: get cart info'
           content:
             application/json:
               schema:
@@ -57,6 +141,40 @@ paths:
                 required:
                   - paymentUrl
 components:
+  requestBodies:
+    updateProfile:
+      description: Update profile request body
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tradeUrl:
+                type: string
+
+    submitSellOrder:
+      description: Submit sell order request body
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              app_id:
+                type: string
+                format: string
+              context_id:
+                type: string
+                format: string
+              asset_id:
+              type: string
+              format: string
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+
   schemas:
     User:
       type: object
@@ -78,12 +196,32 @@ components:
           type: string
         wallet:
           $ref: '#/components/schemas/Wallet'
+    SellOrder:
+      type: object
+      required:
+        - price
+        - appId
+        - contextId
+        - assetId
+        - tradeStatus
+      properties:
+        price:
+          type: integer
+          format: int64
+        appId:
+          type: string
+        contextId:
+          type: string
+        assetId:
+          type: string
+        tradeStatus:
+          type: string
     Wallet:
       type: object
       required:
-        - balance
+        - amount
       properties:
-        balance:
+        amount:
           type: integer
           format: int64
     Error:
@@ -97,3 +235,9 @@ components:
           format: int32
         message:
           type: string
+
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: https
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
