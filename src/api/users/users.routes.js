@@ -2,8 +2,8 @@ const express = require('express');
 
 const winston = require('../../config/winston');
 const User = require('../../models/user.model');
-const { manager } = require('../../utils/trade_offer_manager');
 const isOwner = require('../../middlewares/permission');
+const {steamBot} = require("../../utils/bot");
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.put('/:steamId', isOwner, async (req, res) => {
 });
 
 router.get('/:steamId/inventory', isOwner, async (req, res) => {
-  manager.loadUserInventory(req.params.steamId, 570, 2, true, (err, inventory) => {
+  steamBot.manager.loadUserInventory(req.params.steamId, 570, 2, true, (err, inventory) => {
     if (err) {
       winston.error(err);
     } else {
