@@ -1,8 +1,8 @@
 const express = require('express');
 const SellOrder = require('../../models/sellOrder.model');
 const {User} = require('../../models/user.model');
-const { manager } = require('../../utils/trade_offer_manager');
 const winston = require('../../config/winston');
+const {steamBot} = require("../../utils/bot");
 const { editSellOrder } = require('./sell.controllers');
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
   const assetId = req.body.asset_id;
   const { price } = req.body;
 
-  manager.getUserInventoryContents(
+  steamBot.manager.getUserInventoryContents(
     req.user.steamId,
     appId,
     contextId,
@@ -41,7 +41,13 @@ router.post('/', async (req, res) => {
             contextId: item.contextid,
             assetId: item.assetid,
           });
-          res.json(sellOrder);
+          steamBot.sendDepositTrade(req.user.steamId, item.assetid, (err, success, offerId) => {
+            if (err){
+              winston.error(err);
+              res.status(500).send();
+            }
+            res.json({sellOrder, success, offerId})
+          });
         } catch (error) {
           res.statusCode = 400;
           res.json({ detail: 'already submitted for sell' });
