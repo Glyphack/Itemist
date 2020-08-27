@@ -28,7 +28,8 @@ router.post('/', async (req, res) => {
     true,
     async (err, inventory) => {
       if (err) {
-        winston.log(err);
+        winston.error(err);
+        res.status(500).send();
       } else {
         const item = inventory.find((i) => i.assetid === assetId);
         const user = await User.findOne({ steamId: req.user.steamId });
