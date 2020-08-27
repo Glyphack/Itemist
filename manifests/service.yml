@@ -31,7 +31,7 @@ spec:
     - hidden: true
       name: STEAM_ACCOUNT_SHARED_SECRET
       secret: steam-account-shared-secret
-  - hidden: true
+    - hidden: true
       name: STEAM_ACCOUNT_IDENTITY_SECRET
       secret: steam-account-identity-secret
     - hidden: true
@@ -48,7 +48,7 @@ spec:
       secret: zarinpal-merchant
 
   image_pull_policy: Always
-  image: itemist:<tag>
+  image: itemist:v0.1.0-alpha8
   port: 4000
   source:
     context: ../.
