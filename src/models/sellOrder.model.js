@@ -17,10 +17,9 @@ const sellOrderSchema = new mongoose.Schema({
   assetId: {
     type: String,
   },
-  tradeStatus: {
-    type: String,
-    enum: ['Not sent', 'Pending', 'Succesful', 'Failed'],
-    default: 'Not sent',
+  tradeOffer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'TradeOffer',
   },
 });
 

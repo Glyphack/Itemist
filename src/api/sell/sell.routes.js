@@ -1,7 +1,7 @@
 const express = require('express');
 const SellOrder = require('../../models/sellOrder.model');
-const {sendDepositTrade} = require("../../utils/bot");
-const {getUserInventory} = require("../../utils/bot");
+const {TradeOffer} = require("../../models/tradeOffer.model");
+const {sendDepositTrade, getUserInventory} = require("../../utils/bot");
 const {User} = require('../../models/user.model');
 const {logger} = require('../../config/winston');
 const {editSellOrder} = require('./sell.controllers');
@@ -40,13 +40,25 @@ router.post('/', async (req, res) => {
     res.json({detail: 'already submitted for sell'});
     return;
   }
-  sendDepositTrade(req.user.steamId, item.assetid, (err, success, offerId) => {
+  sendDepositTrade(req.user.steamId, item.assetid, async (err, success, offerId) => {
     if (err) {
-      logger.error(`TradeError: ${err}`);
-    } else {
-      logger.info({success, offerId});
-      res.json({sellOrder, success, offerId});
+      logger.error(`sendDepositTradeErro : ${err}`);
+      res.status(500).json({detail: 'cannot trade item, try again'});
+      return ;
     }
+    let tradeStatus;
+    if (success){
+      tradeStatus = 'succesful';
+    } else {
+      tradeStatus = 'failed';
+    }
+    sellOrder.tradeOffer = await TradeOffer.create({
+      offerId: offerId,
+      tradeStatus: tradeStatus,
+      user: user
+    });
+    sellOrder.save();
+    res.json({sellOrder, success, offerId});
   });
 
 });
