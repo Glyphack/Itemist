@@ -1,8 +1,9 @@
 const express = require('express');
 const SellOrder = require('../../models/sellOrder.model');
+const {sendDepositTrade} = require("../../utils/bot");
+const {getUserInventory} = require("../../utils/bot");
 const {User} = require('../../models/user.model');
 const {logger} = require('../../config/winston');
-const {steamBot} = require("../../utils/bot");
 const {editSellOrder} = require('./sell.controllers');
 
 const router = express.Router();
@@ -16,46 +17,37 @@ router.get('/', async (req, res) => {
 router.put('/', editSellOrder);
 
 router.post('/', async (req, res) => {
-  const appId = req.body.app_id;
-  const contextId = req.body.context_id;
-  const assetId = req.body.asset_id;
-  const {price} = req.body;
+  const price = req.body.price;
+  const appId = req.body.appId;
+  const contextId = req.body.contextId;
+  const assetId = req.body.assetId;
 
-  steamBot.getUserInventory(
-    req.user.steamId,
-    appId,
-    contextId,
-    true,
-    async (err, inventory) => {
-      if (err) {
-        logger.error(err);
-        res.status(500).send();
-      } else {
-        const item = inventory.find((i) => i.assetid === assetId);
-        const user = await User.findOne({steamId: req.user.steamId});
-        try {
-          const sellOrder = await SellOrder.create({
-            seller: user,
-            price,
-            appId: item.appid,
-            contextId: item.contextid,
-            assetId: item.assetid,
-          });
-          steamBot.sendDepositTrade(req.user.steamId, item.assetid, (err, success, offerId) => {
-            if (err) {
-              console.error(err, success);
-            } else {
-              logger.info({success, offerId})
-            }
-          });
-          res.json({sellOrder});
-        } catch (error) {
-          res.statusCode = 400;
-          res.json({detail: 'already submitted for sell'});
-        }
-      }
-      // TODO: send trade offer
-    },
-  );
+  const inventory = await getUserInventory(req.user.steamId, appId, contextId, true);
+  const item = inventory.find((i) => i.assetid === assetId);
+  const user = await User.findOne({steamId: req.user.steamId});
+  let sellOrder = undefined;
+  try {
+    sellOrder = await SellOrder.create({
+      seller: user,
+      price,
+      appId: item.appid,
+      contextId: item.contextid,
+      assetId: item.assetid,
+    });
+  } catch (error) {
+    logger.error(error);
+    res.statusCode = 400;
+    res.json({detail: 'already submitted for sell'});
+    return;
+  }
+  sendDepositTrade(req.user.steamId, item.assetid, (err, success, offerId) => {
+    if (err) {
+      logger.error(`TradeError: ${err}`);
+    } else {
+      logger.info({success, offerId});
+      res.json({sellOrder, success, offerId});
+    }
+  });
+
 });
 module.exports = router;
