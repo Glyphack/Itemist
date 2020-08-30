@@ -4,6 +4,9 @@ const TradeOfferManager = require('steam-tradeoffer-manager');
 const SteamCommunity = require('steamcommunity');
 const SteamTotp = require('steam-totp');
 const SteamUser = require('steam-user');
+const {SellOrder} = require("../models/sellOrder.model");
+const {TradeOffer} = require("../models/tradeOffer.model");
+const {logger} = require('../config/winston');
 
 const client = new SteamUser();
 const community = new SteamCommunity();
@@ -62,6 +65,21 @@ manager.on('newOffer', function (offer) {
   });
 });
 
+manager.on('sentOfferChanged', async (offer, oldState) => {
+  logger.info(`offer with old state ${oldState} changed`);
+  const offerId = offer.id;
+  let tradeOffer = await TradeOffer.findOne({offerId: offerId});
+  let sellOrder = await SellOrder.findOne({tradeOffer: tradeOffer});
+  if (offer.state === 3){
+    tradeOffer.tradeStatus = 'Succesful';
+    sellOrder.success = true;
+  } else {
+    tradeOffer.tradeStatus = 'Failed';
+  }
+  tradeOffer.save();
+  sellOrder.save();
+})
+
 async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
   const getUserInventoryContentsPromise = util.promisify(manager.getUserInventoryContents.bind(manager));
   return await getUserInventoryContentsPromise(userSteamId, appId, contextId, tradableOnly);
@@ -119,4 +137,4 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
   });
 }
 
-module.exports = {getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
+module.exports = {getUserInventory, getBotInventory: getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
