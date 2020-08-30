@@ -1,5 +1,5 @@
 const express = require('express');
-const SellOrder = require('../../models/sellOrder.model');
+const {SellOrder} = require('../../models/sellOrder.model');
 const {TradeOffer} = require("../../models/tradeOffer.model");
 const {sendDepositTrade, getUserInventory} = require("../../utils/bot");
 const {User} = require('../../models/user.model');
@@ -26,35 +26,21 @@ router.post('/', async (req, res) => {
   const item = inventory.find((i) => i.assetid === assetId);
   const user = await User.findOne({steamId: req.user.steamId});
   let sellOrder = undefined;
-  try {
-    sellOrder = await SellOrder.create({
-      seller: user,
-      price,
-      appId: item.appid,
-      contextId: item.contextid,
-      assetId: item.assetid,
-    });
-  } catch (error) {
-    logger.error(error);
-    res.statusCode = 400;
-    res.json({detail: 'already submitted for sell'});
-    return;
-  }
+  sellOrder = await SellOrder.create({
+    seller: user,
+    price,
+    appId: item.appid,
+    contextId: item.contextid,
+    assetId: item.assetid,
+  });
   sendDepositTrade(req.user.steamId, item.assetid, async (err, success, offerId) => {
     if (err) {
       logger.error(`sendDepositTradeErro : ${err}`);
       res.status(500).json({detail: 'cannot trade item, try again'});
       return ;
     }
-    let tradeStatus;
-    if (success){
-      tradeStatus = 'succesful';
-    } else {
-      tradeStatus = 'failed';
-    }
     sellOrder.tradeOffer = await TradeOffer.create({
       offerId: offerId,
-      tradeStatus: tradeStatus,
       user: user
     });
     sellOrder.save();

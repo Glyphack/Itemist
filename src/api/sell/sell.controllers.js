@@ -1,5 +1,5 @@
 const { editSellOrderPrice } = require('./sell.services');
-const SellOrder = require('../../models/sellOrder.model');
+const {SellOrder} = require('../../models/sellOrder.model');
 
 async function editSellOrder(req, res) {
   const result = await editSellOrderPrice(req.body.id, req.body.price);
