@@ -9,9 +9,12 @@ const mongoose = require('mongoose');
 const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
+const bodyParser = require('body-parser');
 
-const winston = require('./config/winston');
+const {logger} = require('./config/winston');
 const routesV1 = require('./api/routes');
+const manager = require('./utils/bot');
+
 
 const app = express();
 
@@ -21,10 +24,11 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => winston.info('Connected to MongoDB 🔥'))
-  .catch(() => {
-    throw new Error('Could not connect to database');
+  .then(() => logger.info('Connected to MongoDB 🔥'))
+  .catch((e) => {
+    throw new Error('Could not connect to database' + e);
   });
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
@@ -34,16 +38,20 @@ const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
 app.use(Sentry.Handlers.requestHandler());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(morgan('combined', { stream: winston.stream }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+app.use(morgan('combined', { stream: logger.stream }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/v1', routesV1);
 
 app.use(Sentry.Handlers.errorHandler());
 
-// catch 404 a)nd forward to error handler
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
@@ -54,7 +62,7 @@ app.use((err, req, res) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  winston.error(
+  logger.error(
     `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
   );
 
