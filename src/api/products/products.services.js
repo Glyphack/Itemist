@@ -3,6 +3,7 @@ const Product = require('../../models/product.model');
 const {getBotInventory} = require("../../utils/bot");
 
 async function createProductFromSellOrder(sellOrder) {
+  console.log(getBotInventory)
   const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, true);
   const item = inventory.find((i) => i.assetid === sellOrder.assetId);
   if (item === undefined) {
