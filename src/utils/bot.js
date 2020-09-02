@@ -4,8 +4,7 @@ const TradeOfferManager = require('steam-tradeoffer-manager');
 const SteamCommunity = require('steamcommunity');
 const SteamTotp = require('steam-totp');
 const SteamUser = require('steam-user');
-const {SellOrder} = require("../models/sellOrder.model");
-const {TradeOffer} = require("../models/tradeOffer.model");
+
 const {logger} = require('../config/winston');
 
 const client = new SteamUser();
@@ -44,41 +43,6 @@ community.on("sessionExpired", function (err) {
   console.error(`not logged in ${err}`);
   client.webLogOn();
 });
-
-manager.on('newOffer', function (offer) {
-  console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
-  offer.accept(function (err, status) {
-    if (err) {
-      console.log("Unable to accept offer: " + err.message);
-    } else {
-      console.log("Offer accepted: " + status);
-      if (status == "pending") {
-        community.acceptConfirmationForObject(process.env.STEAM_ACCOUNT_SHARED_SECRET, offer.id, function (err) {
-          if (err) {
-            console.log("Can't confirm trade offer: " + err.message);
-          } else {
-            console.log("Trade offer " + offer.id + " confirmed");
-          }
-        });
-      }
-    }
-  });
-});
-
-manager.on('sentOfferChanged', async (offer, oldState) => {
-  logger.info(`offer with old state ${oldState} changed`);
-  const offerId = offer.id;
-  let tradeOffer = await TradeOffer.findOne({offerId: offerId});
-  let sellOrder = await SellOrder.findOne({tradeOffer: tradeOffer});
-  if (offer.state === 3){
-    tradeOffer.tradeStatus = 'Succesful';
-    sellOrder.success = true;
-  } else {
-    tradeOffer.tradeStatus = 'Failed';
-  }
-  tradeOffer.save();
-  sellOrder.save();
-})
 
 async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
   const getUserInventoryContentsPromise = util.promisify(manager.getUserInventoryContents.bind(manager));
@@ -137,4 +101,43 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
   });
 }
 
-module.exports = {getUserInventory, getBotInventory: getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
+module.exports = {getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
+
+
+const {SellOrder} = require("../models/sellOrder.model");
+const {TradeOffer} = require("../models/tradeOffer.model");
+
+manager.on('newOffer', function (offer) {
+  console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
+  offer.accept(function (err, status) {
+    if (err) {
+      console.log("Unable to accept offer: " + err.message);
+    } else {
+      console.log("Offer accepted: " + status);
+      if (status == "pending") {
+        community.acceptConfirmationForObject(process.env.STEAM_ACCOUNT_SHARED_SECRET, offer.id, function (err) {
+          if (err) {
+            console.log("Can't confirm trade offer: " + err.message);
+          } else {
+            console.log("Trade offer " + offer.id + " confirmed");
+          }
+        });
+      }
+    }
+  });
+});
+
+manager.on('sentOfferChanged', async (offer, oldState) => {
+  logger.info(`offer with old state ${oldState} changed`);
+  const offerId = offer.id;
+  let tradeOffer = await TradeOffer.findOne({offerId: offerId});
+  let sellOrder = await SellOrder.findOne({tradeOffer: tradeOffer});
+  if (offer.state === 3){
+    tradeOffer.tradeStatus = 'Succesful';
+    sellOrder.success = true;
+  } else {
+    tradeOffer.tradeStatus = 'Failed';
+  }
+  tradeOffer.save();
+  sellOrder.save();
+})
