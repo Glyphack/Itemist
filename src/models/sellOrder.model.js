@@ -31,8 +31,7 @@ const sellOrderSchema = new mongoose.Schema({
 sellOrderSchema.index({ seller: 1, assetId: 1 }, { unique: true });
 
 sellOrderSchema.post('save', async function(doc) {
-  console.info('post save hook');
-  if (doc.success !== true){
+  if (doc.success === true){
     await createProductFromSellOrder(doc);
   }
 });
