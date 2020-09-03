@@ -1,6 +1,6 @@
 const {Transaction} = require('../../models/transaction.model');
-const {zarinpal} = require("../../config/zarinpal");
-const {logger} = require('../../config/winston');
+const {zarinpal} = require("../../utils/zarinpal");
+const {logger} = require('../../utils/winston');
 
 async function verifyPayment(req, res) {
   const transaction = await Transaction.findOne({authority: req.query.Authority});

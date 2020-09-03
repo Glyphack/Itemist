@@ -5,7 +5,7 @@ const SteamCommunity = require('steamcommunity');
 const SteamTotp = require('steam-totp');
 const SteamUser = require('steam-user');
 
-const {logger} = require('../config/winston');
+const {logger} = require('./winston');
 
 const client = new SteamUser();
 const community = new SteamCommunity();

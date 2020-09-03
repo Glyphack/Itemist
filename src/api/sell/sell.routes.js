@@ -3,7 +3,7 @@ const {SellOrder} = require('../../models/sellOrder.model');
 const {TradeOffer} = require("../../models/tradeOffer.model");
 const {sendDepositTrade, getUserInventory} = require("../../utils/bot");
 const {User} = require('../../models/user.model');
-const {logger} = require('../../config/winston');
+const {logger} = require('../../utils/winston');
 const {editSellOrder} = require('./sell.controllers');
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-const {logger} = require('../../config/winston');
+const {logger} = require('../../utils/winston');
 const Product = require('../../models/product.model');
 const {getBotInventory} = require("../../utils/bot");
 
