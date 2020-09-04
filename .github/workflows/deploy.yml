@@ -14,8 +14,8 @@ jobs:
       - name: deploy action step
         uses: Glyphack/fandogh-service-deploy-action@v0.1.0-alpha
         with:
-          username: f
-          password: f
-          image_name: f
-          image_version: 2
+          username: ${{ secrets.FANDOGH_USERNAME }}
+          password: ${{ secrets.FANDOGH_PASSWORD }}
+          image_name: itemist
+          image_version: v0.1.0-alpha10
           path_to_service_file: ./manifests/service.yml
