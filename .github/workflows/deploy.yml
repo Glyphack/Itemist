@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2     
       - name: deploy action step
-        id: deploy
         uses: Glyphack/fandogh-service-deploy-action@v0.1.0-alpha
         with:
           username: f
