@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy action step
+        id: deploy
+        uses: Glyphack/fandogh-service-deploy-action@v0.1.0-alpha
+        with:
+          username: f
+          password: f
+          image_name: f
+          image_version: 2
+          path_to_service_file: ./manifests/service.yml
