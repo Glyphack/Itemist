@@ -28,7 +28,7 @@ const sellOrderSchema = new mongoose.Schema({
   }
 });
 
-sellOrderSchema.index({ seller: 1, assetId: 1 }, { unique: true });
+sellOrderSchema.index({ contextId: 1, assetId: 1 }, { unique: true });
 
 sellOrderSchema.post('save', async function(doc) {
   if (doc.success === true){
