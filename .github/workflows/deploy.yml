@@ -13,10 +13,6 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: fandogh deploy
-        run: |
-          pip install fandogh-cli --upgrade
-          fandogh login --username ${{ secrets.FANDOGH_USERNAME }} --password ${{ secrets.FANDOGH_PASSWORD }}
       - name: deploy action step
         uses: Glyphack/fandogh-service-deploy-action@v0.1.0-beta.3
         with:
