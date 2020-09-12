@@ -1,11 +1,9 @@
 name: Deploy
-
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,5 +15,14 @@ jobs:
           python-version: 3.8
       - name: fandogh deploy
         run: |
+          pip install fandogh --upgrade
           pip install fandogh-cli --upgrade
           fandogh login --username ${{ secrets.FANDOGH_USERNAME }} --password ${{ secrets.FANDOGH_PASSWORD }}
+      - name: deploy action step
+        uses: Glyphack/fandogh-service-deploy-action@v0.1.0-beta.3
+        with:
+          username: ${{ secrets.FANDOGH_USERNAME }}
+          password: ${{ secrets.FANDOGH_PASSWORD }}
+          image_name: itemist
+          image_version: v0.1.0-alpha10
+          path_to_service_file: ./manifests/service.yml
