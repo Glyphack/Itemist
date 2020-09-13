@@ -106,6 +106,7 @@ module.exports = {getUserInventory, getBotInventory, sendDepositTrade, sendWithd
 
 const {SellOrder} = require("../models/sellOrder.model");
 const {TradeOffer} = require("../models/tradeOffer.model");
+const {createProductFromSellOrder} = require("../api/products/products.services");
 
 manager.on('newOffer', function (offer) {
   console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
@@ -135,9 +136,17 @@ manager.on('sentOfferChanged', async (offer, oldState) => {
   if (offer.state === 3){
     tradeOffer.tradeStatus = 'Succesful';
     sellOrder.success = true;
+    offer.getReceivedItems(async (err, items) => {
+      if (err){
+        logger.error(`error processing tradeoffer ${tradeOffer}`);
+        return;
+      }
+      const item = items[0];
+      await createProductFromSellOrder(sellOrder, item.assetid);
+    });
+    sellOrder.save();
   } else {
     tradeOffer.tradeStatus = 'Failed';
   }
   tradeOffer.save();
-  sellOrder.save();
 })
