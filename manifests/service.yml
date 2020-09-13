@@ -48,7 +48,7 @@ spec:
       secret: zarinpal-merchant
 
   image_pull_policy: Always
-  image: itemist:v0.1.0-alpha8
+  image: <IMAGE:VERSION>
   port: 4000
   source:
     context: ../.
