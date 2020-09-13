@@ -30,10 +30,4 @@ const sellOrderSchema = new mongoose.Schema({
 
 sellOrderSchema.index({ appId:1, contextId: 1, assetId: 1 }, { unique: true });
 
-sellOrderSchema.post('save', async function(doc) {
-  if (doc.success === true){
-    await createProductFromSellOrder(doc);
-  }
-});
-
 module.exports = {SellOrder: mongoose.model('SellOrder', sellOrderSchema)};
