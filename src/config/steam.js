@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const passport = require('passport');
 const { Strategy } = require('passport-steam');
-const User = require('../models/user.model');
+const {User} = require('../models/user.model');
 
 const strategyOptions = {
   returnURL: `${process.env.BASE_URL}/auth/steam/return`,
