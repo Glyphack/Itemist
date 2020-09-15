@@ -72,10 +72,10 @@ const productSchema = new mongoose.Schema({
       type: String,
     },
     marketable: {
-      type: String,
+      type: Boolean,
     },
     commodity: {
-      type: String,
+      type: Boolean,
     },
     marketTradableRestriction: {
       type: String,
