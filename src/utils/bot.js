@@ -142,7 +142,7 @@ manager.on('sentOfferChanged', async (offer, oldState) => {
         return;
       }
       const item = items[0];
-      await createProductFromSellOrder(sellOrder, item.assetid);
+      await createProductFromSellOrder(sellOrder, item);
     });
     sellOrder.save();
   } else {
