@@ -11,6 +11,7 @@ async function createProductFromSellOrder(sellOrder, newAssetId) {
     Product.create({
       seller: sellOrder.seller,
       price: sellOrder.price,
+      isTradable: item.tradable,
       productId: item.assetid,
       appId: item.appid,
       classId: item.classid,

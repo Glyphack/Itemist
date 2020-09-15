@@ -23,6 +23,9 @@ const productSchema = new mongoose.Schema({
     price: {
       type: Number,
     },
+    isTradable: {
+      type: Boolean
+    },
     productId: {
       type: String,
     },
@@ -87,7 +90,7 @@ const productSchema = new mongoose.Schema({
       type: [tagSchema],
     },
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
 module.exports = {Product: mongoose.model('Product', productSchema)}
