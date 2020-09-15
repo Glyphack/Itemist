@@ -3,8 +3,7 @@ const Product = require('../../models/product.model');
 const {getBotInventory} = require("../../utils/bot");
 
 async function createProductFromSellOrder(sellOrder, newAssetId) {
-  console.log(getBotInventory)
-  const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, true);
+  const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, false);
   const item = inventory.find((i) => i.assetid === newAssetId);
   if (item === undefined) {
     logger.error(`Could not find Item for ${sellOrder} in with id ${newAssetId} inventory`);
