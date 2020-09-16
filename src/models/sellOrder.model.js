@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {createProductFromSellOrder} = require("../api/products/products.services");
 
 const sellOrderSchema = new mongoose.Schema({
     seller: {
@@ -29,7 +28,5 @@ const sellOrderSchema = new mongoose.Schema({
   },
   {timestamps: true}
 );
-
-sellOrderSchema.index({appId: 1, contextId: 1, assetId: 1}, {unique: true});
 
 module.exports = {SellOrder: mongoose.model('SellOrder', sellOrderSchema)};
