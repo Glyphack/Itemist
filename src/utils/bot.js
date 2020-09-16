@@ -6,6 +6,9 @@ const SteamTotp = require('steam-totp');
 const SteamUser = require('steam-user');
 
 const {logger} = require('./winston');
+const {SellOrder} = require("../models/sellOrder.model");
+const {TradeOffer} = require("../models/tradeOffer.model");
+const {createProductFromSellOrder} = require("../api/products/products.services");
 
 const client = new SteamUser();
 const community = new SteamCommunity();
@@ -102,11 +105,6 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
 }
 
 module.exports = {getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
-
-
-const {SellOrder} = require("../models/sellOrder.model");
-const {TradeOffer} = require("../models/tradeOffer.model");
-const {createProductFromSellOrder} = require("../api/products/products.services");
 
 manager.on('newOffer', function (offer) {
   console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
