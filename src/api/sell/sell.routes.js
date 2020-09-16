@@ -25,8 +25,7 @@ router.post('/', async (req, res) => {
   const inventory = await getUserInventory(req.user.steamId, appId, contextId, true);
   const item = inventory.find((i) => i.assetid === assetId);
   const user = await User.findOne({steamId: req.user.steamId});
-  let sellOrder = undefined;
-  sellOrder = await SellOrder.create({
+  let sellOrder = await SellOrder.create({
     seller: user,
     price,
     appId: item.appid,
