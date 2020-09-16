@@ -2,10 +2,6 @@ const {logger} = require('../../utils/winston');
 const {Product} = require('../../models/product.model');
 
 async function createProductFromSellOrder(sellOrder, item) {
-  if (item === undefined) {
-    logger.error(`Could not create product for ${sellOrder} with id ${item.assetid}`);
-    return
-  }
   await Product.create({
     seller: sellOrder.seller,
     price: sellOrder.price,
@@ -27,6 +23,7 @@ async function createProductFromSellOrder(sellOrder, item) {
     marketable: item.marketable,
     commodity: item.commodity,
     descriptions: item.descriptions.map((x) => x.value),
+    tags: item.tags
   });
 }
 
