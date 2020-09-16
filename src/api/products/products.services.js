@@ -19,7 +19,6 @@ async function createProductFromSellOrder(sellOrder, item) {
     iconUrl: item.icon_url,
     iconUrlLarge: item.icon_url_large,
     name: item.name,
-    post: item.pos,
     marketHashName: item.market_hash_name,
     marketName: item.market_name,
     nameColor: item.name_color,
