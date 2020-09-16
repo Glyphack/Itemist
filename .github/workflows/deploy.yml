@@ -11,7 +11,7 @@ jobs:
       - name: Set env
         run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
       - name: deploy action step
-        uses: Glyphack/fandogh-service-deploy-action@v0.1-alpha
+        uses: Glyphack/fandogh-service-deploy-action@v1.0
         with:
           username: ${{ secrets.FANDOGH_USERNAME }}
           password: ${{ secrets.FANDOGH_PASSWORD }}
