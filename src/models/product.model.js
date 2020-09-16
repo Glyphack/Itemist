@@ -16,76 +16,81 @@ const tagSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    price: {
+      type: Number,
+    },
+    isTradable: {
+      type: Boolean
+    },
+    productId: {
+      type: String,
+    },
+    appId: {
+      type: String,
+    },
+    classId: {
+      type: String,
+    },
+    instanceId: {
+      type: String,
+    },
+    assetId: {
+      type: String,
+    },
+    contextId: {
+      type: String,
+    },
+    pos: {
+      type: String,
+    },
+    iconUrl: {
+      type: String,
+    },
+    iconUrlLarge: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    marketHashName: {
+      type: String,
+    },
+    marketName: {
+      type: String,
+    },
+    nameColor: {
+      type: String,
+    },
+    backgroundColor: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    marketable: {
+      type: Boolean,
+    },
+    commodity: {
+      type: Boolean,
+    },
+    marketTradableRestriction: {
+      type: String,
+    },
+    marketMarketableRestriction: {
+      type: String,
+    },
+    descriptions: {
+      type: [String],
+    },
+    tags: {
+      type: [tagSchema],
+    },
   },
-  price: {
-    type: Number,
-  },
-  productId: {
-    type: String,
-  },
-  appId: {
-    type: String,
-  },
-  classId: {
-    type: String,
-  },
-  instanceId: {
-    type: String,
-  },
-  assetId: {
-    type: String,
-  },
-  contextId: {
-    type: String,
-  },
-  pos: {
-    type: String,
-  },
-  iconUrl: {
-    type: String,
-  },
-  iconUrlLarge: {
-    type: String,
-  },
-  name: {
-    type: String,
-  },
-  marketHashName: {
-    type: String,
-  },
-  marketName: {
-    type: String,
-  },
-  nameColor: {
-    type: String,
-  },
-  backgroundColor: {
-    type: String,
-  },
-  type: {
-    type: String,
-  },
-  marketable: {
-    type: String,
-  },
-  commodity: {
-    type: String,
-  },
-  marketTradableRestriction: {
-    type: String,
-  },
-  marketMarketableRestriction: {
-    type: String,
-  },
-  descriptions: {
-    type: [String],
-  },
-  tags: {
-    type: [tagSchema],
-  },
-});
+  {timestamps: true}
+);
 
 module.exports = {Product: mongoose.model('Product', productSchema)}

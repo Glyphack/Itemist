@@ -97,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SellOrder'
+                $ref: '#/components/responses/SubmitSellOrderResponse'
   /products:
     get:
       summary: 'get products for sell: Returns list of products'
@@ -157,23 +157,35 @@ components:
       description: Submit sell order request body
       required: true
       content:
-        application/x-www-form-urlencoded:
+        application/json:
           schema:
             type: object
             properties:
-              app_id:
+              appId:
+                type: integer
+                format: int64
+              contextId:
+                type: integer
+                format: int64
+              assetId:
                 type: string
-                format: string
-              context_id:
-                type: string
-                format: string
-              asset_id:
-              type: string
-              format: string
-
+              price:
+                type: integer
+                format: int64
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+    SubmitSellOrderResponse:
+      type: object
+      required:
+        - success
+      optional:
+        - sellOrder
+      properties:
+        success:
+          type: boolean
+        sellorder:
+          $ref: '#/components/schemas/SellOrder'
 
   schemas:
     User:
@@ -199,12 +211,15 @@ components:
     SellOrder:
       type: object
       required:
+        - seller
         - price
         - appId
         - contextId
         - assetId
-        - tradeStatus
+        - tradeOffer
       properties:
+        seller:
+          $ref: '#/components/schemas/User'
         price:
           type: integer
           format: int64
@@ -215,7 +230,7 @@ components:
         assetId:
           type: string
         tradeStatus:
-          type: string
+          $ref: '#/components/schemas/TradeOffer'
     Wallet:
       type: object
       required:
@@ -224,6 +239,16 @@ components:
         amount:
           type: integer
           format: int64
+    TradeOffer:
+      type: object
+      required:
+        - offerId
+        - tradeStatus
+      properties:
+        offerId:
+          type: string
+        tradeStatus:
+          type: string
     Error:
       type: object
       required:

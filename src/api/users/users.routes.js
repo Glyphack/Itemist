@@ -1,6 +1,6 @@
 const express = require('express');
 
-const User = require('../../models/user.model');
+const {User} = require('../../models/user.model');
 const isOwner = require('../../middlewares/permission');
 const {getUserInventory} = require("../../utils/bot");
 

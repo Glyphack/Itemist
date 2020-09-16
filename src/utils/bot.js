@@ -5,6 +5,11 @@ const SteamCommunity = require('steamcommunity');
 const SteamTotp = require('steam-totp');
 const SteamUser = require('steam-user');
 
+const {logger} = require('./winston');
+const {SellOrder} = require("../models/sellOrder.model");
+const {TradeOffer} = require("../models/tradeOffer.model");
+const {createProductFromSellOrder} = require("../api/products/products.services");
+
 const client = new SteamUser();
 const community = new SteamCommunity();
 const manager = new TradeOfferManager({
@@ -40,26 +45,6 @@ client.on('webSession', (sid, cookies) => {
 community.on("sessionExpired", function (err) {
   console.error(`not logged in ${err}`);
   client.webLogOn();
-});
-
-manager.on('newOffer', function (offer) {
-  console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
-  offer.accept(function (err, status) {
-    if (err) {
-      console.log("Unable to accept offer: " + err.message);
-    } else {
-      console.log("Offer accepted: " + status);
-      if (status == "pending") {
-        community.acceptConfirmationForObject(process.env.STEAM_ACCOUNT_SHARED_SECRET, offer.id, function (err) {
-          if (err) {
-            console.log("Can't confirm trade offer: " + err.message);
-          } else {
-            console.log("Trade offer " + offer.id + " confirmed");
-          }
-        });
-      }
-    }
-  });
 });
 
 async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
@@ -120,3 +105,35 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
 }
 
 module.exports = {getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager};
+
+manager.on('newOffer', function (offer) {
+  console.log("New offer #" + offer.id + " from " + offer.partner.getSteam3RenderedID());
+});
+
+manager.on('sentOfferChanged', async (offer, oldState) => {
+  logger.info(`offer with old state ${oldState} changed`);
+  const offerId = offer.id;
+  let tradeOffer = await TradeOffer.findOne({offerId: offerId});
+  let sellOrder = await SellOrder.findOne({tradeOffer: tradeOffer});
+  if (offer.state === 3){
+    tradeOffer.tradeStatus = 'Succesful';
+    sellOrder.success = true;
+    offer.getReceivedItems(async (err, items) => {
+      if (err){
+        logger.error(`error processing tradeoffer ${tradeOffer}`);
+        return;
+      }
+      let item = items[0];
+      const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, false);
+      item = inventory.find((i) => i.assetid === item.assetid);
+      if (item === undefined) {
+        logger.error(`Could not find Item for ${sellOrder} with id ${item.assetid} in inventory`);
+      }
+      await createProductFromSellOrder(sellOrder, item);
+    });
+    sellOrder.save();
+  } else {
+    tradeOffer.tradeStatus = 'Failed';
+  }
+  tradeOffer.save();
+})

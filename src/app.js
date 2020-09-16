@@ -11,7 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const bodyParser = require('body-parser');
 
-const {logger} = require('./config/winston');
+const {logger} = require('./utils/winston');
 const routesV1 = require('./api/routes');
 const manager = require('./utils/bot');
 
@@ -23,6 +23,7 @@ Sentry.init({ dsn: process.env.SENTRY_DSN });
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true
 })
   .then(() => logger.info('Connected to MongoDB 🔥'))
   .catch((e) => {

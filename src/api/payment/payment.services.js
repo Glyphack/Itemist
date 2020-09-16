@@ -1,4 +1,4 @@
-const {zarinpal} = require("../../config/zarinpal");
+const {zarinpal} = require("../../utils/zarinpal");
 
 /**
  * PaymentRequest [module]

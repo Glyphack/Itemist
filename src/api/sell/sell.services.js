@@ -1,4 +1,4 @@
-const SellOrder = require('../../models/sellOrder.model');
+const {SellOrder} = require('../../models/sellOrder.model');
 
 async function editSellOrderPrice(id, newPrice) {
   return SellOrder.updateOne(

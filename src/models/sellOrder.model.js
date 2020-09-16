@@ -1,28 +1,32 @@
 const mongoose = require('mongoose');
 
 const sellOrderSchema = new mongoose.Schema({
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    price: {
+      type: Number,
+    },
+    appId: {
+      type: String,
+    },
+    contextId: {
+      type: String,
+    },
+    assetId: {
+      type: String,
+    },
+    tradeOffer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'TradeOffer',
+    },
+    success: {
+      type: Boolean,
+      default: false,
+    }
   },
-  price: {
-    type: Number,
-  },
-  appId: {
-    type: String,
-  },
-  contextId: {
-    type: String,
-  },
-  assetId: {
-    type: String,
-  },
-  tradeOffer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'TradeOffer',
-  },
-});
+  {timestamps: true}
+);
 
-sellOrderSchema.index({ seller: 1, assetId: 1 }, { unique: true });
-
-module.exports = mongoose.model('SellOrder', sellOrderSchema);
+module.exports = {SellOrder: mongoose.model('SellOrder', sellOrderSchema)};

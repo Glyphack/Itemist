@@ -1,7 +1,7 @@
 const express = require('express');
 
 const jwtMiddleWare = require('../middlewares/auth.js');
-const authRoutes = require('./auth/steam');
+const authRoutes = require('./auth/auth.routes');
 const userRoutes = require('./users/users.routes');
 const sellOrdersRoutes = require('./sell/sell.routes');
 const productRoutes = require('./products/products');
