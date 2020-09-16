@@ -125,7 +125,12 @@ manager.on('sentOfferChanged', async (offer, oldState) => {
         logger.error(`error processing tradeoffer ${tradeOffer}`);
         return;
       }
-      const item = items[0];
+      let item = items[0];
+      const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, false);
+      item = inventory.find((i) => i.assetid === item.assetid);
+      if (item === undefined) {
+        logger.error(`Could not find Item for ${sellOrder} with id ${item.assetid} in inventory`);
+      }
       await createProductFromSellOrder(sellOrder, item);
     });
     sellOrder.save();
