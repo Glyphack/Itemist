@@ -71,17 +71,13 @@ paths:
                 $ref: '#/components/schemas/Error'
   /sell:
     get:
-      summary: 'get user submitted sell orders'
+      summary: 'get submitted sell orders'
       operationId: getSells
       tags:
         - sell
       responses:
         '200':
-          description: 'Sample response: return list of sell orders submitted'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SellOrder'
+          $ref: '#/components/responses/GetSellOrders'
     post:
       summary: 'submit a new sell order'
       operationId: newSellOrder
@@ -196,6 +192,37 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/InventoryItem'
+    GetSellOrders:
+      description: 'returns list of sell orders'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sells
+            properties:
+              sells:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - price
+                    - appId
+                    - contextId
+                    - assetId
+                    - tradeOffer
+                  properties:
+                    price:
+                      type: integer
+                      format: int64
+                    appId:
+                      type: string
+                    contextId:
+                      type: string
+                    assetId:
+                      type: string
+                    tradeOfer:
+                      $ref: '#/components/schemas/TradeOffer'
   schemas:
     User:
       type: object
