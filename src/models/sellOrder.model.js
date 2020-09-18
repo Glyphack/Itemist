@@ -19,7 +19,7 @@ const sellOrderSchema = new mongoose.Schema({
     },
     tradeOffer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'TradeOffer',
+      ref: 'tradeOffer',
     },
     success: {
       type: Boolean,

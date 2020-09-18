@@ -62,7 +62,7 @@ paths:
             format: int32
       responses:
         '200':
-          description: 'Sample response: Details about a user by ID'
+          $ref: '#/components/responses/GetInventory'
         default:
           description: Unexpected error
           content:
@@ -71,17 +71,13 @@ paths:
                 $ref: '#/components/schemas/Error'
   /sell:
     get:
-      summary: 'get user submitted sell orders'
+      summary: 'get submitted sell orders'
       operationId: getSells
       tags:
         - sell
       responses:
         '200':
-          description: 'Sample response: return list of sell orders submitted'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SellOrder'
+          $ref: '#/components/responses/GetSellOrders'
     post:
       summary: 'submit a new sell order'
       operationId: newSellOrder
@@ -93,11 +89,8 @@ paths:
         $ref: '#/components/requestBodies/submitSellOrder'
       responses:
         '200':
-          description: 'Sample response: return sellOrder, trade offer id, trade success or not'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/SubmitSellOrderResponse'
+          $ref: '#components/responses/SubmitSellOrderResponse'
+
   /products:
     get:
       summary: 'get products for sell: Returns list of products'
@@ -106,8 +99,7 @@ paths:
         - product
       responses:
         '200':
-          description: 'Sample response: Details about a user by ID'
-
+          $ref: '#/components/responses/GetProducts'
   /cart:
     get:
       summary: 'get user cart'
@@ -176,17 +168,73 @@ components:
     UnauthorizedError:
       description: Access token is missing or invalid
     SubmitSellOrderResponse:
-      type: object
-      required:
-        - success
-      optional:
-        - sellOrder
-      properties:
-        success:
-          type: boolean
-        sellorder:
-          $ref: '#/components/schemas/SellOrder'
-
+      description: 'submit sell order respone'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              sellorder:
+                $ref: '#/components/schemas/SellOrder'
+    GetInventory:
+      description: 'user inventory'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - inventory
+            properties:
+              inventory:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
+    GetSellOrders:
+      description: 'returns list of sell orders'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sells
+            properties:
+              sells:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - price
+                    - appId
+                    - contextId
+                    - assetId
+                    - tradeOffer
+                  properties:
+                    price:
+                      type: integer
+                      format: int64
+                    appId:
+                      type: string
+                    contextId:
+                      type: string
+                    assetId:
+                      type: string
+                    tradeOfer:
+                      $ref: '#/components/schemas/TradeOffer'
+    GetProducts:
+      description: 'return list of items for sell'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - products
+            properties:
+              products:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
   schemas:
     User:
       type: object
@@ -260,9 +308,105 @@ components:
           format: int32
         message:
           type: string
+    InventoryItem:
+      type: object
+      required:
+        - appid
+        - contextid
+        - assetid
+        - classid
+        - instanceid
+        - amount
+        - pos
+        - background_color
+        - icon_url
+        - icon_url_large
+        - descriptions
+        - name
+        - name_color
+        - type
+      properties:
+        appid:
+          type: string
+        cotextid:
+          type: string
+        assetid:
+          type: string
+        classid:
+          type: string
+        instanceid:
+          type: string
+        amount:
+          type: string
+        pos:
+          type: integer
+          format: int32
+        background_color:
+          type: string
+        icon_url:
+          type: string
+        icon_url_large:
+          type: string
+        descriptions:
+          $ref: '#/components/schemas/ItemDescription'
+        name:
+          type: string
+        name_color:
+          type: string
+        type:
+          type: string
+        tags:
+          $ref: '#/components/schemas/ItemTag'
+      example:
+        appid: 570
+        contextid: 2
+        assetid: 100000
+        classid: 2325345343
+        instanceid: 454353
+        amount: 1
+        pos: 2
+        background_color: ""
+        icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_opzBmnZg7CJw537UzUa1hUpMa-BthPXLTQiZAqMaSfGGU3LWt5kmTni0WUTggZFFgDM"
+        icon_url_large: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_08GYiyU2pHYltirfzUG2iEpLabRr0P3MH1qcU6RLHqeBUCGEsMgiS32oSE62yDJOhq-tt21qKIE"
+        descriptions: [ { "type": "html", "value": "Used By: Bloodseeker" }, { "type": "html", "value": " " }, { "type": "html", "value": "The Gallows Understudy", "color": "9da1a9" }, { "type": "html", "value": "The Gallows Understudy Mantle", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Hood", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Back", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Gauntlets", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Skirt", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade - Off-Hand", "color": "6c7075" }, { "type": "html", "value": "Hempen ropes are a crude tool for execution, but Bloodseeker seeks to understand the ways of the backwards lands through which his hunting takes him." } ]
+        name: "The Gallows Understudy Gauntlets"
+        name_color: "D2D2D2"
+        type: "Common Gauntlets"
+        tags: [ { "internal_name": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "category_name": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
+    ItemDescription:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+        color:
+          type: string
+    ItemTag:
+      type: object
+      reuqired:
+        - internal_name
+        - name
+        - category
+        - color
+        - category_name
+      properties:
+        internal_name:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        color:
+          type: string
+        category_name:
+          type: string
 
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
-      type: https
+      type: http
       scheme: bearer
       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
