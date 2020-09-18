@@ -48,7 +48,7 @@ spec:
       secret: zarinpal-merchant
 
   image_pull_policy: Always
-  image: <IMAGE:VERSION>
+  image: ${IMAGE_URL}:${TAG}
   port: 4000
   source:
     context: ../.
