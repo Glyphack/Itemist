@@ -99,8 +99,7 @@ paths:
         - product
       responses:
         '200':
-          description: 'Sample response: Details about a user by ID'
-
+          $ref: '#/components/responses/GetProducts'
   /cart:
     get:
       summary: 'get user cart'
@@ -223,6 +222,19 @@ components:
                       type: string
                     tradeOfer:
                       $ref: '#/components/schemas/TradeOffer'
+    GetProducts:
+      description: 'return list of items for sell'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - products
+            properties:
+              products:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
   schemas:
     User:
       type: object
