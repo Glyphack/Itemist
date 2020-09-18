@@ -10,7 +10,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const user = await User.findOne({steamId: req.user.steamId});
-  const sellOrders = await SellOrder.find({seller: user});
+  const sellOrders = await SellOrder.find({seller: user}).populate({
+    path: "tradeOffer",
+    model: "TradeOffer",
+    select: 'offerId tradeStatus'
+  }).exec();
   res.send(sellOrders);
 });
 
