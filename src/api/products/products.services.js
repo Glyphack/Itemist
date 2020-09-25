@@ -1,11 +1,12 @@
-const {logger} = require('../../utils/winston');
 const {Product} = require('../../models/product.model');
 
 async function createProductFromSellOrder(sellOrder, item) {
+  let becomeTradable = new Date();
+  becomeTradable.setDate(new Date().getDate()+Number(item.market_tradable_restriction));
   await Product.create({
     seller: sellOrder.seller,
     price: sellOrder.price,
-    isTradable: item.tradable,
+    becomeTradable: becomeTradable,
     productId: item.assetid,
     appId: item.appid,
     classId: item.classid,
