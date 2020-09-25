@@ -10,7 +10,7 @@ async function createProductFromSellOrder(sellOrder, item) {
     productId: item.assetid,
     appId: item.appid,
     classId: item.classid,
-    instanseId: item.instanceid,
+    instanceId: item.instanceid,
     assetId: item.assetid,
     contextId: item.contextid,
     iconUrl: item.icon_url,
