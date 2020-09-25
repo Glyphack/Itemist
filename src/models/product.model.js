@@ -19,33 +19,38 @@ const productSchema = new mongoose.Schema({
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
     price: {
       type: Number,
+      required: true,
     },
-    isTradable: {
-      type: Boolean
+    becomeTradable: {
+      type: Date,
+      required: true,
     },
     productId: {
       type: String,
     },
     appId: {
       type: String,
+      required: true,
     },
     classId: {
       type: String,
+      required: true,
     },
     instanceId: {
       type: String,
+      required: true,
     },
     assetId: {
       type: String,
+      required: true,
     },
     contextId: {
       type: String,
-    },
-    pos: {
-      type: String,
+      required: true,
     },
     iconUrl: {
       type: String,
