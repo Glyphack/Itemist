@@ -10,10 +10,13 @@ const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const {logger} = require('./utils/winston');
 const routesV1 = require('./api/routes');
-const manager = require('./utils/bot');
+const {getCorsOptions} = require('./config/cors');
+// require('./utils/bot');
+
 
 
 const app = express();
@@ -38,6 +41,7 @@ require('./config/steam')(app);
 const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
 app.use(Sentry.Handlers.requestHandler());
+app.use(cors(getCorsOptions(process.env.CORS_WHITELIST)))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(morgan('combined', { stream: logger.stream }));
