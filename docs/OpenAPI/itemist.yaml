@@ -9,20 +9,12 @@ security:
   - bearerAuth: []
 
 paths:
-  /users/{steamId}:
+  /profile:
     get:
       summary: 'get user profile: Returns details about a particular user'
       operationId: getUser
       tags:
-        - user
-      parameters:
-        - name: steamId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            type: integer
-            format: int32
+        - profile
       responses:
         '200':
           description: 'Sample response: Details about a user by ID'
@@ -37,21 +29,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      summary: 'update users profile'
+      summary: 'update profile profile'
       operationId: updateProfile
       tags:
-        - user
-      requestBody:
-        $ref: '#/components/requestBodies/updateProfile'
+        - profile
       responses:
         '200':
           description: 'Profile updated'
-  /users/{steamId}/inventory:
+  /profile/inventory:
     get:
       summary: 'get user inventory: Returns user steam inventory'
       operationId: getUserInventory
       tags:
-        - user
+        - profile
       parameters:
         - name: steamId
           in: path
@@ -134,17 +124,6 @@ paths:
                   - paymentUrl
 components:
   requestBodies:
-    updateProfile:
-      description: Update profile request body
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              tradeUrl:
-                type: string
-
     submitSellOrder:
       description: Submit sell order request body
       required: true
