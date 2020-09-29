@@ -40,8 +40,8 @@ app.set('views', path.join(__dirname, '/views'));
 require('./config/steam')(app);
 const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
-app.use(Sentry.Handlers.requestHandler());
 app.use(cors(getCorsOptions(process.env.CORS_WHITELIST)))
+app.use(Sentry.Handlers.requestHandler());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(morgan('combined', { stream: logger.stream }));
