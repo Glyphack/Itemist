@@ -46,6 +46,9 @@ spec:
     - hidden: true
       name: ZARINPAL_MERCHANT
       secret: zarinpal-merchant
+    - hidden: false
+      name: CORS_WHITELIST
+      secret: cors-whitelist
 
   image_pull_policy: Always
   image: ${IMAGE_URL}:${IMAGE_VERSION}
