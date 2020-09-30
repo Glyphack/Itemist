@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {SteamItemSchema} = require("./SteamItem.schema");
 
 const sellOrderSchema = new mongoose.Schema({
     seller: {
@@ -17,6 +18,7 @@ const sellOrderSchema = new mongoose.Schema({
     assetId: {
       type: String,
     },
+    steamItem: SteamItemSchema,
     tradeOffer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'TradeOffer',
