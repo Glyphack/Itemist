@@ -60,7 +60,8 @@ router.post('/', async (req, res, next) => {
       next(error)
     });
     sellOrder.save();
-    res.json({sellOrder, success, offerId});
+    sellOrder = await sellOrder.populate('tradeOffer').execPopulate()
+    res.json({sellOrder, success});
   });
 });
 module.exports = router;
