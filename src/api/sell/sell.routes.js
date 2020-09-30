@@ -39,9 +39,11 @@ router.post('/', async (req, res, next) => {
   let sellOrder = await SellOrder.create({
     seller: user,
     price,
-    appId: item.appid,
-    contextId: item.contextid,
-    assetId: item.assetid,
+    steamItem: {
+      appId: item.appid,
+      contextId: item.contextid,
+      assetId: item.assetid,
+    },
   }).catch(err => {
     logger.error(`create sell order error: ${err}`)
     next(err)
