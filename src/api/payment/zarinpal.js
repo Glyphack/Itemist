@@ -6,5 +6,5 @@ const ZarinpalCheckout = require('zarinpal-checkout');
  * @param {Boolean} false [toggle `Sandbox` mode]
  */
 const zarinpal = ZarinpalCheckout.create(process.env.ZARINPAL_MERCHANT, true);
-
+  
 module.exports = {zarinpal};

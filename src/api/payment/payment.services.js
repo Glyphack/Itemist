@@ -1,4 +1,4 @@
-const {zarinpal} = require("../../utils/zarinpal");
+const {zarinpal} = require("./zarinpal");
 
 /**
  * PaymentRequest [module]
