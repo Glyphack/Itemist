@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {User} = require('../../models/user.model');
-const {getUserInventory} = require("../../utils/bot");
+const {getUserInventory} = require("../../bot/bot");
 
 const router = express.Router();
 
