@@ -1,5 +1,5 @@
 const {Transaction} = require('../../models/transaction.model');
-const {zarinpal} = require("../../utils/zarinpal");
+const {zarinpal} = require("./zarinpal");
 const {logger} = require('../../utils/winston');
 
 async function verifyPayment(req, res) {
