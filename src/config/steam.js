@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const passport = require('passport');
 const { Strategy } = require('passport-steam');
 const {User} = require('../models/user.model');
@@ -13,16 +12,15 @@ module.exports = (app) => {
   passport.use(
     new Strategy(strategyOptions, async (identifier, profile, done) => {
       let user = await User.findOne({ steamId: profile._json.steamid });
-      if (!user) {
-        user = await new User({
-          name: profile._json.personaname,
-          avatar: profile._json.avatar,
-          profileUrl: profile._json.profileurl,
-          steamId: profile._json.steamid,
-        }).save();
+      if (user) {
+        return done(null, user);
       }
-
-      return done(null, user);
+      return await new User({
+        name: profile._json.personaname,
+        avatar: profile._json.avatar,
+        profileUrl: profile._json.profileurl,
+        steamId: profile._json.steamid,
+      }).save();
     }),
   );
 
