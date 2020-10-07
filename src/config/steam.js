@@ -15,12 +15,13 @@ module.exports = (app) => {
       if (user) {
         return done(null, user);
       }
-      return await new User({
+      const newUser = await new User({
         name: profile._json.personaname,
         avatar: profile._json.avatar,
         profileUrl: profile._json.profileurl,
         steamId: profile._json.steamid,
       }).save();
+      return done(null, newUser);
     }),
   );
 
