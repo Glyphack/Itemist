@@ -1,9 +1,9 @@
 const express = require('express');
 const {SellOrder} = require('../../models/sellOrder.model');
 const {TradeOffer} = require("../../models/tradeOffer.model");
-const {sendDepositTrade, getUserInventory} = require("../../utils/bot");
+const {sendDepositTrade, getUserInventory} = require("../../bot/bot");
 const {User} = require('../../models/user.model');
-const {logger} = require('../../utils/winston');
+const {logger} = require('../../logger/winston');
 const {editSellOrder} = require('./sell.controllers');
 
 const router = express.Router();

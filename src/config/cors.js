@@ -1,13 +1,12 @@
-function getCorsOptions(whitelist) {
-  return {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1 || !origin) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
+const corsOptions = {
+  origin: function (origin, callback) {
+    const whitelist = process.env.CORS_WHITELIST;
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
     }
-  }
-}
+    callback(new Error('Not allowed by CORS'));
+  },
+};
 
-module.exports = {getCorsOptions}
+
+module.exports = { corsOptions }
