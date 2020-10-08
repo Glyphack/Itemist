@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const user = await User.findOne({steamId: req.user.steamId});
-  const sellOrders = await SellOrder.find({seller: user}).populate({
+  const sellOrders = await SellOrders.find({seller: user}).populate({
     path: "tradeOffer",
     model: "TradeOffer",
     select: 'offerId tradeStatus'
@@ -49,7 +49,7 @@ router.post('/', async (req, res, next) => {
 
   sendDepositTrade(req.user.steamId, item.assetid, async (err, success, offerId) => {
     if (err) {
-      logger.error(`sendDepositTradeErro : ${err}`);
+      logger.error(`sendDepositTradeError : ${err}`);
       res.status(503)
     }
     sellOrder.tradeOffer = await TradeOffer.create({
