@@ -1,10 +1,10 @@
-const {Transaction} = require('../../models/transaction.model');
-const {User} = require('../../models/user.model');
-const {start_payment} = require("../payment/payment.services");
-const {emptyCartProducts} = require("./cart.services");
-const {removeProductFromCart} = require("./cart.services");
-const {addProductToCart} = require("./cart.services");
-const {getOrCreateCart} = require("./cart.services");
+const { Transaction } = require('../../models/transaction.model');
+const { User } = require('../../models/user.model');
+const { startPayment } = require('../payment/payment.services');
+const { emptyCartProducts } = require('./cart.services');
+const { removeProductFromCart } = require('./cart.services');
+const { addProductToCart } = require('./cart.services');
+const { getOrCreateCart } = require('./cart.services');
 
 async function getCart(req, res) {
   res.json(await getOrCreateCart(req.user.steamId));
@@ -36,11 +36,15 @@ async function emptyCart(req, res) {
 }
 
 async function checkOut(req, res) {
-  const user = await User.findOne({steamId: req.user.steamId});
+  const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
-  const {url, authority} = await start_payment(1000);
-  Transaction.create({user: user, authority: authority, status: 'pending', products: cart.products, amount: 1000});
-  res.json({paymentUrl: url});
+  const { url, authority } = await startPayment(1000);
+  Transaction.create({
+    user, authority, status: 'pending', products: cart.products, amount: 1000,
+  });
+  res.json({ paymentUrl: url });
 }
 
-module.exports = {getCart, addToCart, removeFromCart, emptyCart, checkOut}
+module.exports = {
+  getCart, addToCart, removeFromCart, emptyCart, checkOut,
+};
