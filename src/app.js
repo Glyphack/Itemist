@@ -12,9 +12,9 @@ const YAML = require('yamljs');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
-const {logger} = require('./logger/winston');
+const { logger } = require('./logger/winston');
 const routesV1 = require('./api/routes');
-const corsOptions = require('./config/cors');
+const { corsOptions } = require('./config/cors');
 require('./bot/bot');
 
 
