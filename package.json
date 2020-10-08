@@ -32,12 +32,15 @@
     "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
-    "eslint": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-security": "^1.4.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "typescript": "^4.0.3"
   },
   "scripts": {
     "start": "node bin/www",
