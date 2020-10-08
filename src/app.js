@@ -14,7 +14,7 @@ const cors = require('cors')
 
 const {logger} = require('./logger/winston');
 const routesV1 = require('./api/routes');
-const {CorsOptions} = require('./config/cors');
+const corsOptions = require('./config/cors');
 require('./bot/bot');
 
 

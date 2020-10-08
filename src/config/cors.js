@@ -1,4 +1,4 @@
-const cors_options = {
+export default {
   origin: function (origin, callback) {
     whitelist = process.env.CORS_WHITELIST;
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -7,5 +7,3 @@ const cors_options = {
     callback(new Error('Not allowed by CORS'));
   },
 };
-
-module.exports = { CorsOptions };
