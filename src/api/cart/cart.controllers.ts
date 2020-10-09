@@ -6,6 +6,7 @@ import { AuthenticatedRequest } from '../../types/request';
 import {
   emptyCartProducts, removeProductFromCart, addProductToCart, getOrCreateCart,
 } from './cart.services';
+import transactionModel from '../../models/transaction.model';
 
 async function getCart(req: AuthenticatedRequest, res) {
   res.json(await getOrCreateCart(req.user.steamId));
@@ -40,12 +41,13 @@ async function checkOut(req: AuthenticatedRequest, res) {
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
-  Transaction.create({
+  const transaction = new Transaction({
     user, authority, status: 'pending', products: cart.products, amount: 1000,
   });
+  await transaction.save();
   res.json({ paymentUrl: url });
 }
 
-export = {
+export {
   getCart, addToCart, removeFromCart, emptyCart, checkOut,
 };

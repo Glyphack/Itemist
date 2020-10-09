@@ -1,7 +1,7 @@
 import ZarinpalCheckout from 'zarinpal-checkout';
 
 export interface IZarinpal {
-  PaymentRequest: (options) => {status: number, authority: string};
+  PaymentRequest: (options) => {status: number, authority: string, url: string};
   PaymentVerification: (options) => {status: number, RefID: string}
 }
 

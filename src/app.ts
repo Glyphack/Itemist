@@ -14,7 +14,6 @@ import routesV1 from './api/routes';
 import getCorsOptions from './config/cors';
 import HttpException from './exceptions/http';
 
-require('dotenv').config();
 const Sentry = require('@sentry/node');
 require('./utils/bot');
 

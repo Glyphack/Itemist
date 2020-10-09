@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /**
  * Module dependencies.
  */
 
-import debugLib from 'debug';
-import http from 'http';
-import app from '../built/app';
+require('dotenv').config();
+const debug = require('debug');
+
+const http = require('http');
+const app = require('../dist/src/app');
 
 /**
  * Get port from environment and store in Express.

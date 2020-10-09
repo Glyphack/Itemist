@@ -1,9 +1,12 @@
 import Transaction from '../../models/transaction.model';
 import zarinpal from '../../utils/zarinpal';
 import logger from '../../utils/winston';
-import { AuthenticatedRequest } from '../../types/request';
 
-async function verifyPayment(req: AuthenticatedRequest, res) {
+interface VerifyPaymentRequest {
+  query: {Authority: string, Status: string}
+}
+
+export default async function verifyPayment(req: VerifyPaymentRequest, res) {
   const transaction = await Transaction.findOne({ authority: req.query.Authority });
   const transactionStatus = req.query.Status;
   try {
@@ -31,4 +34,3 @@ async function verifyPayment(req: AuthenticatedRequest, res) {
     res.redirect(301, `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=Error`);
   }
 }
-export = { verifyPayment };

@@ -4,7 +4,7 @@ import { IProduct } from './product.model';
 
 export interface ICart extends mongoose.Document {
   user: IUser;
-  products: IProduct[];
+  products?: IProduct[];
 }
 
 const cartSchema = new mongoose.Schema({

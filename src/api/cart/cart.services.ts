@@ -17,10 +17,9 @@ async function getOrCreateCart(steamId) {
 
 async function addProductToCart(cartId, productId) {
   const product = await Product.findById(productId);
-  await Cart.updateOne(
-    { _id: cartId },
-    { $push: { products: [product] } },
-  ).exec();
+  const cart = await Cart.findById(cartId);
+  cart.products.push(product);
+  cart.save();
 }
 
 async function removeProductFromCart(cartId, productId) {

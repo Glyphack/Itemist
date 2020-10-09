@@ -27,7 +27,7 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    semi: [2, 'always'],
+    semi: [0, 'always'],
     '@typescript-eslint/no-unused-vars': 'error',
   },
   settings: {

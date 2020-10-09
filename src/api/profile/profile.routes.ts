@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 
 import User from '../../models/user.model';
 import { getUserInventory } from '../../utils/bot';

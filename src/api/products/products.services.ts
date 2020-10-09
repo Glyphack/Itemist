@@ -1,9 +1,11 @@
 import Product from '../../models/product.model';
+import { ISellOrder } from '../../models/sellOrder.model';
+import Item from '../../types/steamItem';
 
-async function createProductFromSellOrder(sellOrder, item) {
+async function createProductFromSellOrder(sellOrder: ISellOrder, item: Item): Promise<void> {
   const becomeTradable = new Date();
   becomeTradable.setDate(new Date().getDate() + Number(item.market_tradable_restriction));
-  await Product.create({
+  const product = new Product({
     seller: sellOrder.seller,
     price: sellOrder.price,
     becomeTradable,
@@ -23,9 +25,9 @@ async function createProductFromSellOrder(sellOrder, item) {
     type: item.type,
     marketable: item.marketable,
     commodity: item.commodity,
-    descriptions: item.descriptions.map((x) => x.value),
     tags: item.tags,
   });
+  product.save();
 }
 
 export = createProductFromSellOrder;
