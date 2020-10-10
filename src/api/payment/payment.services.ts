@@ -1,10 +1,10 @@
-import zarinpal from '../../utils/zarinpal';
+import zarinpal from './zarinpal';
 
 /**
  * PaymentRequest [module]
  * @return {String} URL [Payement Authority]
  */
-export default async function startPayment(amount: number): Promise<{url?: string, authority?: string}> {
+export default async function startPayment(amount: number): Promise<{ url?: string, authority?: string }> {
   const response = await zarinpal.PaymentRequest({
     Amount: amount, // In Tomans
     CallbackURL: 'http://localhost:4000/v1/payment/verify',

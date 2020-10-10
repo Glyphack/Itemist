@@ -1,9 +1,9 @@
 import express from 'express';
 import TradeOffer from '../../models/tradeOffer.model';
 import User from '../../models/user.model';
-import logger from '../../utils/winston';
+import logger from '../../logger/winston';
 import editSellOrder from './sell.controllers';
-import { sendDepositTrade, getUserInventory } from '../../utils/bot';
+import { sendDepositTrade, getUserInventory } from '../../bot/bot';
 import SellOrderModel from '../../models/sellOrder.model';
 import { AuthenticatedRequest } from '../../types/request';
 

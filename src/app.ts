@@ -9,13 +9,13 @@ import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
-import logger from './utils/winston';
+import logger from './logger/winston';
 import routesV1 from './api/routes';
 import getCorsOptions from './config/cors';
 import HttpException from './exceptions/http';
 
 const Sentry = require('@sentry/node');
-require('./utils/bot');
+require('./bot/bot');
 
 const app = express();
 
@@ -38,7 +38,11 @@ require('./config/steam')(app);
 
 const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
+<<<<<<< HEAD:src/app.ts
 app.use(cors(getCorsOptions(process.env.CORS_WHITELIST)));
+=======
+app.use(cors(corsOptions));
+>>>>>>> 8f4c49562055863c1b278865139add1ec3502490:src/app.js
 app.use(Sentry.Handlers.requestHandler());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

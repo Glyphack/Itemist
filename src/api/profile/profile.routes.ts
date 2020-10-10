@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 
 import User from '../../models/user.model';
-import { getUserInventory } from '../../utils/bot';
+import { getUserInventory } from '../../bot/bot';
 import { AuthenticatedRequest } from '../../types/request';
 
 const router = express.Router();

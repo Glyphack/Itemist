@@ -1,10 +1,14 @@
 {
-    "editor.tabSize": 2,
-    "cSpell.words": [
-        "Zarin",
-        "Zarinpal",
-        "appid",
-        "assetid",
-        "contextid"
-    ]
+        "editor.tabSize": 2,
+        "cSpell.words": [
+                "Zarin",
+                "Zarinpal",
+                "appid",
+                "assetid",
+                "contextid",
+                "personaname",
+                "profileurl",
+                "steamid",
+                "zarinpal"
+        ]
 }
