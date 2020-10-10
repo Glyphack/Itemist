@@ -5,7 +5,7 @@ import SteamCommunity from 'steamcommunity';
 import SteamTotp from 'steam-totp';
 import SteamUser from 'steam-user';
 
-import logger from './winston';
+import logger from '../logger/winston';
 import SellOrderModel from '../models/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
