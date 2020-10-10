@@ -50,11 +50,12 @@
     "ts-node-dev": "^1.0.0-pre.63"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "npm run debug",
+    "collectassets": "cp -r ./src/views ./dist/src",
     "build": "tsc",
     "lint": "eslint . --fix",
-    "prod": "npx tsc && node ./bin/www.ts",
-    "debug": "npx tsc && node --inspect ./bin/www.ts"
+    "prod": "node ./bin/www.ts",
+    "debug": "tsc && node --inspect ./bin/www.ts"
   },
   "engines": {
     "node": "~12.18.2"
