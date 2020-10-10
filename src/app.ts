@@ -38,11 +38,7 @@ require('./config/steam')(app);
 
 const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
 
-<<<<<<< HEAD:src/app.ts
 app.use(cors(getCorsOptions(process.env.CORS_WHITELIST)));
-=======
-app.use(cors(corsOptions));
->>>>>>> 8f4c49562055863c1b278865139add1ec3502490:src/app.js
 app.use(Sentry.Handlers.requestHandler());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
