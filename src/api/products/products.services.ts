@@ -26,7 +26,9 @@ async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem):
       type: item.type,
       marketable: item.marketable,
       commodity: item.commodity,
-      descriptions: item.descriptions.map((x) => x.value),
+      descriptions: item.descriptions.map((x) => {
+        return { type: x.type, value: x.value, color: x.color };
+      }),
       tags: item.tags,
     },
   });

@@ -49,7 +49,6 @@ const descriptionSchema = new mongoose.Schema({
   },
   value: {
     type: String,
-    required: true,
   },
   color: {
     type: String,
