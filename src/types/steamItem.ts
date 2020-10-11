@@ -1,6 +1,6 @@
 import { ITag } from '../models/product.model';
 /* eslint-disable camelcase */
-export default interface Item {
+export default interface RawItem {
   id: string;
   assetid: string;
   contextid: string;

@@ -1,8 +1,8 @@
 import Product from '../../models/product.model';
 import { ISellOrder } from '../../models/sellOrder.model';
-import Item from '../../types/steamItem';
+import RawItem from '../../types/steamItem';
 
-async function createProductFromSellOrder(sellOrder: ISellOrder, item: Item): Promise<void> {
+async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem): Promise<void> {
   const becomeTradable = new Date();
   becomeTradable.setDate(new Date().getDate() + Number(item.market_tradable_restriction));
   const product = new Product({
