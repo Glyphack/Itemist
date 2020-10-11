@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, model, Model } from 'mongoose';
 import { IUser } from './user.model';
-import { ISteamItem } from './steamItem.schema';
+import { ISteamItem, SteamItemSchema } from './steamItem.schema';
 
 export interface IProduct extends Document {
   seller: IUser;

@@ -1,4 +1,4 @@
-import { ITag } from '../models/product.model';
+import { ITag } from '../models/steamItem.schema';
 /* eslint-disable camelcase */
 export default interface RawItem {
   id: string;
@@ -20,7 +20,7 @@ export default interface RawItem {
   commodity: string;
   market_tradable_restriction: string;
   market_marketable_restriction: string;
-  descriptions: string[];
+  descriptions: { type: string; value: string; color: string }[];
   fraudwarnings: string[];
   app_data?: Record<string, unknown>;
   tags: ITag[];

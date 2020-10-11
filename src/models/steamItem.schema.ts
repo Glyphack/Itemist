@@ -43,6 +43,19 @@ const tagSchema = new mongoose.Schema({
   },
 });
 
+const descriptionSchema = new mongoose.Schema({
+  type: {
+    type: String,
+  },
+  value: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+  },
+});
+
 const SteamItemSchema = new mongoose.Schema(
   {
     productId: {
@@ -105,7 +118,7 @@ const SteamItemSchema = new mongoose.Schema(
       type: String,
     },
     descriptions: {
-      type: [String],
+      type: [descriptionSchema],
     },
     tags: {
       type: [tagSchema],
