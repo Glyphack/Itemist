@@ -51,7 +51,7 @@ spec:
       secret: cors-whitelist
 
   image_pull_policy: Always
-  image: itemist:test-ts.1
+  image: ${IMAGE_URL}:${IMAGE_VERSION}
   port: 4000
   source:
     context: ../.
