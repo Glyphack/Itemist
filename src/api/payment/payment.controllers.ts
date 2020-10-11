@@ -3,7 +3,7 @@ import zarinpal from './zarinpal';
 import logger from '../../logger/winston';
 
 interface VerifyPaymentRequest {
-  query: { Authority: string, Status: string }
+  query: { Authority: string; Status: string };
 }
 
 export default async function verifyPayment(req: VerifyPaymentRequest, res) {

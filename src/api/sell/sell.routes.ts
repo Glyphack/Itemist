@@ -11,11 +11,13 @@ const router = express.Router();
 
 router.get('/', async (req: AuthenticatedRequest, res) => {
   const user = await User.findOne({ steamId: req.user.steamId });
-  const sellOrders = await SellOrderModel.find({ seller: user }).populate({
-    path: 'tradeOffer',
-    model: 'TradeOffer',
-    select: 'offerId tradeStatus',
-  }).exec();
+  const sellOrders = await SellOrderModel.find({ seller: user })
+    .populate({
+      path: 'tradeOffer',
+      model: 'TradeOffer',
+      select: 'offerId tradeStatus',
+    })
+    .exec();
   res.send(sellOrders);
 });
 
@@ -27,12 +29,12 @@ router.post('/', async (req: AuthenticatedRequest, res, next) => {
   const { contextId } = req.body;
   const { assetId } = req.body;
 
-  const inventory = await getUserInventory(
-    req.user.steamId, appId, contextId, true,
-  ).catch(((err) => {
-    logger.error(`could not fetch inventory ${err}`);
-    next(err);
-  }));
+  const inventory = await getUserInventory(req.user.steamId, appId, contextId, true).catch(
+    (err) => {
+      logger.error(`could not fetch inventory ${err}`);
+      next(err);
+    },
+  );
   const item = inventory.find((i) => i.assetid === assetId);
   if (item === undefined) {
     res.status(400).json({ detail: 'this item does not exists in your inventory' });

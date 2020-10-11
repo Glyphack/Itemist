@@ -21,11 +21,12 @@ const app = express();
 
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-})
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
   .then(() => logger.info('Connected to MongoDB 🔥'))
   .catch((e) => {
     throw new Error(`Could not connect to database${e}`);
@@ -42,7 +43,7 @@ app.use(cors(getCorsOptions(process.env.CORS_WHITELIST)));
 app.use(Sentry.Handlers.requestHandler());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use(morgan('combined', { stream: logger.stream }));
+app.use(morgan('combined'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

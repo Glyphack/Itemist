@@ -4,7 +4,10 @@ import User from '../../models/user.model';
 import startPayment from '../payment/payment.services';
 import { AuthenticatedRequest } from '../../types/request';
 import {
-  emptyCartProducts, removeProductFromCart, addProductToCart, getOrCreateCart,
+  emptyCartProducts,
+  removeProductFromCart,
+  addProductToCart,
+  getOrCreateCart,
 } from './cart.services';
 import transactionModel from '../../models/transaction.model';
 
@@ -42,12 +45,14 @@ async function checkOut(req: AuthenticatedRequest, res) {
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
   const transaction = new Transaction({
-    user, authority, status: 'pending', products: cart.products, amount: 1000,
+    user,
+    authority,
+    status: 'pending',
+    products: cart.products,
+    amount: 1000,
   });
   await transaction.save();
   res.json({ paymentUrl: url });
 }
 
-export {
-  getCart, addToCart, removeFromCart, emptyCart, checkOut,
-};
+export { getCart, addToCart, removeFromCart, emptyCart, checkOut };

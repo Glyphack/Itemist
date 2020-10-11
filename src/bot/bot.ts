@@ -6,7 +6,6 @@ import SteamTotp from 'steam-totp';
 import SteamUser from 'steam-user';
 
 import logger from '../logger/winston';
->>>>>>> 786538e46dfc9d466f437167773e830a427cc915
 import SellOrderModel from '../models/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
@@ -23,9 +22,7 @@ const manager = new TradeOfferManager({
 const logInOptions = {
   accountName: process.env.STEAM_ACCOUNT_NAME,
   password: process.env.STEAM_ACCOUNT_PASSWORD,
-  twoFactorCode: SteamTotp.generateAuthCode(
-    process.env.STEAM_ACCOUNT_SHARED_SECRET,
-  ),
+  twoFactorCode: SteamTotp.generateAuthCode(process.env.STEAM_ACCOUNT_SHARED_SECRET),
 };
 
 client.logOn(logInOptions);
@@ -52,9 +49,7 @@ async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
   const getUserInventoryContentsPromise = util.promisify(
     manager.getUserInventoryContents.bind(manager),
   );
-  return getUserInventoryContentsPromise(
-    userSteamId, appId, contextId, tradableOnly,
-  );
+  return getUserInventoryContentsPromise(userSteamId, appId, contextId, tradableOnly);
 }
 
 async function getBotInventory(appId, contextId, tradableOnly) {
@@ -77,7 +72,7 @@ function sendDepositTrade(partner, assetid, callback) {
     offer.addTheirItem(item);
     offer.setMessage('Deposit item on the website!');
     offer.send((err, status) => {
-      callback(err, (status === 'sent' || status === 'pending'), offer.id);
+      callback(err, status === 'sent' || status === 'pending', offer.id);
     });
   });
 }
@@ -99,14 +94,12 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
     offer.addMyItem(item);
     offer.setMessage('Withdraw item from the website!');
     offer.send((err, status) => {
-      callback(err, (status === 'sent' || status === 'pending'), offer.id);
+      callback(err, status === 'sent' || status === 'pending', offer.id);
     });
   });
 }
 
-export {
-  getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager,
-};
+export { getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager };
 
 manager.on('newOffer', (offer) => {
   logger.info(`New offer #${offer.id} from ${offer.partner.getSteam3RenderedID()}`);

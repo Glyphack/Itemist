@@ -1,8 +1,6 @@
 import express from 'express';
 import jwtMiddleWare from '../../middlewares/auth';
-import {
-  checkOut, emptyCart, removeFromCart, getCart, addToCart,
-} from './cart.controllers';
+import { checkOut, emptyCart, removeFromCart, getCart, addToCart } from './cart.controllers';
 
 const cartRouter = express.Router();
 

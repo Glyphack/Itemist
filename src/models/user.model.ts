@@ -1,32 +1,32 @@
-import {
-  Document, model, Model, Schema,
-} from 'mongoose';
+import { Document, model, Model, Schema } from 'mongoose';
 
-const userSchema: Schema = new Schema({
-  name: {
-    type: String,
-  },
-  steamId: {
-    type: String,
-  },
-  avatar: {
-    type: String,
-  },
-  profileUrl: {
-    type: String,
-  },
-  tradeUrl: {
-    type: String,
-    default: '',
-  },
-  wallet: {
-    balance: {
-      type: Number,
-      default: 0,
+const userSchema: Schema = new Schema(
+  {
+    name: {
+      type: String,
+    },
+    steamId: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+    profileUrl: {
+      type: String,
+    },
+    tradeUrl: {
+      type: String,
+      default: '',
+    },
+    wallet: {
+      balance: {
+        type: Number,
+        default: 0,
+      },
     },
   },
-},
-{ timestamps: true });
+  { timestamps: true },
+);
 
 export interface IUser extends Document {
   name: string;
@@ -34,7 +34,7 @@ export interface IUser extends Document {
   avatar: string;
   profileUrl: string;
   tradeUrl: string;
-  wallet: { balance: number }
+  wallet: { balance: number };
 }
 
 const UserModel: Model<IUser> = model<IUser>('User', userSchema);
