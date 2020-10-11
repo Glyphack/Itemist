@@ -10,7 +10,9 @@ async function editSellOrder(req: AuthenticatedRequest, res: Response): Promise<
     res.json({ detail: 'cannot find sell order with that id' });
     return;
   }
-  const editedSellOrder = await SellOrderModel.findById(req.body.id).populate('seller', 'name').exec();
+  const editedSellOrder = await SellOrderModel.findById(req.body.id)
+    .populate('seller', 'name')
+    .exec();
   res.json(editedSellOrder);
 }
 

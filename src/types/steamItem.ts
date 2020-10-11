@@ -26,4 +26,5 @@ export default interface Item {
   tags: ITag[];
   icon_url: string;
   icon_url_large: string;
+  // eslint-disable-next-line semi
 }

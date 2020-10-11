@@ -1,6 +1,4 @@
-import mongoose, {
-  Schema, Document, model, Model,
-} from 'mongoose';
+import mongoose, { Schema, Document, model, Model } from 'mongoose';
 import { IUser } from './user.model';
 
 export interface ITag {
@@ -25,7 +23,7 @@ export interface IProduct extends Document {
   name: string;
   marketHashName: string;
   marketName: string;
-  nameColor: string
+  nameColor: string;
   backgroundColor: string;
   type: string;
   marketable: string;
@@ -51,87 +49,89 @@ const tagSchema: Schema = new Schema({
   },
 });
 
-const productSchema = new mongoose.Schema({
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const productSchema = new mongoose.Schema(
+  {
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    becomeTradable: {
+      type: Date,
+      required: true,
+    },
+    productId: {
+      type: String,
+    },
+    appId: {
+      type: String,
+      required: true,
+    },
+    classId: {
+      type: String,
+      required: true,
+    },
+    instanceId: {
+      type: String,
+      required: true,
+    },
+    assetId: {
+      type: String,
+      required: true,
+    },
+    contextId: {
+      type: String,
+      required: true,
+    },
+    iconUrl: {
+      type: String,
+    },
+    iconUrlLarge: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    marketHashName: {
+      type: String,
+    },
+    marketName: {
+      type: String,
+    },
+    nameColor: {
+      type: String,
+    },
+    backgroundColor: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    marketable: {
+      type: Boolean,
+    },
+    commodity: {
+      type: Boolean,
+    },
+    marketTradableRestriction: {
+      type: String,
+    },
+    marketMarketableRestriction: {
+      type: String,
+    },
+    descriptions: {
+      type: [String],
+    },
+    tags: {
+      type: [tagSchema],
+    },
   },
-  price: {
-    type: Number,
-    required: true,
-  },
-  becomeTradable: {
-    type: Date,
-    required: true,
-  },
-  productId: {
-    type: String,
-  },
-  appId: {
-    type: String,
-    required: true,
-  },
-  classId: {
-    type: String,
-    required: true,
-  },
-  instanceId: {
-    type: String,
-    required: true,
-  },
-  assetId: {
-    type: String,
-    required: true,
-  },
-  contextId: {
-    type: String,
-    required: true,
-  },
-  iconUrl: {
-    type: String,
-  },
-  iconUrlLarge: {
-    type: String,
-  },
-  name: {
-    type: String,
-  },
-  marketHashName: {
-    type: String,
-  },
-  marketName: {
-    type: String,
-  },
-  nameColor: {
-    type: String,
-  },
-  backgroundColor: {
-    type: String,
-  },
-  type: {
-    type: String,
-  },
-  marketable: {
-    type: Boolean,
-  },
-  commodity: {
-    type: Boolean,
-  },
-  marketTradableRestriction: {
-    type: String,
-  },
-  marketMarketableRestriction: {
-    type: String,
-  },
-  descriptions: {
-    type: [String],
-  },
-  tags: {
-    type: [tagSchema],
-  },
-},
-{ timestamps: true });
+  { timestamps: true },
+);
 
 const ProductModel: Model<IProduct> = model<IProduct>('Product', productSchema);
 
