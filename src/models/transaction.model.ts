@@ -31,7 +31,7 @@ const transactionSchema: Schema = new Schema({
 
 export interface ITransaction extends Document {
   user: IUser
-  products: Array<IProduct>
+  products: IProduct[]
   authority: string;
   status: string;
   amount: number;

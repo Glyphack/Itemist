@@ -12,7 +12,7 @@ async function getOrCreateCart(steamId) {
   if (cart) {
     return cart;
   }
-  return Cart.create({ user });
+  return await Cart.create({ user });
 }
 
 async function addProductToCart(cartId, productId) {

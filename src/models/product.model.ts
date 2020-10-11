@@ -12,7 +12,7 @@ export interface ITag {
 
 export interface IProduct extends Document {
   seller: IUser;
-  price: Number;
+  price: number;
   becomeTradable: Date;
   productId: string;
   appId: string;
