@@ -7,7 +7,7 @@ import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
 const router = express.Router();
 
 router.get('', async (req: AuthenticatedRequest, res: Response) => {
-  const user = await getUserBySteamId(req.user.steamId)
+  const user = await getUserBySteamId(req.user.steamId);
   res.json({
     tradeUrl: user.tradeUrl,
     wallet: user.wallet,
@@ -17,7 +17,7 @@ router.get('', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 router.put('', async (req: AuthenticatedRequest, res) => {
-  const user = await UpdateUserTradeUrl(req.user.steamId, req.body.tradeUrl)
+  const user = await UpdateUserTradeUrl(req.user.steamId, req.body.tradeUrl);
   res.json({
     tradeUrl: user.tradeUrl,
     wallet: user.wallet,
