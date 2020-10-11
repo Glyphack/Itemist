@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model, Model } from 'mongoose';
+import mongoose, { Document, model, Model } from 'mongoose';
 import { IUser } from './user.model';
 import { ISteamItem, SteamItemSchema } from './steamItem.schema';
 
