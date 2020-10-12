@@ -105,30 +105,35 @@ manager.on('newOffer', (offer) => {
   logger.info(`New offer #${offer.id} from ${offer.partner.getSteam3RenderedID()}`);
 });
 
-manager.on('sentOfferChanged', async (offer, oldState) => {
+async function handleTradeOfferStateChanged(offer, oldState) {
   logger.info(`offer with old state ${oldState} changed`);
   const offerId = offer.id;
   const tradeOffer = await TradeOffer.findOne({ offerId });
   const sellOrder = await SellOrderModel.findOne({ tradeOffer });
-  if (offer.state === 3) {
-    tradeOffer.tradeStatus = 'Successful';
-    sellOrder.success = true;
-    offer.getReceivedItems(async (err, items) => {
-      if (err) {
-        logger.error(`error processing tradeoffer ${tradeOffer}`);
-        return;
-      }
-      let item = items[0];
-      const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, false);
-      item = inventory.find((i) => i.assetid === item.assetid);
-      if (item === undefined) {
-        logger.error(`Could not find Item for ${sellOrder} with id ${item.assetid} in inventory`);
-      }
-      await createProductFromSellOrder(sellOrder, item);
-    });
-    sellOrder.save();
-  } else {
+
+  // if state is not 3 then trade is failed
+  if (offer.state !== 3) {
     tradeOffer.tradeStatus = 'Failed';
+    tradeOffer.save();
+    return;
   }
+  tradeOffer.tradeStatus = 'Successful';
   tradeOffer.save();
-});
+  offer.getReceivedItems(async (err, items) => {
+    if (err) {
+      logger.error(`error processing tradeoffer ${tradeOffer}`);
+      return;
+    }
+    let item = items[0];
+    const inventory = await getBotInventory(sellOrder.appId, sellOrder.contextId, false);
+    item = inventory.find((i) => i.assetid === item.assetid);
+    if (item === undefined) {
+      logger.error(`Could not find Item for ${sellOrder} with id ${item.assetid} in inventory`);
+    }
+    await createProductFromSellOrder(sellOrder, item);
+  });
+  sellOrder.success = true;
+  sellOrder.save();
+}
+
+manager.on('sentOfferChanged', handleTradeOfferStateChanged);
