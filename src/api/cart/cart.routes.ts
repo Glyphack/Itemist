@@ -31,4 +31,4 @@ cartRouter.delete('/empty', emptyCart);
  */
 cartRouter.get('/checkout', checkOut);
 
-export = { cartRoutes: cartRouter };
+export default cartRouter;

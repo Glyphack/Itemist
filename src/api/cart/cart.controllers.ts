@@ -9,30 +9,31 @@ import {
 } from './cart.services';
 import transactionModel from '../../models/transaction.model';
 import { AddToCartRequest, RemoveFromCartRequest } from './cart.schemas';
+import { Response } from 'express';
 
-async function getCart(req: AuthenticatedRequest, res: Response): Promise<Void> {
-  void res.json(await getOrCreateCart(req.user.steamId));
+async function getCart(req: AuthenticatedRequest, res: Response): Promise<void> {
+  res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function addToCart(req: AddToCartRequest, res: Response): Promise<Void> {
+async function addToCart(req: AddToCartRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await addProductToCart(cart._id, req.body.productId);
-  void res.json(await getOrCreateCart(req.user.steamId));
+  res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function removeFromCart(req: RemoveFromCartRequest, res: Response): Promise<Void> {
+async function removeFromCart(req: RemoveFromCartRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await removeProductFromCart(cart._id, req.body.productId);
-  void res.json(await getOrCreateCart(req.user.steamId));
+  res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function emptyCart(req: AuthenticatedRequest, res: Response): Promise<Void> {
+async function emptyCart(req: AuthenticatedRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await emptyCartProducts(cart._id);
-  void res.json(await getOrCreateCart(req.user.steamId));
+  res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function checkOut(req: AuthenticatedRequest, res: Response): Promise<Void> {
+async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void> {
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
@@ -44,7 +45,7 @@ async function checkOut(req: AuthenticatedRequest, res: Response): Promise<Void>
     amount: 1000,
   });
   await transaction.save();
-  void res.json({ paymentUrl: url });
+  res.json({ paymentUrl: url });
 }
 
 export { getCart, addToCart, removeFromCart, emptyCart, checkOut };
