@@ -7,7 +7,7 @@ import {
   addProductToCart,
   getOrCreateCart,
 } from './cart.services';
-import transactionModel from '../../models/transaction.model';
+import TransactionModel from '../../models/transaction.model';
 import { AddToCartRequest, RemoveFromCartRequest } from './cart.schemas';
 import { Response } from 'express';
 
@@ -37,7 +37,7 @@ async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void>
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
-  const transaction = new transactionModel({
+  const transaction = new TransactionModel({
     user,
     authority,
     status: 'pending',
