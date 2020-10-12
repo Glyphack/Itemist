@@ -225,7 +225,7 @@ components:
               products:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/Product'
   schemas:
     User:
       type: object
@@ -395,7 +395,16 @@ components:
           type: string
         category_name:
           type: string
-
+    Product:
+      type: object
+      reuqired:
+        - price
+        - steamItem
+      properties:
+        price:
+          type: string
+        steamItem:
+          $ref: '#/components/schemas/InventoryItem'
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
       type: http
