@@ -32,7 +32,7 @@ async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem):
       tags: item.tags,
     },
   });
-  product.save();
+  await product.save();
 }
 
 export = createProductFromSellOrder;
