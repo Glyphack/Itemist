@@ -56,9 +56,6 @@ const descriptionSchema = new mongoose.Schema({
 });
 
 const SteamItemSchema = new mongoose.Schema({
-  productId: {
-    type: String,
-  },
   appId: {
     type: String,
     required: true,

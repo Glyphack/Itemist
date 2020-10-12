@@ -10,7 +10,6 @@ async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem):
     price: sellOrder.price,
     becomeTradable,
     steamItem: {
-      productId: item.assetid,
       appId: item.appid,
       classId: item.classid,
       instanceId: item.instanceid,
