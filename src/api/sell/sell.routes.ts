@@ -53,6 +53,7 @@ router.post('/', async (req: AuthenticatedRequest, res, next) => {
     if (err) {
       logger.error(`sendDepositTradeError : ${err}`);
       res.status(503);
+      return;
     }
     sellOrder.tradeOffer = await TradeOffer.create({
       offerId,
