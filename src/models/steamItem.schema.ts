@@ -55,75 +55,72 @@ const descriptionSchema = new mongoose.Schema({
   },
 });
 
-const SteamItemSchema = new mongoose.Schema(
-  {
-    productId: {
-      type: String,
-    },
-    appId: {
-      type: String,
-      required: true,
-    },
-    classId: {
-      type: String,
-      required: true,
-    },
-    instanceId: {
-      type: String,
-      required: true,
-    },
-    assetId: {
-      type: String,
-      required: true,
-    },
-    contextId: {
-      type: String,
-      required: true,
-    },
-    iconUrl: {
-      type: String,
-    },
-    iconUrlLarge: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    marketHashName: {
-      type: String,
-    },
-    marketName: {
-      type: String,
-    },
-    nameColor: {
-      type: String,
-    },
-    backgroundColor: {
-      type: String,
-    },
-    type: {
-      type: String,
-    },
-    marketable: {
-      type: Boolean,
-    },
-    commodity: {
-      type: Boolean,
-    },
-    marketTradableRestriction: {
-      type: String,
-    },
-    marketMarketableRestriction: {
-      type: String,
-    },
-    descriptions: {
-      type: [descriptionSchema],
-    },
-    tags: {
-      type: [tagSchema],
-    },
+const SteamItemSchema = new mongoose.Schema({
+  productId: {
+    type: String,
   },
-  { timestamps: true },
-);
+  appId: {
+    type: String,
+    required: true,
+  },
+  classId: {
+    type: String,
+    required: true,
+  },
+  instanceId: {
+    type: String,
+    required: true,
+  },
+  assetId: {
+    type: String,
+    required: true,
+  },
+  contextId: {
+    type: String,
+    required: true,
+  },
+  iconUrl: {
+    type: String,
+  },
+  iconUrlLarge: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  marketHashName: {
+    type: String,
+  },
+  marketName: {
+    type: String,
+  },
+  nameColor: {
+    type: String,
+  },
+  backgroundColor: {
+    type: String,
+  },
+  type: {
+    type: String,
+  },
+  marketable: {
+    type: Boolean,
+  },
+  commodity: {
+    type: Boolean,
+  },
+  marketTradableRestriction: {
+    type: String,
+  },
+  marketMarketableRestriction: {
+    type: String,
+  },
+  descriptions: {
+    type: [descriptionSchema],
+  },
+  tags: {
+    type: [tagSchema],
+  },
+});
 
 export { SteamItemSchema };
