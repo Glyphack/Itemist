@@ -3,11 +3,11 @@ import RawItem from '../../types/steamItem';
 
 export function convertRawSteamItemToSteamItem(item: RawItem): ISteamItem {
   return {
-    appId: item.appid,
+    appId: parseInt(item.appId),
     classId: item.classid,
     instanceId: item.instanceid,
     assetId: item.assetid,
-    contextId: item.contextid,
+    contextId: parseInt(item.contextid),
     iconUrl: item.icon_url,
     iconUrlLarge: item.icon_url_large,
     name: item.name,
