@@ -1,16 +1,17 @@
-import express from 'express';
+import express, { NextFunction, Response } from 'express';
+import { getUserInventory, sendDepositTrade } from '../../bot/bot';
+import logger from '../../logger/winston';
+import SellOrderModel from '../../models/sellOrder.model';
 import TradeOffer from '../../models/tradeOffer.model';
 import User from '../../models/user.model';
-import logger from '../../logger/winston';
-import editSellOrder from './sell.controllers';
-import { sendDepositTrade, getUserInventory } from '../../bot/bot';
-import SellOrderModel from '../../models/sellOrder.model';
 import { AuthenticatedRequest } from '../../types/request';
 import RawItem from '../../types/steamItem';
+import editSellOrder from './sell.controllers';
+import { CreateSellOrderRequest } from './sell.schemas';
 
 const router = express.Router();
 
-router.get('/', async (req: AuthenticatedRequest, res) => {
+router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   const user = await User.findOne({ steamId: req.user.steamId });
   const sellOrders = await SellOrderModel.find({ seller: user })
     .populate({
@@ -24,11 +25,11 @@ router.get('/', async (req: AuthenticatedRequest, res) => {
 
 router.put('/', editSellOrder);
 
-router.post('/', async (req: AuthenticatedRequest, res, next) => {
-  const { price } = req.body;
-  const { appId } = req.body;
-  const { contextId } = req.body;
-  const { assetId } = req.body;
+router.post('/', async (req: CreateSellOrderRequest, res: Response, next: NextFunction) => {
+  const price = req.body.price;
+  const appId = req.body.appId;
+  const contextId = req.body.contextId;
+  const assetId = req.body.assetId;
 
   let inventory: RawItem[];
   try {
@@ -51,19 +52,23 @@ router.post('/', async (req: AuthenticatedRequest, res, next) => {
     assetId: item.assetid,
   });
 
-  sendDepositTrade(req.user.steamId, item.assetid, async (err, success, offerId: string) => {
-    if (err) {
-      logger.error(`sendDepositTradeError : ${err}`);
-      res.status(503);
-      return;
-    }
-    sellOrder.tradeOffer = await TradeOffer.create({
-      offerId,
-      user,
-    });
-    await sellOrder.save();
-    sellOrder = await sellOrder.populate('tradeOffer').execPopulate();
-    res.json({ sellOrder, success });
-  });
+  void sendDepositTrade(
+    req.user.steamId,
+    item.assetid,
+    async (err, success: boolean, offerId: string) => {
+      if (err) {
+        logger.error(`sendDepositTradeError : ${err}`);
+        res.status(503);
+        return;
+      }
+      sellOrder.tradeOffer = await TradeOffer.create({
+        offerId,
+        user,
+      });
+      await sellOrder.save();
+      sellOrder = await sellOrder.populate('tradeOffer').execPopulate();
+      res.json({ sellOrder, success });
+    },
+  );
 });
 export = router;
