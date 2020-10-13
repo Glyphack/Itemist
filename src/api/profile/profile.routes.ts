@@ -2,6 +2,7 @@ import express, { Response } from 'express';
 
 import { getUserInventory } from '../../bot/bot';
 import { AuthenticatedRequest } from '../../types/request';
+import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
 import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
 
 const router = express.Router();
@@ -28,7 +29,8 @@ router.put('', async (req: AuthenticatedRequest, res) => {
 
 router.get('/inventory', async (req: AuthenticatedRequest, res) => {
   const inventory = await getUserInventory(req.user.steamId, 570, 2, true);
-  res.json({ inventory });
+  const userInventoryResponse = inventory.map((item) => convertRawSteamItemToSteamItem(item));
+  res.json(userInventoryResponse);
 });
 
 export = router;

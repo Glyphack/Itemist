@@ -6,6 +6,7 @@ import editSellOrder from './sell.controllers';
 import { sendDepositTrade, getUserInventory } from '../../bot/bot';
 import SellOrderModel from '../../models/sellOrder.model';
 import { AuthenticatedRequest } from '../../types/request';
+import RawItem from '../../types/steamItem';
 
 const router = express.Router();
 
@@ -29,12 +30,13 @@ router.post('/', async (req: AuthenticatedRequest, res, next) => {
   const { contextId } = req.body;
   const { assetId } = req.body;
 
-  const inventory = await getUserInventory(req.user.steamId, appId, contextId, true).catch(
-    (err) => {
-      logger.error(`could not fetch inventory ${err}`);
-      next(err);
-    },
-  );
+  let inventory: RawItem[];
+  try {
+    inventory = await getUserInventory(req.user.steamId, appId, contextId, true);
+  } catch (err) {
+    logger.error(`could not fetch inventory ${err}`);
+    next(err);
+  }
   const item = inventory.find((i) => i.assetid === assetId);
   if (item === undefined) {
     res.status(400).json({ detail: 'this item does not exists in your inventory' });
@@ -43,7 +45,7 @@ router.post('/', async (req: AuthenticatedRequest, res, next) => {
   const user = await User.findOne({ steamId: req.user.steamId });
   let sellOrder = new SellOrderModel({
     seller: user,
-    price,
+    price: price,
     appId: item.appid,
     contextId: item.contextid,
     assetId: item.assetid,

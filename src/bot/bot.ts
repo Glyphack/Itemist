@@ -9,6 +9,7 @@ import logger from '../logger/winston';
 import SellOrderModel from '../models/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
+import RawItem from '../types/steamItem';
 
 const client = new SteamUser();
 const community = new SteamCommunity();
@@ -45,7 +46,7 @@ community.on('sessionExpired', (err) => {
   client.webLogOn();
 });
 
-async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
+async function getUserInventory(userSteamId, appId, contextId, tradableOnly): Promise<RawItem[]> {
   const getUserInventoryContentsPromise = util.promisify(
     manager.getUserInventoryContents.bind(manager),
   );

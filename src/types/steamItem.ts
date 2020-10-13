@@ -1,5 +1,21 @@
-import { ITag } from '../models/steamItem.schema';
+import { IDescription, ITag } from '../models/steamItem.schema';
 /* eslint-disable camelcase */
+
+export interface IRawTag {
+  internal_name: string;
+  name: string;
+  category: string;
+  color: string;
+  category_name: string;
+}
+
+export interface IRawDescription {
+  type: string;
+  value: string;
+  color: string;
+  app_data?: Record<string, unknown>;
+}
+
 export default interface RawItem {
   id: string;
   assetid: string;
@@ -20,10 +36,9 @@ export default interface RawItem {
   commodity: string;
   market_tradable_restriction: string;
   market_marketable_restriction: string;
-  descriptions: { type: string; value: string; color: string }[];
+  descriptions: IRawDescription[];
   fraudwarnings: string[];
-  app_data?: Record<string, unknown>;
-  tags: ITag[];
+  tags: IRawTag[];
   icon_url: string;
   icon_url_large: string;
   // eslint-disable-next-line semi

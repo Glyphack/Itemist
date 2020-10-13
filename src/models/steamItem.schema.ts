@@ -1,11 +1,19 @@
 import mongoose from 'mongoose';
 
 export interface ITag {
+  internalName: string;
   name: string;
   category: string;
   color: string;
   categoryName: string;
 }
+
+export interface IDescription {
+  type: string;
+  value: string;
+  color: string;
+}
+
 export interface ISteamItem {
   appId: string;
   classId: string;
@@ -24,11 +32,14 @@ export interface ISteamItem {
   commodity: string;
   marketTradableRestriction: string;
   marketMarketableRestriction: string;
-  descriptions: string[];
+  descriptions: IDescription[];
   tags: ITag[];
 }
 
 const tagSchema = new mongoose.Schema({
+  internalName: {
+    type: String,
+  },
   name: {
     type: String,
   },
