@@ -44,14 +44,6 @@ paths:
       operationId: getUserInventory
       tags:
         - profile
-      parameters:
-        - name: steamId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           $ref: '#/components/responses/GetInventory'
@@ -75,8 +67,6 @@ paths:
       operationId: newSellOrder
       tags:
         - sell
-      security:
-        - bearerAuth: [jnh]
       requestBody:
         $ref: '#/components/requestBodies/submitSellOrder'
       responses:
@@ -100,11 +90,38 @@ paths:
         - cart
       responses:
         '200':
-          description: 'Sample response: get cart info'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Cart"
+    post:
+      summary: 'add product to cart'
+      operationId: addToCart
+      tags:
+        - cart
+        - product
+      requestBody:
+        $ref: '#/components/requestBodies/addToCart'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    delete:
+      summary: 'Remove product from cart'
+      operationId: addToCart
+      tags:
+        - cart
+        - product
+      requestBody:
+        $ref: '#/components/requestBodies/removeFromCart'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
   /cart/checkout:
     get:
       summary: 'get payment link to checkout cart'
@@ -124,6 +141,7 @@ paths:
                     format: string
                 required:
                   - paymentUrl
+
 components:
   requestBodies:
     submitSellOrder:
@@ -155,11 +173,25 @@ components:
             properties:
               tradeUrl:
                 type: string
+    addToCart:
+      description: Add product to cart
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              productId:
+                type: string
+    removeFromCart:
+      description: Remove product from cart
+      content:
+        $ref: '#/components/requestBodies/addToCart'
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
     SubmitSellOrderResponse:
-      description: 'submit sell order respone'
+      description: 'submit sell order response'
       content:
         application/json:
           schema:
@@ -167,7 +199,7 @@ components:
             properties:
               success:
                 type: boolean
-              sellorder:
+              sellOrder:
                 $ref: '#/components/schemas/SellOrder'
     GetInventory:
       description: 'user inventory'
@@ -211,7 +243,7 @@ components:
                       type: string
                     assetId:
                       type: string
-                    tradeOfer:
+                    tradeOffer:
                       $ref: '#/components/schemas/TradeOffer'
     GetProducts:
       description: 'return list of items for sell'
@@ -301,7 +333,7 @@ components:
           type: string
     Product:
       type: object
-      reuqired:
+      required:
         - price
         - steamItem
       properties:
@@ -309,6 +341,26 @@ components:
           type: string
         steamItem:
           $ref: '#/components/schemas/SteamItem'
+
+    Cart:
+      type: object
+      required:
+        - products
+      properties:
+        product:
+          type: object
+          required:
+            - name
+            - iconUrl
+            - price
+          properties:
+            name:
+              type: string
+            iconUrl:
+              type: string
+            price:
+              type: string
+
     SteamItem:
       type: object
       required:
@@ -324,10 +376,10 @@ components:
         - name
         - nameColor
         - type
-      propertes:
+      properties:
         appId:
           type: number
-        cotextId:
+        contextId:
           type: number
         assetId:
           type: string
@@ -384,7 +436,7 @@ components:
           type: string
     SteamItemTag:
       type: object
-      reuqired:
+      required:
         - internalName
         - name
         - category
