@@ -299,6 +299,16 @@ components:
           format: int32
         message:
           type: string
+    Product:
+      type: object
+      required:
+        - price
+        - steamItem
+      properties:
+        price:
+          type: string
+        steamItem:
+          $ref: '#/components/schemas/SteamItem'
     InventoryItem:
       type: object
       required:
@@ -319,7 +329,7 @@ components:
       properties:
         appid:
           type: string
-        cotextid:
+        contextid:
           type: string
         assetid:
           type: string
@@ -339,7 +349,7 @@ components:
         icon_url_large:
           type: string
         descriptions:
-          $ref: '#/components/schemas/ItemDescription'
+          $ref: '#/components/schemas/InventoryItemDescription'
         name:
           type: string
         name_color:
@@ -347,7 +357,7 @@ components:
         type:
           type: string
         tags:
-          $ref: '#/components/schemas/ItemTag'
+          $ref: '#/components/schemas/InventoryItemTag'
       example:
         appid: 570
         contextid: 2
@@ -364,7 +374,7 @@ components:
         name_color: "D2D2D2"
         type: "Common Gauntlets"
         tags: [ { "internal_name": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "category_name": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
-    ItemDescription:
+    InventoryItemDescription:
       type: object
       required:
         - type
@@ -376,9 +386,9 @@ components:
           type: string
         color:
           type: string
-    ItemTag:
+    InventoryItemTag:
       type: object
-      reuqired:
+      required:
         - internal_name
         - name
         - category
@@ -395,16 +405,98 @@ components:
           type: string
         category_name:
           type: string
-    Product:
+    SteamItem:
       type: object
-      reuqired:
-        - price
-        - steamItem
+      required:
+        - appId
+        - contextId
+        - assetId
+        - classId
+        - instanceId
+        - backgroundColor
+        - iconUrl
+        - iconUrlLarge
+        - descriptions
+        - name
+        - nameColor
+        - type
       properties:
-        price:
+        appId:
+          type: number
+        contextId:
+          type: number
+        assetId:
           type: string
-        steamItem:
-          $ref: '#/components/schemas/InventoryItem'
+        classId:
+          type: string
+        instanceId:
+          type: string
+        pos:
+          type: integer
+          format: int32
+        backgroundColor:
+          type: string
+        icon_url:
+          type: string
+        icon_url_large:
+          type: string
+        descriptions:
+          $ref: '#/components/schemas/SteamItemDescription'
+        name:
+          type: string
+        nameColor:
+          type: string
+        type:
+          type: string
+        tags:
+          $ref: '#/components/schemas/SteamItemTag'
+      example:
+        appId: 570
+        contextId: 2
+        assetId: 100000
+        classId: 2325345343
+        instanceId: 454353
+        amount: 1
+        pos: 2
+        backgroundColor: ""
+        iconUrl: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_opzBmnZg7CJw537UzUa1hUpMa-BthPXLTQiZAqMaSfGGU3LWt5kmTni0WUTggZFFgDM"
+        iconUrlLarge: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_08GYiyU2pHYltirfzUG2iEpLabRr0P3MH1qcU6RLHqeBUCGEsMgiS32oSE62yDJOhq-tt21qKIE"
+        descriptions: [ { "type": "html", "value": "Used By: Bloodseeker" }, { "type": "html", "value": " " }, { "type": "html", "value": "The Gallows Understudy", "color": "9da1a9" }, { "type": "html", "value": "The Gallows Understudy Mantle", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Hood", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Back", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Gauntlets", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Skirt", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade - Off-Hand", "color": "6c7075" }, { "type": "html", "value": "Hempen ropes are a crude tool for execution, but Bloodseeker seeks to understand the ways of the backwards lands through which his hunting takes him." } ]
+        name: "The Gallows Understudy Gauntlets"
+        nameColor: "D2D2D2"
+        type: "Common Gauntlets"
+        tags: [ { "internalName": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "categoryName": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
+    SteamItemDescription:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+        color:
+          type: string
+    SteamItemTag:
+      type: object
+      required:
+        - internalName
+        - name
+        - category
+        - color
+        - categoryName
+      properties:
+        internalName:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        color:
+          type: string
+        categoryName:
+          type: string
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
       type: http
