@@ -1,4 +1,3 @@
-import { IDescription, ITag } from '../models/steamItem.schema';
 /* eslint-disable camelcase */
 
 export interface IRawTag {
