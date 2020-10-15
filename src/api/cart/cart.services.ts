@@ -1,7 +1,8 @@
 import Product from '../../models/product.model';
-import Cart from '../../models/cart.model';
+import Cart, { ICart } from '../../models/cart.model';
+import UserModel from '../../models/user.model';
 
-async function getOrCreateCart(steamId: string): Promise<void> {
+async function getOrCreateCart(steamId: string): Promise<ICart> {
   const cart = await Cart.findOne({ 'user.steamId': steamId })
     .populate({
       path: 'products',
@@ -12,7 +13,8 @@ async function getOrCreateCart(steamId: string): Promise<void> {
   if (cart) {
     return cart;
   }
-  return await Cart.create({ 'user.steamId': steamId });
+  const user = new UserModel({ steamId: steamId });
+  return await Cart.create({ user });
 }
 
 async function addProductToCart(cartId: string, productId: string): Promise<void> {
