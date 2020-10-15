@@ -5,4 +5,4 @@ const paymentRouter = express.Router();
 
 paymentRouter.get('/verify', verifyPayment);
 
-export = { paymentRoutes: paymentRouter };
+export { paymentRouter };
