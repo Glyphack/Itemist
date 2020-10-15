@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import util from 'util';
 
 import TradeOfferManager from 'steam-tradeoffer-manager';
@@ -9,6 +13,7 @@ import logger from '../logger/winston';
 import SellOrderModel from '../models/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
+import RawItem from '../types/steamItem';
 
 const client = new SteamUser();
 const community = new SteamCommunity();
@@ -45,19 +50,28 @@ community.on('sessionExpired', (err) => {
   client.webLogOn();
 });
 
-async function getUserInventory(userSteamId, appId, contextId, tradableOnly) {
+async function getUserInventory(
+  userSteamId: string,
+  appId: number,
+  contextId: number,
+  tradableOnly: boolean,
+): Promise<RawItem[]> {
   const getUserInventoryContentsPromise = util.promisify(
     manager.getUserInventoryContents.bind(manager),
   );
   return getUserInventoryContentsPromise(userSteamId, appId, contextId, tradableOnly);
 }
 
-async function getBotInventory(appId, contextId, tradableOnly) {
+async function getBotInventory(
+  appId: string,
+  contextId: string,
+  tradableOnly: boolean,
+): Promise<RawItem[]> {
   const getInventoryContentsPromise = util.promisify(manager.getInventoryContents.bind(manager));
   return getInventoryContentsPromise(appId, contextId, tradableOnly);
 }
 
-function sendDepositTrade(partner, assetid, callback) {
+function sendDepositTrade(partner: string, assetid: string, callback): void {
   const offer = manager.createOffer(partner);
 
   manager.getUserInventoryContents(partner, 570, 2, true, (err, inv) => {

@@ -44,14 +44,6 @@ paths:
       operationId: getUserInventory
       tags:
         - profile
-      parameters:
-        - name: steamId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           $ref: '#/components/responses/GetInventory'
@@ -75,8 +67,6 @@ paths:
       operationId: newSellOrder
       tags:
         - sell
-      security:
-        - bearerAuth: [jnh]
       requestBody:
         $ref: '#/components/requestBodies/submitSellOrder'
       responses:
@@ -100,11 +90,38 @@ paths:
         - cart
       responses:
         '200':
-          description: 'Sample response: get cart info'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Cart"
+    post:
+      summary: 'add product to cart'
+      operationId: addToCart
+      tags:
+        - cart
+        - product
+      requestBody:
+        $ref: '#/components/requestBodies/addToCart'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    delete:
+      summary: 'Remove product from cart'
+      operationId: addToCart
+      tags:
+        - cart
+        - product
+      requestBody:
+        $ref: '#/components/requestBodies/removeFromCart'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
   /cart/checkout:
     get:
       summary: 'get payment link to checkout cart'
@@ -124,6 +141,7 @@ paths:
                     format: string
                 required:
                   - paymentUrl
+
 components:
   requestBodies:
     submitSellOrder:
@@ -155,11 +173,25 @@ components:
             properties:
               tradeUrl:
                 type: string
+    addToCart:
+      description: Add product to cart
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              productId:
+                type: string
+    removeFromCart:
+      description: Remove product from cart
+      content:
+        $ref: '#/components/requestBodies/addToCart'
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
     SubmitSellOrderResponse:
-      description: 'submit sell order respone'
+      description: 'submit sell order response'
       content:
         application/json:
           schema:
@@ -167,7 +199,7 @@ components:
             properties:
               success:
                 type: boolean
-              sellorder:
+              sellOrder:
                 $ref: '#/components/schemas/SellOrder'
     GetInventory:
       description: 'user inventory'
@@ -181,7 +213,7 @@ components:
               inventory:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/SteamItem'
     GetSellOrders:
       description: 'returns list of sell orders'
       content:
@@ -211,7 +243,7 @@ components:
                       type: string
                     assetId:
                       type: string
-                    tradeOfer:
+                    tradeOffer:
                       $ref: '#/components/schemas/TradeOffer'
     GetProducts:
       description: 'return list of items for sell'
@@ -225,7 +257,7 @@ components:
               products:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/Product'
   schemas:
     User:
       type: object
@@ -299,72 +331,98 @@ components:
           format: int32
         message:
           type: string
-    InventoryItem:
+    Product:
       type: object
       required:
-        - appid
-        - contextid
-        - assetid
-        - classid
-        - instanceid
-        - amount
-        - pos
-        - background_color
-        - icon_url
-        - icon_url_large
+        - price
+        - steamItem
+      properties:
+        price:
+          type: string
+        steamItem:
+          $ref: '#/components/schemas/SteamItem'
+
+    Cart:
+      type: object
+      required:
+        - products
+      properties:
+        product:
+          type: object
+          required:
+            - name
+            - iconUrl
+            - price
+          properties:
+            name:
+              type: string
+            iconUrl:
+              type: string
+            price:
+              type: string
+
+    SteamItem:
+      type: object
+      required:
+        - appId
+        - contextId
+        - assetId
+        - classId
+        - instanceId
+        - backgroundColor
+        - iconUrl
+        - iconUrlLarge
         - descriptions
         - name
-        - name_color
+        - nameColor
         - type
       properties:
-        appid:
+        appId:
+          type: number
+        contextId:
+          type: number
+        assetId:
           type: string
-        cotextid:
+        classId:
           type: string
-        assetid:
-          type: string
-        classid:
-          type: string
-        instanceid:
-          type: string
-        amount:
+        instanceId:
           type: string
         pos:
           type: integer
           format: int32
-        background_color:
+        backgroundColor:
           type: string
         icon_url:
           type: string
         icon_url_large:
           type: string
         descriptions:
-          $ref: '#/components/schemas/ItemDescription'
+          $ref: '#/components/schemas/SteamItemDescription'
         name:
           type: string
-        name_color:
+        nameColor:
           type: string
         type:
           type: string
         tags:
-          $ref: '#/components/schemas/ItemTag'
+          $ref: '#/components/schemas/SteamItemTag'
       example:
-        appid: 570
-        contextid: 2
-        assetid: 100000
-        classid: 2325345343
-        instanceid: 454353
+        appId: 570
+        contextId: 2
+        assetId: 100000
+        classId: 2325345343
+        instanceId: 454353
         amount: 1
         pos: 2
-        background_color: ""
-        icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_opzBmnZg7CJw537UzUa1hUpMa-BthPXLTQiZAqMaSfGGU3LWt5kmTni0WUTggZFFgDM"
-        icon_url_large: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_08GYiyU2pHYltirfzUG2iEpLabRr0P3MH1qcU6RLHqeBUCGEsMgiS32oSE62yDJOhq-tt21qKIE"
+        backgroundColor: ""
+        iconUrl: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_opzBmnZg7CJw537UzUa1hUpMa-BthPXLTQiZAqMaSfGGU3LWt5kmTni0WUTggZFFgDM"
+        iconUrlLarge: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_08GYiyU2pHYltirfzUG2iEpLabRr0P3MH1qcU6RLHqeBUCGEsMgiS32oSE62yDJOhq-tt21qKIE"
         descriptions: [ { "type": "html", "value": "Used By: Bloodseeker" }, { "type": "html", "value": " " }, { "type": "html", "value": "The Gallows Understudy", "color": "9da1a9" }, { "type": "html", "value": "The Gallows Understudy Mantle", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Hood", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Back", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Gauntlets", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Skirt", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade - Off-Hand", "color": "6c7075" }, { "type": "html", "value": "Hempen ropes are a crude tool for execution, but Bloodseeker seeks to understand the ways of the backwards lands through which his hunting takes him." } ]
         name: "The Gallows Understudy Gauntlets"
-        name_color: "D2D2D2"
+        nameColor: "D2D2D2"
         type: "Common Gauntlets"
-        tags: [ { "internal_name": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "category_name": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
-    ItemDescription:
+        tags: [ { "internalName": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "categoryName": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
+    SteamItemDescription:
       type: object
       required:
         - type
@@ -376,16 +434,16 @@ components:
           type: string
         color:
           type: string
-    ItemTag:
+    SteamItemTag:
       type: object
-      reuqired:
-        - internal_name
+      required:
+        - internalName
         - name
         - category
         - color
-        - category_name
+        - categoryName
       properties:
-        internal_name:
+        internalName:
           type: string
         name:
           type: string
@@ -393,9 +451,8 @@ components:
           type: string
         color:
           type: string
-        category_name:
+        categoryName:
           type: string
-
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
       type: http

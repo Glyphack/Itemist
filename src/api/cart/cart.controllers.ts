@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-import Transaction from '../../models/transaction.model';
 import User from '../../models/user.model';
 import startPayment from '../payment/payment.services';
 import { AuthenticatedRequest } from '../../types/request';
@@ -9,42 +7,37 @@ import {
   addProductToCart,
   getOrCreateCart,
 } from './cart.services';
-import transactionModel from '../../models/transaction.model';
+import TransactionModel from '../../models/transaction.model';
+import { AddToCartRequest, RemoveFromCartRequest } from './cart.schemas';
+import { Response } from 'express';
 
-async function getCart(req: AuthenticatedRequest, res) {
+async function getCart(req: AuthenticatedRequest, res: Response): Promise<void> {
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-/**
- * @param {string} req.body.productId
- */
-async function addToCart(req: AuthenticatedRequest, res) {
+async function addToCart(req: AddToCartRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await addProductToCart(cart._id, req.body.productId);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-/**
- * @param {string} req.body.productId
- * @param {Object} req.user
- */
-async function removeFromCart(req: AuthenticatedRequest, res) {
+async function removeFromCart(req: RemoveFromCartRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await removeProductFromCart(cart._id, req.body.productId);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function emptyCart(req: AuthenticatedRequest, res) {
+async function emptyCart(req: AuthenticatedRequest, res: Response): Promise<void> {
   const cart = await getOrCreateCart(req.user.steamId);
   await emptyCartProducts(cart._id);
   res.json(await getOrCreateCart(req.user.steamId));
 }
 
-async function checkOut(req: AuthenticatedRequest, res) {
+async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void> {
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
-  const transaction = new Transaction({
+  const transaction = new TransactionModel({
     user,
     authority,
     status: 'pending',
