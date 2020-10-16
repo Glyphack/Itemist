@@ -54,7 +54,7 @@
     "build-ts": "tsc",
     "copy-assets": "cp -r ./src/views ./dist/",
     "start": "npm run serve",
-    "serve": "node ./bin/www.ts",
+    "serve": "node ./dist/index.js",
     "serve-debug": "node --inspect ./dist/index.js",
     "lint": "eslint . --ext .js,.ts --fix"
   },
