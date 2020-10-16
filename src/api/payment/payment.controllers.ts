@@ -2,6 +2,7 @@ import zarinpal from './zarinpal';
 import logger from '../../logger/winston';
 import { Response } from 'express';
 import TransactionModel from '../../models/transaction.model';
+import CartModel from '../../models/cart.model';
 
 interface VerifyPaymentRequest {
   query: { Authority: string; Status: string };
@@ -24,9 +25,10 @@ export default async function verifyPayment(
     } else {
       status = 'failed';
     }
-    transaction.refId = response.RefID;
+    transaction.refId = response.RefID.toString();
     transaction.status = status;
     await transaction.save();
+    await CartModel.updateOne({ user: transaction.user }, { $set: { products: [] } }).exec();
     res.redirect(
       301,
       `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=${transactionStatus}?refId=${response.RefID}`,
