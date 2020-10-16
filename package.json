@@ -52,10 +52,10 @@
   "scripts": {
     "build": "npm run build-ts && npm run copy-assets",
     "build-ts": "tsc",
-    "copy-assets": "cp -r ./src/views ./dist/src",
+    "copy-assets": "cp -r ./src/views ./dist/",
     "start": "npm run serve",
     "serve": "node ./bin/www.ts",
-    "serve-debug": "node --inspect ./bin/www.ts",
+    "serve-debug": "node --inspect ./dist/index.js",
     "lint": "eslint . --ext .js,.ts --fix"
   },
   "engines": {
