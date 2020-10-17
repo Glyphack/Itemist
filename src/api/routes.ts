@@ -14,7 +14,7 @@ router.use('/auth', authRoutes);
 router.use('/profile', jwtMiddleWare, profileRoutes);
 router.use('/sell', jwtMiddleWare, sellOrdersRoutes);
 router.use('/products', productRoutes);
-router.use('/cart', cartRoutes);
+router.use('/cart', jwtMiddleWare, cartRoutes);
 router.use('/payment', paymentRoutes);
 
 export = router;
