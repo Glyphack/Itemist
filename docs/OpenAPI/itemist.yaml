@@ -94,12 +94,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
+  /cart/add-product:
     post:
       summary: 'add product to cart'
       operationId: addToCart
       tags:
         - cart
-        - product
       requestBody:
         $ref: '#/components/requestBodies/addToCart'
       responses:
@@ -108,12 +108,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
-    delete:
+  /cart/remove-product:
+    post:
       summary: 'Remove product from cart'
       operationId: addToCart
       tags:
         - cart
-        - product
       requestBody:
         $ref: '#/components/requestBodies/removeFromCart'
       responses:
@@ -186,7 +186,12 @@ components:
     removeFromCart:
       description: Remove product from cart
       content:
-        $ref: '#/components/requestBodies/addToCart'
+        application/json:
+          schema:
+            type: object
+            properties:
+              productId:
+                type: string
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
