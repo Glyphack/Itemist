@@ -42,6 +42,6 @@ const sellOrderSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const SellOrderModel: Model<ISellOrder> = model('SellOrder', sellOrderSchema);
+const SellOrderModel: Model<ISellOrder> = model<ISellOrder>('SellOrder', sellOrderSchema);
 
 export default SellOrderModel;

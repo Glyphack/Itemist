@@ -1,4 +1,4 @@
-import { Document, model, Schema } from 'mongoose';
+import { Document, Model, model, Schema } from 'mongoose';
 import { IUser } from './user.model';
 import { IProduct } from './product.model';
 
@@ -40,4 +40,6 @@ export interface ITransaction extends Document {
   refId: string;
 }
 
-export default model<ITransaction>('Transaction', transactionSchema);
+const TransactionModel: Model<ITransaction> = model<ITransaction>('Transaction', transactionSchema);
+
+export default TransactionModel;

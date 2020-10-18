@@ -1,8 +1,7 @@
 import UserModel, { IUser } from '../../models/user.model';
 
 async function getUserBySteamId(steamId: string): Promise<IUser> {
-  const user = await UserModel.findOne({ steamId });
-  return user;
+  return UserModel.findOne({ steamId });
 }
 async function UpdateUserTradeUrl(steamId: string, tradeUrl: string): Promise<IUser> {
   const user = await UserModel.findOneAndUpdate(

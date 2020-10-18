@@ -49,9 +49,12 @@ spec:
     - hidden: false
       name: CORS_WHITELIST
       secret: cors-whitelist
+    - hidden: false
+      name: VERIFY_PAYMENT_CALLBACK_URL
+      secret: verify-payment-callback-url
 
   image_pull_policy: Always
-  image: itemist:test-enable-shopping-cart.8
+  image: itemist:test-enable-payment.1
   port: 4000
   source:
     context: ../.

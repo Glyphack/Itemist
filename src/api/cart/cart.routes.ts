@@ -14,12 +14,12 @@ cartRouter.get('/', getCart);
 /**
  * add item to cart
  */
-cartRouter.post('/', addToCart);
+cartRouter.post('/add-product', addToCart);
 
 /**
  * delete product from cart
  */
-cartRouter.delete('/', removeFromCart);
+cartRouter.post('/remove-product', removeFromCart);
 
 /**
  * empty cart

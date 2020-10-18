@@ -3,25 +3,23 @@ import Cart, { ICart } from '../../models/cart.model';
 import UserModel from '../../models/user.model';
 
 async function getOrCreateCart(steamId: string): Promise<ICart> {
-  const cart = await Cart.findOne({ 'user.steamId': steamId })
+  const user = await UserModel.findOne({ steamId });
+  const cart = await Cart.findOne({ user })
     .populate({
       path: 'products',
       model: 'Product',
-      select: 'name iconUrl price -seller',
+      select: 'steamItem.name steamItem.iconUrl price',
     })
     .exec();
   if (cart) {
     return cart;
   }
-  const user = new UserModel({ steamId: steamId });
-  return await Cart.create({ user });
+  return Cart.create({ user: user });
 }
 
 async function addProductToCart(cartId: string, productId: string): Promise<void> {
   const product = await Product.findById(productId);
-  const cart = await Cart.findById(cartId);
-  cart.products.push(product);
-  await cart.save();
+  await Cart.update({ _id: cartId }, { $addToSet: { products: product } });
 }
 
 async function removeProductFromCart(cartId: string, productId: string): Promise<void> {
