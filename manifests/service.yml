@@ -54,7 +54,7 @@ spec:
       secret: verify-payment-callback-url
 
   image_pull_policy: Always
-  image: itemist:test-enable-payment.1
+  image: ${IMAGE_URL}:${IMAGE_VERSION}
   port: 4000
   source:
     context: ../.
