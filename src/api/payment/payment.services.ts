@@ -8,10 +8,9 @@ import zarinpal from './zarinpal';
 export default async function startPayment(
   amount: number,
 ): Promise<{ url?: string; authority?: string }> {
-  logger.info('here');
   const response = await zarinpal.PaymentRequest({
     Amount: amount, // In Tomans
-    CallbackURL: 'http://localhost:4000/v1/payment/verify',
+    CallbackURL: `${process.env.VERIFY_PAYMENT_CALLBACK_URL}/v1/payment/verify`,
     Description: 'A Payment from Node.JS',
     Email: 'shayegan@yahoo.com',
     Mobile: '00000000',
