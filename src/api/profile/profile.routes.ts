@@ -1,5 +1,9 @@
 import express, { Response } from 'express';
-import { getUserProfile, updateUserProfile } from './profile.controllers';
+import {
+  getUserInventoryController,
+  getUserProfile,
+  updateUserProfile,
+} from './profile.controllers';
 
 import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
 
@@ -9,6 +13,6 @@ router.get('', getUserProfile);
 
 router.put('', updateUserProfile);
 
-router.get('/inventory', getUserInventory);
+router.get('/inventory', getUserInventoryController);
 
 export default router;

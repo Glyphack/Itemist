@@ -1,10 +1,22 @@
 import { getUserInventory } from '../../bot/bot';
-import { getUserBySteamId } from './profile.services';
+import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
 import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
+import { GetUserInventoryRequest } from './profile.schemas';
+import { Response } from 'express';
+import { AuthenticatedRequest } from '../../types/request';
+import logger from '../../logger/winston';
 
-async function getUserInventory(req: GetInventoryRequest, res) {
+async function getUserInventoryController(req: GetUserInventoryRequest, res: Response) {
   const inventory = await getUserInventory(req.user.steamId, 570, 2, true);
   const userInventoryResponse = inventory.map((item) => convertRawSteamItemToSteamItem(item));
+  if (req.query.name !== undefined) {
+    logger.info(req.query.name);
+    const searchResults = userInventoryResponse.filter((item) =>
+      item.name.includes(req.query.name),
+    );
+    res.json(searchResults);
+    return;
+  }
   res.json(userInventoryResponse);
 }
 
@@ -18,7 +30,7 @@ async function getUserProfile(req: AuthenticatedRequest, res: Response) {
   });
 }
 
-async function updateUserProfile(req: AuthenticatedRequest, res) {
+async function updateUserProfile(req: AuthenticatedRequest, res: Response) {
   const user = await UpdateUserTradeUrl(req.user.steamId, req.body.tradeUrl);
   res.json({
     tradeUrl: user.tradeUrl,
@@ -28,4 +40,4 @@ async function updateUserProfile(req: AuthenticatedRequest, res) {
   });
 }
 
-export { getUserInventory, getUserProfile, updateUserProfile };
+export { getUserInventoryController, getUserProfile, updateUserProfile };
