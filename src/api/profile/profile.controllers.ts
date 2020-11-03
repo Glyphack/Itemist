@@ -1,12 +1,16 @@
-import { getUserInventory } from '../../bot/bot';
 import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
+import { GetUserInventoryRequest, UpdateUserProfileRequest } from './profile.schemas';
+import { getUserInventory } from '../../bot/bot';
 import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
-import { GetUserInventoryRequest } from './profile.schemas';
-import { Response } from 'express';
 import { AuthenticatedRequest } from '../../types/request';
 import logger from '../../logger/winston';
+import { Response } from 'express';
+import sanitize from 'mongo-sanitize';
 
-async function getUserInventoryController(req: GetUserInventoryRequest, res: Response) {
+async function getUserInventoryController(
+  req: GetUserInventoryRequest,
+  res: Response,
+): Promise<void> {
   const inventory = await getUserInventory(req.user.steamId, 570, 2, true);
   const userInventoryResponse = inventory.map((item) => convertRawSteamItemToSteamItem(item));
   if (req.query.name !== undefined) {
@@ -20,7 +24,7 @@ async function getUserInventoryController(req: GetUserInventoryRequest, res: Res
   res.json(userInventoryResponse);
 }
 
-async function getUserProfile(req: AuthenticatedRequest, res: Response) {
+async function getUserProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
   const user = await getUserBySteamId(req.user.steamId);
   res.json({
     tradeUrl: user.tradeUrl,
@@ -30,8 +34,9 @@ async function getUserProfile(req: AuthenticatedRequest, res: Response) {
   });
 }
 
-async function updateUserProfile(req: AuthenticatedRequest, res: Response) {
-  const user = await UpdateUserTradeUrl(req.user.steamId, req.body.tradeUrl);
+async function updateUserProfile(req: UpdateUserProfileRequest, res: Response): Promise<void> {
+  const tradeUrl = sanitize(req.body.tradeUrl);
+  const user = await UpdateUserTradeUrl(req.user.steamId, tradeUrl);
   res.json({
     tradeUrl: user.tradeUrl,
     wallet: user.wallet,
