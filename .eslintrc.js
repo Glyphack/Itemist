@@ -14,10 +14,16 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['prettier'],
+  plugins: ['prettier', 'import'],
   rules: {
     semi: ['error', 'always'],
     'prettier/prettier': ['error'],
+    'import/order': [
+      'error',
+      {
+        groups: ['index', 'sibling', 'parent', 'internal', 'external', 'builtin'],
+      },
+    ],
   },
   settings: {
     'import/resolver': {
