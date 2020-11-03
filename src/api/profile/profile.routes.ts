@@ -1,13 +1,11 @@
-import express, { Response } from 'express';
+import { Router } from 'express';
 import {
   getUserInventoryController,
   getUserProfile,
   updateUserProfile,
 } from './profile.controllers';
 
-import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
-
-const router = express.Router();
+const router = Router();
 
 router.get('', getUserProfile);
 
