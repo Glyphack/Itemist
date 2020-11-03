@@ -1,36 +1,16 @@
-import express, { Response } from 'express';
+import { Router } from 'express';
+import {
+  getUserInventoryController,
+  getUserProfile,
+  updateUserProfile,
+} from './profile.controllers';
 
-import { getUserInventory } from '../../bot/bot';
-import { AuthenticatedRequest } from '../../types/request';
-import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
-import { getUserBySteamId, UpdateUserTradeUrl } from './profile.services';
+const router = Router();
 
-const router = express.Router();
+router.get('', getUserProfile);
 
-router.get('', async (req: AuthenticatedRequest, res: Response) => {
-  const user = await getUserBySteamId(req.user.steamId);
-  res.json({
-    tradeUrl: user.tradeUrl,
-    wallet: user.wallet,
-    name: user.name,
-    avatar: user.avatar,
-  });
-});
+router.put('', updateUserProfile);
 
-router.put('', async (req: AuthenticatedRequest, res) => {
-  const user = await UpdateUserTradeUrl(req.user.steamId, req.body.tradeUrl);
-  res.json({
-    tradeUrl: user.tradeUrl,
-    wallet: user.wallet,
-    name: user.name,
-    avatar: user.avatar,
-  });
-});
+router.get('/inventory', getUserInventoryController);
 
-router.get('/inventory', async (req: AuthenticatedRequest, res) => {
-  const inventory = await getUserInventory(req.user.steamId, 570, 2, true);
-  const userInventoryResponse = inventory.map((item) => convertRawSteamItemToSteamItem(item));
-  res.json(userInventoryResponse);
-});
-
-export = router;
+export default router;
