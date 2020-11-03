@@ -44,6 +44,13 @@ paths:
       operationId: getUserInventory
       tags:
         - profile
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: false
+          description: Search with item name
       responses:
         '200':
           $ref: '#/components/responses/GetInventory'
