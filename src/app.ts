@@ -1,6 +1,8 @@
+import logger from './logger/winston';
+import routesV1 from './api/routes';
+import HttpException from './exceptions/http';
 import createError from 'http-errors';
 import express, { Request, Response, NextFunction } from 'express';
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
@@ -8,13 +10,12 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
-import logger from './logger/winston';
-import routesV1 from './api/routes';
-import HttpException from './exceptions/http';
+import path from 'path';
 
 const Sentry = require('@sentry/node');
 require('./bot/bot');
+require('./orders/orders.queue');
+require('./orders/orders.worker');
 
 const app = express();
 
