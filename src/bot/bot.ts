@@ -91,10 +91,16 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
   });
 }
 
-function sendWithdrawTrade(partner, credits, assetid, callback) {
+function sendWithdrawTrade(
+  partner: string,
+  assetid: string,
+  appId: number,
+  contextId: number,
+  callback,
+): void {
   const offer = this.manager.createOffer(partner);
 
-  this.manager.getInventoryContents(570, 2, true, (err, inv) => {
+  this.manager.getInventoryContents(appId, contextId, true, (err, inv) => {
     if (err) {
       logger.error(err);
       return;
