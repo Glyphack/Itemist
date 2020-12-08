@@ -1,4 +1,3 @@
-import { OrderJob } from './schema';
 import { Queue, QueueScheduler } from 'bullmq';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
