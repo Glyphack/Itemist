@@ -54,11 +54,11 @@ function sendProducts(products: IProduct[], steamId: string): void {
       appId: product.steamItem.appId,
     };
     const now = new Date().getTime();
-    const diff = product.becomeTradable - now;
+    const diff: number = product.becomeTradable.getTime() - now;
     if (diff > 0) {
-      await ordersQueue.add(product._id, job, { delay: diff });
+      void ordersQueue.add(product._id, job, { delay: diff });
     } else {
-      await ordersQueue.add(product._id, job);
+      void ordersQueue.add(product._id, job);
     }
   });
 }
