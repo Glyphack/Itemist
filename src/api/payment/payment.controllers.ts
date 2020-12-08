@@ -53,7 +53,7 @@ function sendProducts(products: IProduct[], steamId: string): void {
       contextId: product.steamItem.contextId,
       appId: product.steamItem.appId,
     };
-    now = new Date().getTime();
+    const now = new Date().getTime();
     const diff = product.becomeTradable - now;
     if (diff > 0) {
       await ordersQueue.add(product._id, job, { delay: diff });
