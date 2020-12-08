@@ -52,6 +52,12 @@ spec:
     - hidden: false
       name: VERIFY_PAYMENT_CALLBACK_URL
       secret: verify-payment-callback-url
+    - hidden: true
+      name: REDIS_CACHE_URL
+      secret: redis-cache-url
+    - hidden: true
+      name: REDIS_CACHE_PASS
+      secret: redis-cache-pass
 
   image_pull_policy: Always
   image: ${IMAGE_URL}:${IMAGE_VERSION}
