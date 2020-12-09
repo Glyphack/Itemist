@@ -64,7 +64,8 @@
     "serve": "node ./dist/index.js",
     "serve-debug": "node --inspect ./dist/index.js",
     "dev": "ts-node-dev ./src/index.ts  --respawn --transpileOnly",
-    "lint": "eslint . --ext .js,.ts --fix"
+    "lint": "eslint . --ext .js,.ts --fix",
+    "cleanup": "rm -r ./dist"
   },
   "engines": {
     "node": "~12.18.2"
