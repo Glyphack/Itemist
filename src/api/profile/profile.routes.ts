@@ -1,9 +1,9 @@
-import { Router } from 'express';
 import {
   getUserInventoryController,
   getUserProfile,
   updateUserProfile,
 } from './profile.controllers';
+import { Router } from 'express';
 
 const router = Router();
 
