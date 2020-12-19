@@ -25,7 +25,7 @@ export default async function verifyPayment(
     let status: string;
     if (response.status === 101 || response.status === 100) {
       status = 'successful';
-      sendProducts(transaction.products, transaction.user.steamId);
+      sendProducts(transaction.products, transaction.user.tradeUrl);
     } else {
       status = 'failed';
     }
@@ -45,10 +45,10 @@ export default async function verifyPayment(
   }
 }
 
-function sendProducts(products: IProduct[], steamId: string): void {
+function sendProducts(products: IProduct[], userTradeUrl: string): void {
   products.forEach((product: IProduct) => {
     const job: SendProductJob = {
-      toSteamId: steamId,
+      tradeUrl: userTradeUrl,
       assetId: product.steamItem.assetId,
       contextId: product.steamItem.contextId,
       appId: product.steamItem.appId,

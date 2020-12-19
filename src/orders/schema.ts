@@ -1,5 +1,5 @@
 export interface SendProductJob {
-  toSteamId: string;
+  tradeUrl: string;
   appId: number;
   assetId: string;
   contextId: number;

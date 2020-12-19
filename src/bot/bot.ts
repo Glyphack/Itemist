@@ -92,13 +92,13 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
 }
 
 function sendWithdrawTrade(
-  partner: string,
+  tradeUrl: string,
   assetid: string,
   appId: number,
   contextId: number,
   callback,
 ): void {
-  const offer = this.manager.createOffer(partner);
+  const offer = this.manager.createOffer(tradeUrl);
 
   this.manager.getInventoryContents(appId, contextId, true, (err, inv) => {
     if (err) {
@@ -112,7 +112,7 @@ function sendWithdrawTrade(
       return;
     }
     offer.addMyItem(item);
-    offer.setMessage('Withdraw item from the website!');
+    offer.setMessage('Itemeto begir boro');
     offer.send((err, status) => {
       callback(err, status === 'sent' || status === 'pending', offer.id);
     });

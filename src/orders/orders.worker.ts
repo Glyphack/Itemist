@@ -7,7 +7,7 @@ const sendProductProcessor = new Worker(
   'SendOrders',
   async (job: { data: SendProductJob }) => {
     sendWithdrawTrade(
-      job.data.toSteamId,
+      job.data.tradeUrl,
       job.data.assetId,
       job.data.appId,
       job.data.contextId,
@@ -17,7 +17,7 @@ const sendProductProcessor = new Worker(
           return;
         }
         logger.debug(
-          `send product to user ${job.data.toSteamId}, offer: ${offerId}, status: ${status}`,
+          `send product to user ${job.data.tradeUrl}, offer: ${offerId}, status: ${status}`,
         );
       },
     );
