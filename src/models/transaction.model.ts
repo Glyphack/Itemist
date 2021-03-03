@@ -19,7 +19,7 @@ const transactionSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'successful', 'failed', 'Error Occured'],
+      enum: ['pending', 'successful', 'failed', 'Error Occurred'],
     },
     amount: {
       type: Number,

@@ -91,10 +91,16 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
   });
 }
 
-function sendWithdrawTrade(partner, credits, assetid, callback) {
-  const offer = this.manager.createOffer(partner);
+function sendWithdrawTrade(
+  tradeUrl: string,
+  assetid: string,
+  appId: number,
+  contextId: number,
+  callback,
+): void {
+  const offer = this.manager.createOffer(tradeUrl);
 
-  this.manager.getInventoryContents(570, 2, true, (err, inv) => {
+  this.manager.getInventoryContents(appId, contextId, true, (err, inv) => {
     if (err) {
       logger.error(err);
       return;
@@ -106,7 +112,7 @@ function sendWithdrawTrade(partner, credits, assetid, callback) {
       return;
     }
     offer.addMyItem(item);
-    offer.setMessage('Withdraw item from the website!');
+    offer.setMessage('Itemeto begir boro');
     offer.send((err, status) => {
       callback(err, status === 'sent' || status === 'pending', offer.id);
     });
