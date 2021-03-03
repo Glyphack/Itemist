@@ -1,4 +1,4 @@
-import { Queue, QueueScheduler, QueueEvents } from 'bullmq';
+import { Queue, QueueScheduler } from 'bullmq';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // it is used for delayed jobs in ordersQueue
