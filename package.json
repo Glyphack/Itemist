@@ -33,6 +33,7 @@
     "steamcommunity": "^3.41.6",
     "swagger-ui-express": "^4.1.4",
     "winston": "^3.3.3",
+    "winston-sentry-log": "^1.0.19",
     "yamljs": "^0.3.0",
     "zarinpal-checkout": "^0.2.7"
   },
