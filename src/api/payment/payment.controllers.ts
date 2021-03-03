@@ -15,7 +15,18 @@ export default async function verifyPayment(
   req: VerifyPaymentRequest,
   res: Response,
 ): Promise<void> {
-  const transaction = await TransactionModel.findOne({ authority: req.query.Authority });
+  const transaction = await TransactionModel.findOne({ authority: req.query.Authority })
+    .populate({
+      path: 'products',
+      model: 'Product',
+      select: 'steamItem.assetId steamItem.contextId steamItem.appId becomeTradable',
+    })
+    .populate({
+      path: 'user',
+      model: 'User',
+      select: 'tradeUrl',
+    })
+    .exec();
   const transactionStatus = req.query.Status;
   try {
     const response = await zarinpal.PaymentVerification({
@@ -38,7 +49,7 @@ export default async function verifyPayment(
       `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=${transactionStatus}?refId=${response.RefID}`,
     );
   } catch (err) {
-    logger.error(err);
+    logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
     transaction.status = 'Error Occurred';
     await transaction.save();
     res.redirect(301, `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=Error`);
