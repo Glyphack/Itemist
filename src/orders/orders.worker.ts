@@ -24,7 +24,7 @@ const sendProductProcessor = new Worker(
   },
   {
     connection: {
-      host: process.env.REDIS_QUEUE_URL,
+      host: process.env.REDIS_URL,
       port: 6379,
     },
   },
