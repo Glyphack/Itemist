@@ -34,6 +34,8 @@ async function emptyCart(req: AuthenticatedRequest, res: Response): Promise<void
 }
 
 async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void> {
+  // TODO: check is available before checkout to prevent concurrent buys
+  // TODO: check product not empty
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
   const { url, authority } = await startPayment(1000);
