@@ -47,10 +47,11 @@ export default async function verifyPayment(
     await CartModel.updateOne({ user: transaction.user }, { $set: { products: [] } }).exec();
     res.redirect(
       301,
-      `${process.env.FRONTEND_PAYMENT_CALLBACK}/${transactionStatus}?orderId=${transaction.orderId}`,
+      `${process.env.FRONTEND_PAYMENT_CALLBACK}/${status}?orderId=${transaction.orderId}`,
     );
   } catch (err) {
-    logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
+    if (err instanceof Error)
+      logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
     res.redirect(
       301,
       `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,

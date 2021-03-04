@@ -15,11 +15,11 @@ export interface IDescription {
 }
 
 export interface ISteamItem {
-  appId: number;
+  appId: string;
   classId: string;
   instanceId: string;
   assetId: string;
-  contextId: number;
+  contextId: string;
   iconUrl: string;
   iconUrlLarge: string;
   name: string;
@@ -68,7 +68,7 @@ const descriptionSchema = new mongoose.Schema({
 
 const SteamItemSchema = new mongoose.Schema({
   appId: {
-    type: Number,
+    type: String,
     required: true,
   },
   classId: {
@@ -84,7 +84,7 @@ const SteamItemSchema = new mongoose.Schema({
     required: true,
   },
   contextId: {
-    type: Number,
+    type: String,
     required: true,
   },
   iconUrl: {

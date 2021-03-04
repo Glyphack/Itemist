@@ -1,7 +1,7 @@
 export interface TradeOfferItemInfo {
-  appId: number;
+  appId: string;
   assetId: string;
-  contextId: number;
+  contextId: string;
 }
 
 export interface SendProductJob {
