@@ -8,9 +8,7 @@ const sendProductProcessor = new Worker(
   async (job: { data: SendProductJob }) => {
     sendWithdrawTrade(
       job.data.tradeUrl,
-      job.data.assetId,
-      job.data.appId,
-      job.data.contextId,
+      job.data.items,
       (err: Error, status: string, offerId: string) => {
         if (err) {
           logger.error(`sendDepositTradeError : ${err.message}`);

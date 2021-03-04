@@ -26,6 +26,7 @@
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^5.9.28",
     "morgan": "^1.10.0",
+    "nanoid": "^3.1.20",
     "node-steam": "0.0.1",
     "passport": "^0.4.1",
     "passport-steam": "^1.0.12",

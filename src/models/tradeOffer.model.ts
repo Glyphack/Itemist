@@ -4,7 +4,7 @@ import { IUser } from './user.model';
 export interface ITradeOffer extends mongoose.Document {
   user: IUser;
   offerId: string;
-  tradeStatus?: 'Not sent' | 'Pending' | 'Successful' | 'Failed';
+  tradeStatus?: 'sent' | 'successful' | 'failed';
 }
 
 const TradeOfferSchema = new mongoose.Schema({
@@ -17,8 +17,8 @@ const TradeOfferSchema = new mongoose.Schema({
   },
   tradeStatus: {
     type: String,
-    enum: ['Not sent', 'Pending', 'Successful', 'Failed'],
-    default: 'Not sent',
+    enum: ['pending', 'sent', 'successful', 'failed'],
+    default: 'pending',
   },
 });
 
