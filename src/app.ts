@@ -14,6 +14,10 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
 
+const AdminBro = require('admin-bro');
+const AdminBroExpress = require('@admin-bro/express');
+AdminBro.registerAdapter(require('@admin-bro/mongoose'));
+
 require('./bot/bot');
 require('./orders/orders.queue');
 require('./orders/orders.worker');
@@ -39,61 +43,71 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-  .then(() => logger.info('Connected to MongoDB 🔥'))
-  .catch((e) => {
-    throw new Error(`Could not connect to database${e}`);
+async function main() {
+  let mongooseConnection;
+  try {
+    mongooseConnection = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    });
+    logger.info('connected to MongoDB 🔥');
+  } catch (err) {
+    logger.info(`could not connect to Database ${err}`);
+  }
+  const adminBro = new AdminBro({
+    databases: [mongooseConnection],
+    rootPath: '/admin',
+  });
+  const router = AdminBroExpress.buildRouter(adminBro);
+  app.use(adminBro.options.rootPath, router);
+  app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, '/views'));
+
+  require('./config/steam')(app);
+
+  const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
+
+  app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
+  app.use(Sentry.Handlers.tracingHandler());
+
+  app.use(cors());
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+  app.use(morgan('combined'));
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(cookieParser());
+
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  app.use('/v1', routesV1);
+
+  app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
+
+  // catch 404 and forward to error handler
+  app.use((req, res, next) => {
+    next(createError(404));
   });
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
+  // error handler
+  // eslint-disable-next-line no-unused-vars
+  app.use((err: HttpException, req: Request, res: Response, next: NextFunction) => {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-require('./config/steam')(app);
+    logger.error(
+      `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+    );
 
-const swaggerDocument = YAML.load('./docs/OpenAPI/itemist.yaml');
+    // render the error page
+    res.status(err.status || 500);
+    res.send('error');
+  });
+}
 
-app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
-app.use(Sentry.Handlers.tracingHandler());
-
-app.use(cors());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-app.use(morgan('combined'));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/v1', routesV1);
-
-app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
-
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
-});
-
-// error handler
-// eslint-disable-next-line no-unused-vars
-app.use((err: HttpException, req: Request, res: Response, next: NextFunction) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  logger.error(
-    `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
-  );
-
-  // render the error page
-  res.status(err.status || 500);
-  res.send('error');
-});
+main();
 
 export = app;
