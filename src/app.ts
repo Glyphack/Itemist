@@ -43,7 +43,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-async function main() {
+async function serve() {
   let mongooseConnection;
   try {
     mongooseConnection = await mongoose.connect(process.env.MONGO_URI, {
@@ -108,6 +108,6 @@ async function main() {
   });
 }
 
-main();
+serve();
 
 export = app;
