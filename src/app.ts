@@ -108,6 +108,6 @@ async function serve() {
   });
 }
 
-serve();
+void serve();
 
 export = app;

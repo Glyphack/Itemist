@@ -9,7 +9,6 @@ import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
 import RawItem from '../types/steamItem';
 import { TradeOfferItemInfo } from '../orders/schema';
-import UserModel from '../models/user.model';
 import SteamUser from 'steam-user';
 import SteamTotp from 'steam-totp';
 import SteamCommunity from 'steamcommunity';
@@ -103,14 +102,12 @@ async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]):
         const foundItem = inv.find((i) => i.assetid === item.assetId);
         if (!foundItem) {
           throw new Error('Could not find item');
-          return;
         }
         offer.addMyItem(foundItem);
         offer.setMessage('Itemeto begir boro');
       } catch (err) {
         if (err instanceof Error)
           logger.error(`error sending trade offer ${err.name}, ${err.message}`);
-        return;
       }
     }),
   );
