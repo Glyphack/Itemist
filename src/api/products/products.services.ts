@@ -5,7 +5,7 @@ import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
 
 async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem): Promise<void> {
   const becomeTradable = new Date();
-  becomeTradable.setDate(new Date().getDate() + Number(item.market_tradable_restriction));
+  becomeTradable.setDate(new Date().getDate() + Number(item.market_tradable_restriction) + 1);
   const product = new Product({
     seller: sellOrder.seller,
     price: sellOrder.price,
