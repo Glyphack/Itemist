@@ -9,6 +9,7 @@ import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
 import RawItem from '../types/steamItem';
 import { TradeOfferItemInfo } from '../orders/schema';
+import UserModel from '../models/user.model';
 import SteamUser from 'steam-user';
 import SteamTotp from 'steam-totp';
 import SteamCommunity from 'steamcommunity';
@@ -91,7 +92,7 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
   });
 }
 
-async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<string> {
+async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<void> {
   const offer = this.manager.createOffer(tradeUrl);
 
   logger.info(JSON.stringify(items));
@@ -112,10 +113,12 @@ async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]):
     }),
   );
 
-  offer.send((err: any, status: string) => {
+  const user = await UserModel.findOne({ tradeUrl: tradeUrl });
+  offer.send((err: any, status: 'failed' | 'sent' | 'successful') => {
     if (err) logger.error(`Error in sending trade offer ${err.cause}`);
+    logger.debug(`send product to user ${tradeUrl}, offer: ${offer.id}`);
+    void TradeOffer.create({ user, offerId: offer.id, tradeStatus: status });
   });
-  return offer.id;
 }
 
 export { getUserInventory, getBotInventory, sendDepositTrade, sendWithdrawTrade, manager };
