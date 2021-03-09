@@ -1,6 +1,6 @@
-import { Document, Model, model, Schema } from 'mongoose';
 import { IUser } from './user.model';
 import { IProduct } from './product.model';
+import { Document, Model, model, Schema } from 'mongoose';
 import { customAlphabet } from 'nanoid';
 
 const orderIdGenerator = customAlphabet('1234567890', 10);
