@@ -2,18 +2,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import util from 'util';
-
-import TradeOfferManager from 'steam-tradeoffer-manager';
-import SteamCommunity from 'steamcommunity';
-import SteamTotp from 'steam-totp';
-import SteamUser from 'steam-user';
 
 import logger from '../logger/winston';
 import SellOrderModel from '../models/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
 import RawItem from '../types/steamItem';
+import { TradeOfferItemInfo } from '../orders/schema';
+import UserModel from '../models/user.model';
+import SteamUser from 'steam-user';
+import SteamTotp from 'steam-totp';
+import SteamCommunity from 'steamcommunity';
+import TradeOfferManager from 'steam-tradeoffer-manager';
+import util from 'util';
 
 const client = new SteamUser();
 const community = new SteamCommunity();
@@ -91,31 +92,32 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
   });
 }
 
-function sendWithdrawTrade(
-  tradeUrl: string,
-  assetid: string,
-  appId: number,
-  contextId: number,
-  callback,
-): void {
+async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<void> {
   const offer = this.manager.createOffer(tradeUrl);
 
-  this.manager.getInventoryContents(appId, contextId, true, (err, inv) => {
-    if (err) {
-      logger.error(err);
-      return;
-    }
-    const item = inv.find((i) => i.assetid === assetid);
+  logger.info(JSON.stringify(items));
+  await Promise.all(
+    items.map(async (item: TradeOfferItemInfo) => {
+      try {
+        const inv = await getBotInventory(item.appId, item.contextId, true);
+        const foundItem = inv.find((i) => i.assetid === item.assetId);
+        if (!foundItem) {
+          throw new Error('Could not find item');
+        }
+        offer.addMyItem(foundItem);
+        offer.setMessage('Itemeto begir boro');
+      } catch (err) {
+        if (err instanceof Error)
+          logger.error(`error sending trade offer ${err.name}, ${err.message}`);
+      }
+    }),
+  );
 
-    if (!item) {
-      callback(new Error('Could not find item'), false);
-      return;
-    }
-    offer.addMyItem(item);
-    offer.setMessage('Itemeto begir boro');
-    offer.send((err, status) => {
-      callback(err, status === 'sent' || status === 'pending', offer.id);
-    });
+  const user = await UserModel.findOne({ tradeUrl: tradeUrl });
+  offer.send((err: any, status: 'failed' | 'sent' | 'successful') => {
+    if (err) logger.error(`Error in sending trade offer ${err.cause}`);
+    logger.debug(`send product to user ${tradeUrl}, offer: ${offer.id}`);
+    void TradeOffer.create({ user, offerId: offer.id, tradeStatus: status });
   });
 }
 
@@ -133,12 +135,12 @@ async function handleTradeOfferStateChanged(offer, oldState) {
 
   // if state is not 3 then trade is failed
   if (offer.state !== 3) {
-    tradeOffer.tradeStatus = 'Failed';
-    tradeOffer.save();
+    tradeOffer.tradeStatus = 'failed';
+    await tradeOffer.save();
     return;
   }
-  tradeOffer.tradeStatus = 'Successful';
-  tradeOffer.save();
+  tradeOffer.tradeStatus = 'successful';
+  await tradeOffer.save();
   offer.getReceivedItems(async (err, items) => {
     if (err) {
       logger.error(`error processing tradeoffer ${tradeOffer}`);
@@ -153,7 +155,7 @@ async function handleTradeOfferStateChanged(offer, oldState) {
     await createProductFromSellOrder(sellOrder, item);
   });
   sellOrder.success = true;
-  sellOrder.save();
+  await sellOrder.save();
 }
 
 manager.on('sentOfferChanged', handleTradeOfferStateChanged);

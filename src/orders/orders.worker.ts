@@ -6,21 +6,11 @@ import { Worker } from 'bullmq';
 const sendProductProcessor = new Worker(
   'SendOrders',
   async (job: { data: SendProductJob }) => {
-    sendWithdrawTrade(
-      job.data.tradeUrl,
-      job.data.assetId,
-      job.data.appId,
-      job.data.contextId,
-      (err: Error, status: string, offerId: string) => {
-        if (err) {
-          logger.error(`sendDepositTradeError : ${err.message}`);
-          return;
-        }
-        logger.debug(
-          `send product to user ${job.data.tradeUrl}, offer: ${offerId}, status: ${status}`,
-        );
-      },
-    );
+    try {
+      await sendWithdrawTrade(job.data.tradeUrl, job.data.items);
+    } catch (err) {
+      if (err instanceof Error) logger.error(`sendWithdrawTradeError : ${err.message}`);
+    }
   },
   {
     connection: {

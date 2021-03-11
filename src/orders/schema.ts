@@ -1,6 +1,10 @@
+export interface TradeOfferItemInfo {
+  appId: string;
+  assetId: string;
+  contextId: string;
+}
+
 export interface SendProductJob {
   tradeUrl: string;
-  appId: number;
-  assetId: string;
-  contextId: number;
+  items: TradeOfferItemInfo[];
 }

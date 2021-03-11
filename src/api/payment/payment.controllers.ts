@@ -3,9 +3,10 @@ import logger from '../../logger/winston';
 import TransactionModel from '../../models/transaction.model';
 import CartModel from '../../models/cart.model';
 import ordersQueue from '../../orders/orders.queue';
-import { SendProductJob } from '../../orders/schema';
+import { SendProductJob, TradeOfferItemInfo } from '../../orders/schema';
 import { IProduct } from '../../models/product.model';
 import { Response } from 'express';
+import { nanoid } from 'nanoid';
 
 interface VerifyPaymentRequest {
   query: { Authority: string; Status: string };
@@ -46,30 +47,48 @@ export default async function verifyPayment(
     await CartModel.updateOne({ user: transaction.user }, { $set: { products: [] } }).exec();
     res.redirect(
       301,
-      `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=${transactionStatus}?refId=${response.RefID}`,
+      `${process.env.FRONTEND_PAYMENT_CALLBACK}/${status}?orderId=${transaction.orderId}`,
     );
   } catch (err) {
-    logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
-    transaction.status = 'Error Occurred';
-    await transaction.save();
-    res.redirect(301, `${process.env.FRONTEND_PAYMENT_CALLBACK}?status=Error`);
+    if (err instanceof Error)
+      logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
+    res.redirect(
+      301,
+      `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,
+    );
   }
 }
 
 function sendProducts(products: IProduct[], userTradeUrl: string): void {
+  const itemsToDeliverNow: TradeOfferItemInfo[] = [];
   products.forEach((product: IProduct) => {
-    const job: SendProductJob = {
-      tradeUrl: userTradeUrl,
-      assetId: product.steamItem.assetId,
-      contextId: product.steamItem.contextId,
-      appId: product.steamItem.appId,
-    };
     const now = new Date().getTime();
     const diff: number = product.becomeTradable.getTime() - now;
     if (diff > 0) {
-      void ordersQueue.add(product._id, job, { delay: diff });
+      const delayedJob: SendProductJob = {
+        tradeUrl: userTradeUrl,
+        items: [
+          {
+            assetId: product.steamItem.assetId,
+            contextId: product.steamItem.contextId,
+            appId: product.steamItem.appId,
+          },
+        ],
+      };
+      void ordersQueue.add(nanoid(10), delayedJob, { delay: diff });
     } else {
-      void ordersQueue.add(product._id, job);
+      itemsToDeliverNow.push({
+        assetId: product.steamItem.assetId,
+        contextId: product.steamItem.contextId,
+        appId: product.steamItem.appId,
+      });
+    }
+    if (itemsToDeliverNow.length != 0) {
+      const jobToRunNow: SendProductJob = {
+        tradeUrl: userTradeUrl,
+        items: itemsToDeliverNow,
+      };
+      void ordersQueue.add(nanoid(10), jobToRunNow);
     }
   });
 }

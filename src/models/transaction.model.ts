@@ -1,6 +1,9 @@
-import { Document, Model, model, Schema } from 'mongoose';
 import { IUser } from './user.model';
 import { IProduct } from './product.model';
+import { Document, Model, model, Schema } from 'mongoose';
+import { customAlphabet } from 'nanoid';
+
+const orderIdGenerator = customAlphabet('1234567890', 10);
 
 const transactionSchema: Schema = new Schema(
   {
@@ -19,13 +22,18 @@ const transactionSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'successful', 'failed', 'Error Occurred'],
+      enum: ['pending', 'successful', 'failed'],
     },
     amount: {
       type: Number,
     },
     refId: {
       type: String,
+    },
+    orderId: {
+      type: String,
+      required: true,
+      default: orderIdGenerator,
     },
   },
   { timestamps: true },
@@ -38,6 +46,7 @@ export interface ITransaction extends Document {
   status: string;
   amount: number;
   refId: string;
+  orderId: string;
 }
 
 const TransactionModel: Model<ITransaction> = model<ITransaction>('Transaction', transactionSchema);
