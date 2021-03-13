@@ -28,7 +28,7 @@ async function getUserProfile(req: AuthenticatedRequest, res: Response): Promise
   const user = await getUserBySteamId(req.user.steamId);
   res.json({
     tradeUrl: user.tradeUrl,
-    wallet: user.wallet,
+    balance: user.balance,
     name: user.name,
     avatar: user.avatar,
   });
@@ -39,7 +39,7 @@ async function updateUserProfile(req: UpdateUserProfileRequest, res: Response): 
   const user = await UpdateUserTradeUrl(req.user.steamId, tradeUrl);
   res.json({
     tradeUrl: user.tradeUrl,
-    wallet: user.wallet,
+    balance: user.balance,
     name: user.name,
     avatar: user.avatar,
   });

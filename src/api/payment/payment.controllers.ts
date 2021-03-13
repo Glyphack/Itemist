@@ -5,6 +5,9 @@ import CartModel from '../../models/cart.model';
 import ordersQueue from '../../orders/orders.queue';
 import { SendProductJob, TradeOfferItemInfo } from '../../orders/schema';
 import { IProduct } from '../../models/product.model';
+import SellOrderModel from '../../models/sellOrder.model';
+import UserModel from '../../models/user.model';
+import { AuthenticatedRequest } from '../../types/request';
 import { Response } from 'express';
 import { nanoid } from 'nanoid';
 
@@ -12,20 +15,12 @@ interface VerifyPaymentRequest {
   query: { Authority: string; Status: string };
 }
 
-export default async function verifyPayment(
-  req: VerifyPaymentRequest,
-  res: Response,
-): Promise<void> {
+export async function verifyPayment(req: VerifyPaymentRequest, res: Response): Promise<void> {
   const transaction = await TransactionModel.findOne({ authority: req.query.Authority })
-    .populate({
-      path: 'products',
-      model: 'Product',
-      select: 'steamItem.assetId steamItem.contextId steamItem.appId becomeTradable',
-    })
     .populate({
       path: 'user',
       model: 'User',
-      select: 'tradeUrl',
+      select: 'tradeUrl _id',
     })
     .exec();
   const transactionStatus = req.query.Status;
@@ -37,6 +32,8 @@ export default async function verifyPayment(
     let status: string;
     if (response.status === 101 || response.status === 100) {
       status = 'successful';
+      await markSellOrdersAsSold(transaction.products);
+      await transferMoneyToSellersWallets(transaction.products);
       sendProducts(transaction.products, transaction.user.tradeUrl);
     } else {
       status = 'failed';
@@ -57,6 +54,11 @@ export default async function verifyPayment(
       `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,
     );
   }
+}
+
+export async function transactionHistory(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const user = await UserModel.findOne({ steamId: req.user.steamId });
+  res.json(await TransactionModel.find({ user }));
 }
 
 function sendProducts(products: IProduct[], userTradeUrl: string): void {
@@ -91,4 +93,34 @@ function sendProducts(products: IProduct[], userTradeUrl: string): void {
       void ordersQueue.add(nanoid(10), jobToRunNow);
     }
   });
+}
+
+async function markSellOrdersAsSold(products: IProduct[]): Promise<void> {
+  logger.info('salam');
+  await Promise.all(
+    products.map((product: IProduct) => {
+      try {
+        logger.info(`product sellorder ${JSON.stringify(product.sellOrder)}`);
+        void SellOrderModel.updateOne({ _id: product.sellOrder }, { state: 'sold' }).exec();
+      } catch (err) {
+        if (err instanceof Error)
+          logger.error('error setting sell order status', { error: JSON.stringify(err) });
+      }
+    }),
+  );
+}
+
+async function transferMoneyToSellersWallets(products: IProduct[]): Promise<void> {
+  await Promise.all(
+    products.map(async (product: IProduct) => {
+      try {
+        const amount: number = product.price * 0.95;
+        logger.info(`money transfer ${product.seller}, ${amount}`);
+        await UserModel.updateOne({ _id: product.seller }, { $inc: { balance: amount } }).exec();
+      } catch (err) {
+        if (err instanceof Error)
+          logger.error('error transfering money to user product', { error: JSON.stringify(err) });
+      }
+    }),
+  );
 }
