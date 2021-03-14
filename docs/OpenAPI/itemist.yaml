@@ -149,6 +149,27 @@ paths:
                 required:
                   - paymentUrl
 
+  /payment/history:
+    get:
+      summary: "get user payment history"
+      operationId: paymentHistory
+      tags:
+        - payment
+      responses:
+        "200":
+          description: "Sample response: user transactions"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Transaction"
+                required:
+                  - transactions
+
 components:
   requestBodies:
     submitSellOrder:
