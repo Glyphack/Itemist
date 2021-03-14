@@ -14,5 +14,5 @@ jobs:
           username: ${{ secrets.FANDOGH_USERNAME }}
           password: ${{ secrets.FANDOGH_PASSWORD }}
           image_name: itemist
-          image_version: ${GITHUB_REF#refs/*/}
+          image_version: $GITHUB_SHA
           path_to_service_file: ./manifests/service.yml
