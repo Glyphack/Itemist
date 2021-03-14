@@ -63,3 +63,5 @@ spec:
     context: ../.
     node_version: '12'
     project_type: nodejs
+  resources:
+    memory: 600Mi
