@@ -9,10 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: deploy action step
-        uses: Glyphack/fandogh-service-deploy-action@v1.1.0
+        uses: Glyphack/fandogh-service-deploy-action@Glyphack-patch-1
         with:
           username: ${{ secrets.FANDOGH_USERNAME }}
           password: ${{ secrets.FANDOGH_PASSWORD }}
           image_name: itemist
-          image_version: ${GITHUB_REF#refs/*/}
           path_to_service_file: ./manifests/service.yml
