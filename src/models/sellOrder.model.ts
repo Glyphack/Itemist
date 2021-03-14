@@ -1,6 +1,6 @@
-import mongoose, { Model, model, Document } from 'mongoose';
 import { IUser } from './user.model';
 import { ITradeOffer } from './tradeOffer.model';
+import mongoose, { Model, model, Document } from 'mongoose';
 
 export interface ISellOrder extends Document {
   seller: IUser;
@@ -10,6 +10,7 @@ export interface ISellOrder extends Document {
   assetId: string;
   tradeOffer: ITradeOffer;
   success: boolean;
+  state?: 'for-sell' | 'sold' | 'canceled';
 }
 
 const sellOrderSchema = new mongoose.Schema(
@@ -37,6 +38,10 @@ const sellOrderSchema = new mongoose.Schema(
     success: {
       type: Boolean,
       default: false,
+    },
+    state: {
+      type: String,
+      enum: ['for-sell', 'sold', 'canceled'],
     },
   },
   { timestamps: true },

@@ -1,14 +1,14 @@
-import User from '../../models/user.model';
-import startPayment from '../payment/payment.services';
-import { AuthenticatedRequest } from '../../types/request';
 import {
   emptyCartProducts,
   removeProductFromCart,
   addProductToCart,
   getOrCreateCart,
 } from './cart.services';
-import TransactionModel from '../../models/transaction.model';
 import { AddToCartRequest, RemoveFromCartRequest } from './cart.schemas';
+import User from '../../models/user.model';
+import startPayment from '../payment/payment.services';
+import { AuthenticatedRequest } from '../../types/request';
+import TransactionModel from '../../models/transaction.model';
 import { Response } from 'express';
 
 async function getCart(req: AuthenticatedRequest, res: Response): Promise<void> {

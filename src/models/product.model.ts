@@ -1,15 +1,17 @@
-import mongoose, { Document, model, Model } from 'mongoose';
 import { IUser } from './user.model';
 import { ISteamItem, SteamItemSchema } from './steamItem.schema';
+import { ISellOrder } from './sellOrder.model';
+import mongoose, { Document, model, Model, Schema } from 'mongoose';
 
 export interface IProduct extends Document {
   seller: IUser;
   price: number;
   becomeTradable: Date;
   steamItem: ISteamItem;
+  sellOrder: ISellOrder;
 }
 
-const productSchema = new mongoose.Schema(
+export const productSchema = new mongoose.Schema(
   {
     seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +27,11 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     steamItem: SteamItemSchema,
+    sellOrder: {
+      type: Schema.Types.ObjectId,
+      ref: 'SellOrder',
+      required: true,
+    },
     isAvailable: {
       type: Boolean,
       required: true,

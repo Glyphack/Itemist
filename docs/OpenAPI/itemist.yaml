@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: Itemist
 servers:
-  - url: 'https://api.itemist.ir/v1'
+  - url: "https://api.itemist.ir/v1"
 
 security:
   - bearerAuth: []
@@ -11,36 +11,36 @@ security:
 paths:
   /profile:
     get:
-      summary: 'get user profile: Returns details about a particular user'
+      summary: "get user profile: Returns details about a particular user"
       operationId: getUser
       tags:
         - profile
       responses:
-        '200':
-          description: 'Sample response: Details about a user by ID'
+        "200":
+          description: "Sample response: Details about a user by ID"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
     put:
-      summary: 'update users profile'
+      summary: "update users profile"
       operationId: updateProfile
       tags:
         - profile
       requestBody:
-        $ref: '#/components/requestBodies/updateProfile'
+        $ref: "#/components/requestBodies/updateProfile"
       responses:
-        '200':
-          description: 'Profile updated'
+        "200":
+          description: "Profile updated"
   /profile/inventory:
     get:
-      summary: 'get user inventory: Returns user steam inventory'
+      summary: "get user inventory: Returns user steam inventory"
       operationId: getUserInventory
       tags:
         - profile
@@ -52,92 +52,92 @@ paths:
           required: false
           description: Search with item name
       responses:
-        '200':
-          $ref: '#/components/responses/GetInventory'
+        "200":
+          $ref: "#/components/responses/GetInventory"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /sell:
     get:
-      summary: 'get submitted sell orders'
+      summary: "get submitted sell orders"
       operationId: getSells
       tags:
         - sell
       responses:
-        '200':
-          $ref: '#/components/responses/GetSellOrders'
+        "200":
+          $ref: "#/components/responses/GetSellOrders"
     post:
-      summary: 'submit a new sell order'
+      summary: "submit a new sell order"
       operationId: newSellOrder
       tags:
         - sell
       requestBody:
-        $ref: '#/components/requestBodies/submitSellOrder'
+        $ref: "#/components/requestBodies/submitSellOrder"
       responses:
-        '200':
-           $ref: '#/components/responses/SubmitSellOrderResponse'
+        "200":
+          $ref: "#/components/responses/SubmitSellOrderResponse"
 
   /products:
     get:
-      summary: 'get products for sell: Returns list of products'
+      summary: "get products for sell: Returns list of products"
       operationId: getProducts
       tags:
         - product
       responses:
-        '200':
-          $ref: '#/components/responses/GetProducts'
+        "200":
+          $ref: "#/components/responses/GetProducts"
   /cart:
     get:
-      summary: 'get user cart'
+      summary: "get user cart"
       operationId: getCart
       tags:
         - cart
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
   /cart/add-product:
     post:
-      summary: 'add product to cart'
+      summary: "add product to cart"
       operationId: addToCart
       tags:
         - cart
       requestBody:
-        $ref: '#/components/requestBodies/addToCart'
+        $ref: "#/components/requestBodies/addToCart"
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
   /cart/remove-product:
     post:
-      summary: 'Remove product from cart'
+      summary: "Remove product from cart"
       operationId: addToCart
       tags:
         - cart
       requestBody:
-        $ref: '#/components/requestBodies/removeFromCart'
+        $ref: "#/components/requestBodies/removeFromCart"
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
   /cart/checkout:
     get:
-      summary: 'get payment link to checkout cart'
+      summary: "get payment link to checkout cart"
       operationId: checkoutCart
       tags:
         - cart
       responses:
-        '200':
-          description: 'Sample response: payment link for checkout'
+        "200":
+          description: "Sample response: payment link for checkout"
           content:
             application/json:
               schema:
@@ -148,6 +148,27 @@ paths:
                     format: string
                 required:
                   - paymentUrl
+
+  /payment/history:
+    get:
+      summary: "get user payment history"
+      operationId: paymentHistory
+      tags:
+        - payment
+      responses:
+        "200":
+          description: "Sample response: user transactions"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Transaction"
+                required:
+                  - transactions
 
 components:
   requestBodies:
@@ -203,7 +224,7 @@ components:
     UnauthorizedError:
       description: Access token is missing or invalid
     SubmitSellOrderResponse:
-      description: 'submit sell order response'
+      description: "submit sell order response"
       content:
         application/json:
           schema:
@@ -212,9 +233,9 @@ components:
               success:
                 type: boolean
               sellOrder:
-                $ref: '#/components/schemas/SellOrder'
+                $ref: "#/components/schemas/SellOrder"
     GetInventory:
-      description: 'user inventory'
+      description: "user inventory"
       content:
         application/json:
           schema:
@@ -225,9 +246,9 @@ components:
               inventory:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SteamItem'
+                  $ref: "#/components/schemas/SteamItem"
     GetSellOrders:
-      description: 'returns list of sell orders'
+      description: "returns list of sell orders"
       content:
         application/json:
           schema:
@@ -256,9 +277,9 @@ components:
                     assetId:
                       type: string
                     tradeOffer:
-                      $ref: '#/components/schemas/TradeOffer'
+                      $ref: "#/components/schemas/TradeOffer"
     GetProducts:
-      description: 'return list of items for sell'
+      description: "return list of items for sell"
       content:
         application/json:
           schema:
@@ -269,7 +290,7 @@ components:
               products:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: "#/components/schemas/Product"
   schemas:
     User:
       type: object
@@ -278,7 +299,7 @@ components:
         - name
         - avatar
         - tradeUrl
-        - wallet
+        - balane
       properties:
         id:
           type: integer
@@ -289,8 +310,8 @@ components:
           type: string
         tradeUrl:
           type: string
-        wallet:
-          $ref: '#/components/schemas/Wallet'
+        balance:
+          type: number
     SellOrder:
       type: object
       required:
@@ -300,9 +321,10 @@ components:
         - contextId
         - assetId
         - tradeOffer
+        - state
       properties:
         seller:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         price:
           type: integer
           format: int64
@@ -313,7 +335,9 @@ components:
         assetId:
           type: string
         tradeStatus:
-          $ref: '#/components/schemas/TradeOffer'
+          $ref: "#/components/schemas/TradeOffer"
+        state:
+          type: string
     Wallet:
       type: object
       required:
@@ -352,26 +376,39 @@ components:
         price:
           type: string
         steamItem:
-          $ref: '#/components/schemas/SteamItem'
+          $ref: "#/components/schemas/SteamItem"
 
     Cart:
       type: object
       required:
         - products
       properties:
-        product:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+
+    Transaction:
+      type: object
+      required:
+        - products
+        - status
+        - amount
+        - orderId
+        - timestamps
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        status:
+          type: string
+        amount:
+          type: number
+        orderId:
+          type: string
+        timestamps:
           type: object
-          required:
-            - name
-            - iconUrl
-            - price
-          properties:
-            name:
-              type: string
-            iconUrl:
-              type: string
-            price:
-              type: string
 
     SteamItem:
       type: object
@@ -409,7 +446,7 @@ components:
         icon_url_large:
           type: string
         descriptions:
-          $ref: '#/components/schemas/SteamItemDescription'
+          $ref: "#/components/schemas/SteamItemDescription"
         name:
           type: string
         nameColor:
@@ -417,7 +454,7 @@ components:
         type:
           type: string
         tags:
-          $ref: '#/components/schemas/SteamItemTag'
+          $ref: "#/components/schemas/SteamItemTag"
       example:
         appId: 570
         contextId: 2
@@ -429,11 +466,96 @@ components:
         backgroundColor: ""
         iconUrl: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_opzBmnZg7CJw537UzUa1hUpMa-BthPXLTQiZAqMaSfGGU3LWt5kmTni0WUTggZFFgDM"
         iconUrlLarge: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KW1Zwwo4NUX4oFJZEHLbXK9QlSPcUwpRRSSHPDQuGm0t2cUVF7KgBopb-gIAJy7PbQdD5X-NW5moWZqPD1JrXFmm5F-4pzhubO8bPmjVG_rgEDNiGmd8PRK1lgNBq_rQD7n6qz0NL_08GYiyU2pHYltirfzUG2iEpLabRr0P3MH1qcU6RLHqeBUCGEsMgiS32oSE62yDJOhq-tt21qKIE"
-        descriptions: [ { "type": "html", "value": "Used By: Bloodseeker" }, { "type": "html", "value": " " }, { "type": "html", "value": "The Gallows Understudy", "color": "9da1a9" }, { "type": "html", "value": "The Gallows Understudy Mantle", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Hood", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Back", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Gauntlets", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Skirt", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade", "color": "6c7075" }, { "type": "html", "value": "The Gallows Understudy Blade - Off-Hand", "color": "6c7075" }, { "type": "html", "value": "Hempen ropes are a crude tool for execution, but Bloodseeker seeks to understand the ways of the backwards lands through which his hunting takes him." } ]
+        descriptions:
+          [
+            { "type": "html", "value": "Used By: Bloodseeker" },
+            { "type": "html", "value": " " },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy",
+              "color": "9da1a9",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Mantle",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Hood",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Back",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Gauntlets",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Skirt",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Blade",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "The Gallows Understudy Blade - Off-Hand",
+              "color": "6c7075",
+            },
+            {
+              "type": "html",
+              "value": "Hempen ropes are a crude tool for execution, but Bloodseeker seeks to understand the ways of the backwards lands through which his hunting takes him.",
+            },
+          ]
         name: "The Gallows Understudy Gauntlets"
         nameColor: "D2D2D2"
         type: "Common Gauntlets"
-        tags: [ { "internalName": "unique", "name": "Standard", "category": "Quality", "color": "D2D2D2", "categoryName": "Quality" }, { "internal_name": "Rarity_Common", "name": "Common", "category": "Rarity", "color": "b0c3d9", "category_name": "Rarity" }, { "internal_name": "wearable", "name": "Wearable", "category": "Type", "color": "", "category_name": "Type" }, { "internal_name": "arms", "name": "Arms", "category": "Slot", "color": "", "category_name": "Slot" }, { "internal_name": "npc_dota_hero_bloodseeker", "name": "Bloodseeker", "category": "Hero", "color": "", "category_name": "Hero" } ]
+        tags:
+          [
+            {
+              "internalName": "unique",
+              "name": "Standard",
+              "category": "Quality",
+              "color": "D2D2D2",
+              "categoryName": "Quality",
+            },
+            {
+              "internal_name": "Rarity_Common",
+              "name": "Common",
+              "category": "Rarity",
+              "color": "b0c3d9",
+              "category_name": "Rarity",
+            },
+            {
+              "internal_name": "wearable",
+              "name": "Wearable",
+              "category": "Type",
+              "color": "",
+              "category_name": "Type",
+            },
+            {
+              "internal_name": "arms",
+              "name": "Arms",
+              "category": "Slot",
+              "color": "",
+              "category_name": "Slot",
+            },
+            {
+              "internal_name": "npc_dota_hero_bloodseeker",
+              "name": "Bloodseeker",
+              "category": "Hero",
+              "color": "",
+              "category_name": "Hero",
+            },
+          ]
     SteamItemDescription:
       type: object
       required:
@@ -466,7 +588,7 @@ components:
         categoryName:
           type: string
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth: # arbitrary name for the security scheme
       type: http
       scheme: bearer
-      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes

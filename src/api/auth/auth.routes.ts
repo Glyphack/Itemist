@@ -1,7 +1,7 @@
+import { AuthenticatedRequest } from '../../types/request';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import express from 'express';
-import { AuthenticatedRequest } from '../../types/request';
 
 const router = express.Router();
 

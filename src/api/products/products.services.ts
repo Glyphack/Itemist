@@ -11,6 +11,7 @@ async function createProductFromSellOrder(sellOrder: ISellOrder, item: RawItem):
     price: sellOrder.price,
     becomeTradable,
     steamItem: convertRawSteamItemToSteamItem(item),
+    sellOrder: sellOrder,
   });
   await product.save();
 }

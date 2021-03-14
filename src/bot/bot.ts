@@ -95,7 +95,6 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
 async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<void> {
   const offer = this.manager.createOffer(tradeUrl);
 
-  logger.info(JSON.stringify(items));
   await Promise.all(
     items.map(async (item: TradeOfferItemInfo) => {
       try {
@@ -115,7 +114,7 @@ async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]):
 
   const user = await UserModel.findOne({ tradeUrl: tradeUrl });
   offer.send((err: any, status: 'failed' | 'sent' | 'successful') => {
-    if (err) logger.error(`Error in sending trade offer ${err.cause}`);
+    if (err) logger.error(`Error in sending trade offer ${err}`);
     logger.debug(`send product to user ${tradeUrl}, offer: ${offer.id}`);
     void TradeOffer.create({ user, offerId: offer.id, tradeStatus: status });
   });
@@ -155,6 +154,7 @@ async function handleTradeOfferStateChanged(offer, oldState) {
     await createProductFromSellOrder(sellOrder, item);
   });
   sellOrder.success = true;
+  sellOrder.state = 'for-sell';
   await sellOrder.save();
 }
 

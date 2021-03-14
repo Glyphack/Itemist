@@ -8,7 +8,6 @@ async function getOrCreateCart(steamId: string): Promise<ICart> {
     .populate({
       path: 'products',
       model: 'Product',
-      select: 'steamItem.name steamItem.iconUrl price',
     })
     .exec();
   if (cart) {
