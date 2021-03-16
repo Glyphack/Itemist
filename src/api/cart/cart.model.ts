@@ -1,6 +1,6 @@
+import { IUser } from '../profile/profile.model';
+import { IProduct } from '../products/product.model';
 import mongoose, { model, Model } from 'mongoose';
-import { IUser } from './user.model';
-import { IProduct } from './product.model';
 
 export interface ICart extends mongoose.Document {
   user: IUser;

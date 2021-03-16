@@ -1,5 +1,5 @@
-import { IUser } from './user.model';
-import { ITradeOffer } from './tradeOffer.model';
+import { IUser } from '../profile/profile.model';
+import { ITradeOffer } from '../../models/tradeOffer.model';
 import mongoose, { Model, model, Document } from 'mongoose';
 
 export interface ISellOrder extends Document {

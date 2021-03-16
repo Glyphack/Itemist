@@ -1,5 +1,5 @@
-import Product from '../../models/product.model';
-import { ISellOrder } from '../../models/sellOrder.model';
+import Product from './product.model';
+import { ISellOrder } from '../sell/sellOrder.model';
 import RawItem from '../../types/steamItem';
 import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
 

@@ -1,7 +1,7 @@
-import { Response } from 'express';
 import editSellOrderPrice from './sell.services';
-import SellOrderModel from '../../models/sellOrder.model';
+import SellOrderModel from './sellOrder.model';
 import { AuthenticatedRequest } from '../../types/request';
+import { Response } from 'express';
 
 async function editSellOrder(req: AuthenticatedRequest, res: Response): Promise<void> {
   const result = await editSellOrderPrice(req.body.id, req.body.price);

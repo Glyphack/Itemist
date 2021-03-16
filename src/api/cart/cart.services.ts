@@ -1,6 +1,6 @@
-import Product from '../../models/product.model';
-import Cart, { ICart } from '../../models/cart.model';
-import UserModel from '../../models/user.model';
+import Cart, { ICart } from './cart.model';
+import Product from '../products/product.model';
+import UserModel from '../profile/profile.model';
 
 async function getOrCreateCart(steamId: string): Promise<ICart> {
   const user = await UserModel.findOne({ steamId });

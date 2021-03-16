@@ -3,7 +3,7 @@ import { GetUserInventoryRequest, UpdateUserProfileRequest } from './profile.sch
 import { getUserInventory } from '../../bot/bot';
 import { convertRawSteamItemToSteamItem } from '../../utils/steam/steam';
 import { AuthenticatedRequest } from '../../types/request';
-import logger from '../../logger/winston';
+import logger from '../../common/logger/winston';
 import { Response } from 'express';
 import sanitize from 'mongo-sanitize';
 

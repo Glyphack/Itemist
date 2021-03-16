@@ -1,6 +1,6 @@
-import { SendProductJob } from './schema';
-import { sendWithdrawTrade } from '../bot/bot';
-import logger from '../logger/winston';
+import { SendProductJob } from './types';
+import { sendWithdrawTrade } from '../../bot/bot';
+import logger from '../../common/logger/winston';
 import { Worker } from 'bullmq';
 
 const sendProductProcessor = new Worker(

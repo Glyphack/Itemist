@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import logger from '../logger/winston';
-import SellOrderModel from '../models/sellOrder.model';
+import logger from '../common/logger/winston';
+import SellOrderModel from '../api/sell/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
 import createProductFromSellOrder from '../api/products/products.services';
 import RawItem from '../types/steamItem';
-import { TradeOfferItemInfo } from '../orders/schema';
-import UserModel from '../models/user.model';
+import { TradeOfferItemInfo } from '../queues/orders/types';
+import UserModel from '../api/profile/profile.model';
 import SteamUser from 'steam-user';
 import SteamTotp from 'steam-totp';
 import SteamCommunity from 'steamcommunity';

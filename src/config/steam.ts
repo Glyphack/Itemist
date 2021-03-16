@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import passport from 'passport';
 import Strategy from 'passport-steam';
-import User from '../models/user.model';
+import User from '../api/profile/profile.model';
 
 const strategyOptions = {
   returnURL: `${process.env.BASE_URL}/auth/steam/return`,

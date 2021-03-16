@@ -1,12 +1,12 @@
 import zarinpal from './zarinpal';
-import logger from '../../logger/winston';
-import TransactionModel from '../../models/transaction.model';
-import CartModel from '../../models/cart.model';
-import ordersQueue from '../../orders/orders.queue';
-import { SendProductJob, TradeOfferItemInfo } from '../../orders/schema';
-import { IProduct } from '../../models/product.model';
-import SellOrderModel from '../../models/sellOrder.model';
-import UserModel from '../../models/user.model';
+import TransactionModel from './payment.model';
+import logger from '../../common/logger/winston';
+import CartModel from '../cart/cart.model';
+import ordersQueue from '../../queues/orders/orders.queue';
+import { SendProductJob, TradeOfferItemInfo } from '../../queues/orders/types';
+import { IProduct } from '../products/product.model';
+import SellOrderModel from '../sell/sellOrder.model';
+import UserModel from '../profile/profile.model';
 import { AuthenticatedRequest } from '../../types/request';
 import { Response } from 'express';
 import { nanoid } from 'nanoid';
@@ -100,7 +100,6 @@ async function markSellOrdersAsSold(products: IProduct[]): Promise<void> {
   await Promise.all(
     products.map((product: IProduct) => {
       try {
-        logger.info(`product sellorder ${JSON.stringify(product.sellOrder)}`);
         void SellOrderModel.updateOne({ _id: product.sellOrder }, { state: 'sold' }).exec();
       } catch (err) {
         if (err instanceof Error)
@@ -115,7 +114,6 @@ async function transferMoneyToSellersWallets(products: IProduct[]): Promise<void
     products.map(async (product: IProduct) => {
       try {
         const amount: number = product.price * 0.95;
-        logger.info(`money transfer ${product.seller}, ${amount}`);
         await UserModel.updateOne({ _id: product.seller }, { $inc: { balance: amount } }).exec();
       } catch (err) {
         if (err instanceof Error)

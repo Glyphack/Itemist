@@ -1,4 +1,4 @@
-import logger from '../../logger/winston';
+import logger from '../../common/logger/winston';
 import zarinpal from './zarinpal';
 
 /**

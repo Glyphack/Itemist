@@ -1,6 +1,6 @@
 import routesV1 from './api/routes';
-import HttpException from './exceptions/http';
-import logger from './logger/winston';
+import HttpException from './common/exceptions/http';
+import logger from './common/logger/winston';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import bodyParser from 'body-parser';

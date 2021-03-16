@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../types/request';
+import { AuthenticatedRequest } from '../../types/request';
 
 function isOwner(req: AuthenticatedRequest, res, next) {
   if (req.user.steamId === req.params.steamId) {

@@ -1,4 +1,4 @@
-import UserModel, { IUser } from '../../models/user.model';
+import UserModel, { IUser } from './profile.model';
 
 async function getUserBySteamId(steamId: string): Promise<IUser> {
   return UserModel.findOne({ steamId });

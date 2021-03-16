@@ -4,11 +4,13 @@ import {
   addProductToCart,
   getOrCreateCart,
 } from './cart.services';
-import { AddToCartRequest, RemoveFromCartRequest } from './cart.schemas';
-import User from '../../models/user.model';
+import { AddToCartRequest, RemoveFromCartRequest } from './cart.types';
+import { ICart } from './cart.model';
+import User from '../profile/profile.model';
 import startPayment from '../payment/payment.services';
 import { AuthenticatedRequest } from '../../types/request';
-import TransactionModel from '../../models/transaction.model';
+import TransactionModel from '../payment/payment.model';
+import { IProduct } from '../products/product.model';
 import { Response } from 'express';
 
 async function getCart(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -34,11 +36,22 @@ async function emptyCart(req: AuthenticatedRequest, res: Response): Promise<void
 }
 
 async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void> {
-  // TODO: check is available before checkout to prevent concurrent buys
-  // TODO: check product not empty
   const user = await User.findOne({ steamId: req.user.steamId });
   const cart = await getOrCreateCart(req.user.steamId);
-  const { url, authority } = await startPayment(1000);
+  if (cart.products.length == 0) {
+    res.statusCode = 400;
+    res.json({ detail: 'You did not select any item to buy' });
+    return;
+  }
+  const [allProductsAvailable, unavailableProducts] = checkAllProductsAvailableToCheckout(
+    cart.products,
+  );
+  if (!allProductsAvailable) {
+    res.statusCode = 400;
+    res.json({ detail: 'These products are not available:' + unavailableProducts.join() });
+    return;
+  }
+  const { url, authority } = await startPayment(calculateCartTotalPrice(cart));
   const transaction = new TransactionModel({
     user,
     authority,
@@ -48,6 +61,25 @@ async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void>
   });
   await transaction.save();
   res.json({ paymentUrl: url });
+}
+
+function calculateCartTotalPrice(cart: ICart): number {
+  let totalPrice = 0;
+  cart.products.forEach((product: IProduct) => {
+    totalPrice += product.price;
+  });
+  return totalPrice;
+}
+
+function checkAllProductsAvailableToCheckout(products: IProduct[]): [boolean, string[]] {
+  const unavailableItems: string[] = [];
+  products.forEach((product: IProduct) => {
+    if (!product.isAvailable) {
+      unavailableItems.push(product.steamItem.name);
+    }
+  });
+  if (unavailableItems.length == 0) return [true, []];
+  else return [true, unavailableItems];
 }
 
 export { getCart, addToCart, removeFromCart, emptyCart, checkOut };

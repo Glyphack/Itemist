@@ -1,5 +1,5 @@
 import { verifyPayment, transactionHistory } from './payment.controllers';
-import jwtMiddleWare from '../../middlewares/auth';
+import jwtMiddleWare from '../../common/middlewares/auth';
 import express from 'express';
 
 const paymentRouter = express.Router();

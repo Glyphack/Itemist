@@ -1,5 +1,5 @@
-import { IUser } from './user.model';
-import { productSchema, IProduct } from './product.model';
+import { productSchema, IProduct } from '../products/product.model';
+import { IUser } from '../profile/profile.model';
 import { Document, Model, model, Schema } from 'mongoose';
 import { customAlphabet } from 'nanoid';
 
