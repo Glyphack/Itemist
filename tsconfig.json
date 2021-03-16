@@ -5,10 +5,18 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "es5",
-    "typeRoots": ["node_modules/@types", "src/types"],
-    "allowSyntheticDefaultImports": true, 
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ],
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
