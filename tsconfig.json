@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true
   },
   "include": [
     "./src/**/*"
