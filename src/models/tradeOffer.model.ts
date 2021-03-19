@@ -1,4 +1,4 @@
-import { IUser } from '../api/profile/profile.model';
+import { IUser } from '../server/api/profile/profile.model';
 import mongoose, { model, Model } from 'mongoose';
 
 export interface ITradeOffer extends mongoose.Document {

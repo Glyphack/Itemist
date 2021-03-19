@@ -1,4 +1,4 @@
-import { ISteamItem } from '../../api/products/product.model';
+import { ISteamItem } from '../../server/api/products/product.model';
 import RawItem from '../../types/steamItem';
 
 export function convertRawSteamItemToSteamItem(item: RawItem): ISteamItem {

@@ -1,19 +1,39 @@
+import { ordersQueueName } from '../../config/orders.queue';
 import { Queue, QueueScheduler } from 'bullmq';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // it is used for delayed jobs in ordersQueue
-const ordersQueueScheduler = new QueueScheduler('SendOrders', {
-  connection: {
-    host: process.env.REDIS_URL,
-    port: 6379,
-  },
-});
+class OrdersQueue {
+  readonly redisURL: string = process.env.REDIS_URL;
+  readonly port: number = 6379;
+  public static queue: Queue;
+  private queueScheduler: QueueScheduler;
 
-const ordersQueue = new Queue('SendOrders', {
-  connection: {
-    host: process.env.REDIS_URL,
-    port: 6379,
-  },
-});
+  constructor(redisURL?: string) {
+    if (redisURL !== undefined) {
+      this.redisURL = redisURL;
+    }
+  }
 
-export = ordersQueue;
+  start(): void {
+    this.queueScheduler = new QueueScheduler(ordersQueueName, {
+      connection: {
+        host: this.redisURL,
+        port: 6379,
+      },
+    });
+    OrdersQueue.queue = new Queue(ordersQueueName, {
+      connection: {
+        host: process.env.REDIS_URL,
+        port: 6379,
+      },
+    });
+  }
+
+  stopQueue(): void {
+    void OrdersQueue.queue.close();
+    void this.queueScheduler.close();
+  }
+}
+
+export { OrdersQueue };
