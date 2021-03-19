@@ -9,7 +9,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-
+import * as csurf from 'csurf';
 import createError from 'http-errors';
 import * as Sentry from '@sentry/node';
 import path from 'path';
@@ -30,6 +30,7 @@ class Server {
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(cookieParser());
     this.app.use(express.static(path.join(__dirname, '/../public')));
+    this.app.use(csrf({ cookie: true }));
     this.app.use(routes);
   }
 

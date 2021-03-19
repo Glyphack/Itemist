@@ -1,5 +1,4 @@
 import zarinpal from './zarinpal';
-import logger from '../../../common/logger/winston';
 
 /**
  * PaymentRequest [module]
