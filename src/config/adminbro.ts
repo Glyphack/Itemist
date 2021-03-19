@@ -10,7 +10,7 @@ const AdminBro = require('admin-bro');
 const AdminBroExpress = require('@admin-bro/express');
 AdminBro.registerAdapter(require('@admin-bro/mongoose'));
 
-const adminRootPath = process.env.ADMIN_PATH;
+const adminRootPath = process.env.ADMIN_PATH || '/admin';
 
 function getAdminRouter(mongooseConnection: Mongoose): Router {
   const adminBro = new AdminBro({
