@@ -9,11 +9,9 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
 import * as Sentry from '@sentry/node';
 import path from 'path';
-const csrf = require('csurf');
 
 class Server {
   app = express();
@@ -30,9 +28,7 @@ class Server {
     this.app.use(morgan('combined'));
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(cookieParser());
     this.app.use(express.static(path.join(__dirname, '/../public')));
-    this.app.use(csrf({ cookie: true }));
     this.app.use(routes);
   }
 
