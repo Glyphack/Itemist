@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { initPassport } from '../config/steam';
 import { initSentry } from '../config/sentry';
+import { setupViewEngine } from '../config/view';
 import HttpException from '../common/exceptions/http';
 import logger from '../common/logger/winston';
 import { NextFunction, Router, Request, Response } from 'express';
@@ -24,6 +25,7 @@ class Server {
   setup(routes: Router): void {
     initPassport(this.app);
     initSentry(this.app);
+    setupViewEngine(this.app);
     this.app.use(cors());
     this.app.use(morgan('combined'));
     this.app.use(bodyParser.json());
