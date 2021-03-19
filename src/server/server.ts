@@ -4,6 +4,7 @@ import { initSentry } from '../config/sentry';
 import { setupViewEngine } from '../config/view';
 import HttpException from '../common/exceptions/http';
 import logger from '../common/logger/winston';
+import corsOptions from '../config/cors';
 import { NextFunction, Router, Request, Response } from 'express';
 import express from 'express';
 import cors from 'cors';
@@ -24,7 +25,7 @@ class Server {
     initPassport(this.app);
     initSentry(this.app);
     setupViewEngine(this.app);
-    this.app.use(cors());
+    this.app.use(cors(corsOptions));
     this.app.use(morgan('combined'));
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
