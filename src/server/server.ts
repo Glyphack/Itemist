@@ -9,7 +9,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import * as csurf from 'csurf';
+import * as csrf from 'csurf';
 import createError from 'http-errors';
 import * as Sentry from '@sentry/node';
 import path from 'path';
