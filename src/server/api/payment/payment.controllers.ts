@@ -1,5 +1,6 @@
 import zarinpal from './zarinpal';
 import TransactionModel from './payment.model';
+import { ITransaction } from './payment.model';
 import logger from '../../../common/logger/winston';
 import CartModel from '../cart/cart.model';
 import { OrdersQueue } from '../../../queues/orders/orders.queue';
@@ -24,36 +25,52 @@ export async function verifyPayment(req: VerifyPaymentRequest, res: Response): P
     })
     .exec();
   const transactionStatus = req.query.Status;
-  try {
-    const response = await zarinpal.PaymentVerification({
-      Amount: transaction.amount,
-      Authority: req.query.Authority,
-    });
-    let status: string;
-    if (response.status === 101 || response.status === 100) {
-      status = 'successful';
-      await markSellOrdersAsSold(transaction.products);
-      await transferMoneyToSellersWallets(transaction.products);
-      sendProducts(transaction.products, transaction.user.tradeUrl);
-    } else {
-      status = 'failed';
+  if (transactionStatus === 'OK') {
+    try {
+      const response = await zarinpal.PaymentVerification({
+        Amount: transaction.amount,
+        Authority: req.query.Authority,
+      });
+      let status: string;
+      if (response.status === 101 || response.status === 100) {
+        status = 'successful';
+        await markSellOrdersAsSold(transaction.products);
+        await transferMoneyToSellersWallets(transaction.products);
+        sendProducts(transaction.products, transaction.user.tradeUrl);
+      } else {
+        logger.error(`transaction failed response: ${JSON.stringify(response)}`);
+        status = 'failed';
+      }
+      void failTransaction(transaction, response.RefID.toString());
+      res.redirect(
+        301,
+        `${process.env.FRONTEND_PAYMENT_CALLBACK}/${status}?orderId=${transaction.orderId}`,
+      );
+    } catch (err) {
+      if (err instanceof Error)
+        logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
+      res.redirect(
+        301,
+        `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,
+      );
     }
-    transaction.refId = response.RefID.toString();
-    transaction.status = status;
-    await transaction.save();
-    await CartModel.updateOne({ user: transaction.user }, { $set: { products: [] } }).exec();
-    res.redirect(
-      301,
-      `${process.env.FRONTEND_PAYMENT_CALLBACK}/${status}?orderId=${transaction.orderId}`,
+  } else {
+    logger.error(
+      `transaction because status is not ok Status: ${transactionStatus} , orderId: ${transaction.orderId}`,
     );
-  } catch (err) {
-    if (err instanceof Error)
-      logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
+    void failTransaction(transaction);
     res.redirect(
       301,
       `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,
     );
   }
+}
+
+async function failTransaction(transaction: ITransaction, refID?: string) {
+  if (!!refID) transaction.refId = refID;
+  transaction.status = 'failed';
+  await transaction.save();
+  await CartModel.updateOne({ user: transaction.user }, { $set: { products: [] } }).exec();
 }
 
 export async function transactionHistory(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -96,7 +113,6 @@ function sendProducts(products: IProduct[], userTradeUrl: string): void {
 }
 
 async function markSellOrdersAsSold(products: IProduct[]): Promise<void> {
-  logger.info('salam');
   await Promise.all(
     products.map((product: IProduct) => {
       try {

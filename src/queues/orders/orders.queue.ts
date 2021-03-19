@@ -1,4 +1,5 @@
 import { ordersQueueName } from '../../config/orders.queue';
+import logger from '../../common/logger/winston';
 import { Queue, QueueScheduler } from 'bullmq';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -16,6 +17,7 @@ class OrdersQueue {
   }
 
   start(): void {
+    logger.info('started orders queue');
     this.queueScheduler = new QueueScheduler(ordersQueueName, {
       connection: {
         host: this.redisURL,

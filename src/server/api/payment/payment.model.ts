@@ -39,7 +39,7 @@ export interface ITransaction extends Document {
   user: IUser;
   products: IProduct[];
   authority: string;
-  status: string;
+  status: 'pending' | 'successful' | 'failed';
   amount: number;
   refId: string;
   orderId: string;

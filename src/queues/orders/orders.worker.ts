@@ -16,6 +16,7 @@ class OrdersWorker {
   }
 
   start(): void {
+    logger.info('started orders worker');
     this.sendOrdersProcessor = new Worker(
       ordersQueueName,
       async (job: { data: SendProductJob }) => {

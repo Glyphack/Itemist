@@ -51,13 +51,14 @@ async function checkOut(req: AuthenticatedRequest, res: Response): Promise<void>
     res.json({ detail: 'These products are not available:' + unavailableProducts.join() });
     return;
   }
-  const { url, authority } = await startPayment(calculateCartTotalPrice(cart));
+  const totalPrice = calculateCartTotalPrice(cart);
+  const { url, authority } = await startPayment(totalPrice);
   const transaction = new TransactionModel({
     user,
     authority,
     status: 'pending',
     products: cart.products,
-    amount: 1000,
+    amount: totalPrice,
   });
   await transaction.save();
   res.json({ paymentUrl: url });
