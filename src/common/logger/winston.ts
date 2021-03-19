@@ -8,14 +8,25 @@ const sentryOptions = {
   level: 'warn',
 };
 
-const options: winston.LoggerOptions = {
-  transports: [
-    new winston.transports.Console({
-      level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
-    }),
-    new Sentry(sentryOptions),
-  ],
-};
+let options: winston.LoggerOptions;
+if (process.env.NODE_ENV === 'production')
+  options = {
+    transports: [
+      new winston.transports.Console({
+        level: 'error',
+      }),
+      new Sentry(sentryOptions),
+    ],
+  };
+else {
+  options = {
+    transports: [
+      new winston.transports.Console({
+        level: 'debug',
+      }),
+    ],
+  };
+}
 
 const logger = winston.createLogger(options);
 

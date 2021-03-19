@@ -3,6 +3,7 @@ import * as Tracing from '@sentry/tracing';
 import express from 'express';
 
 export function initSentry(app: express.Express): void {
+  if (process.env.NODE_ENV != 'production') return;
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     integrations: [
