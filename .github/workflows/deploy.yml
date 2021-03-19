@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: deploy action step
-        uses: Glyphack/fandogh-service-deploy-action@Glyphack-patch-1
+        uses: Glyphack/fandogh-service-deploy-action@v1.2.0
         with:
           username: ${{ secrets.FANDOGH_USERNAME }}
           password: ${{ secrets.FANDOGH_PASSWORD }}
