@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production')
   options = {
     transports: [
       new winston.transports.Console({
-        level: 'error',
+        level: 'info',
       }),
       new Sentry(sentryOptions),
     ],
