@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import logger from '../logger/winston';
-import SellOrderModel from '../models/sellOrder.model';
+import logger from '../common/logger/winston';
+import SellOrderModel from '../server/api/sell/sellOrder.model';
 import TradeOffer from '../models/tradeOffer.model';
-import createProductFromSellOrder from '../api/products/products.services';
+import createProductFromSellOrder from '../server/api/products/products.services';
 import RawItem from '../types/steamItem';
-import { TradeOfferItemInfo } from '../orders/schema';
-import UserModel from '../models/user.model';
+import { TradeOfferItemInfo } from '../queues/orders/types';
+import UserModel from '../server/api/profile/profile.model';
 import SteamUser from 'steam-user';
 import SteamTotp from 'steam-totp';
 import SteamCommunity from 'steamcommunity';
@@ -25,13 +25,14 @@ const manager = new TradeOfferManager({
   domain: 'itemist.ir',
 });
 
-const logInOptions = {
-  accountName: process.env.STEAM_ACCOUNT_NAME,
-  password: process.env.STEAM_ACCOUNT_PASSWORD,
-  twoFactorCode: SteamTotp.generateAuthCode(process.env.STEAM_ACCOUNT_SHARED_SECRET),
-};
-
-client.logOn(logInOptions);
+if (process.env.NODE_ENV === 'production') {
+  const logInOptions = {
+    accountName: process.env.STEAM_ACCOUNT_NAME,
+    password: process.env.STEAM_ACCOUNT_PASSWORD,
+    twoFactorCode: SteamTotp.generateAuthCode(process.env.STEAM_ACCOUNT_SHARED_SECRET),
+  };
+  client.logOn(logInOptions);
+}
 
 client.on('loggedOn', () => {
   logger.info('logged on');

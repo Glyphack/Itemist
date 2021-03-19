@@ -1,17 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-underscore-dangle */
+import User from '../server/api/profile/profile.model';
 import passport from 'passport';
 import Strategy from 'passport-steam';
-import User from '../models/user.model';
+import express from 'express';
 
-const strategyOptions = {
+const steamOathOptions = {
   returnURL: `${process.env.BASE_URL}/auth/steam/return`,
   realm: `${process.env.BASE_URL}/`,
   apiKey: process.env.STEAM_API_KEY,
 };
 
-export = (app) => {
+function initPassport(app: express.Express): void {
   passport.use(
-    new Strategy(strategyOptions, async (identifier, profile, done) => {
+    new Strategy(steamOathOptions, async (identifier, profile, done) => {
       const user = await User.findOne({ steamId: profile._json.steamid });
       if (user) {
         return done(null, user);
@@ -27,4 +32,6 @@ export = (app) => {
   );
 
   app.use(passport.initialize());
-};
+}
+
+export { initPassport };

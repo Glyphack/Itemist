@@ -3,11 +3,15 @@
  * Module dependencies.
  */
 
-require('dotenv').config();
-const debug = require('debug');
+import { loadEnvVars } from './config/envVars';
+import 'reflect-metadata';
+import 'es6-shim';
 
-const http = require('http');
+loadEnvVars();
+
 const app = require('./app');
+const debug = require('debug');
+const http = require('http');
 
 /**
  * Get port from environment and store in Express.

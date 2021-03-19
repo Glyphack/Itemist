@@ -1,0 +1,32 @@
+import Cart, { ICart } from './cart.model';
+import Product from '../products/product.model';
+import UserModel from '../profile/profile.model';
+
+async function getOrCreateCart(steamId: string): Promise<ICart> {
+  const user = await UserModel.findOne({ steamId });
+  const cart = await Cart.findOne({ user })
+    .populate({
+      path: 'products',
+      model: 'Product',
+    })
+    .exec();
+  if (cart) {
+    return cart;
+  }
+  return Cart.create({ user: user });
+}
+
+async function addProductToCart(cartId: string, productId: string): Promise<void> {
+  const product = await Product.findById(productId);
+  await Cart.update({ _id: cartId }, { $addToSet: { products: product } });
+}
+
+async function removeProductFromCart(cartId: string, productId: string): Promise<void> {
+  await Cart.updateOne({ _id: cartId }, { $pull: { products: productId } }).exec();
+}
+
+async function emptyCartProducts(cartId: string): Promise<void> {
+  await Cart.updateOne({ _id: cartId }, { $set: { products: [] } }).exec();
+}
+
+export { getOrCreateCart, addProductToCart, removeProductFromCart, emptyCartProducts };

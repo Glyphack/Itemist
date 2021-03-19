@@ -4,19 +4,21 @@
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
-    "target": "es5",
+    "target": "es2017",
     "typeRoots": [
       "node_modules/@types",
       "src/types"
     ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "skipLibCheck": true
   },
   "include": [
     "./src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "*test*",
   ]
 }
