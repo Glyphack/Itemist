@@ -5,6 +5,7 @@ import apiRouter from './server/api/routes';
 import { getAdminRouter } from './config/adminbro';
 import { OrdersQueue } from './queues/orders/orders.queue';
 import { OrdersWorker } from './queues/orders/orders.worker';
+require('./bot/bot');
 
 const server = new Server();
 

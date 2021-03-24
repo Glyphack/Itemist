@@ -80,7 +80,7 @@ function checkAllProductsAvailableToCheckout(products: IProduct[]): [boolean, st
     }
   });
   if (unavailableItems.length == 0) return [true, []];
-  else return [true, unavailableItems];
+  else return [false, unavailableItems];
 }
 
 export { getCart, addToCart, removeFromCart, emptyCart, checkOut };
