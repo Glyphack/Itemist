@@ -11,6 +11,7 @@ import UserModel from '../profile/profile.model';
 import { AuthenticatedRequest } from '../../../types/request';
 import { Response } from 'express';
 import { nanoid } from 'nanoid';
+import * as Sentry from '@sentry/node';
 
 interface VerifyPaymentRequest {
   query: { Authority: string; Status: string };
@@ -38,10 +39,10 @@ export async function verifyPayment(req: VerifyPaymentRequest, res: Response): P
         await transferMoneyToSellersWallets(transaction.products);
         sendProducts(transaction.products, transaction.user.tradeUrl);
       } else {
-        logger.error(`transaction failed response: ${JSON.stringify(response)}`);
+        void failTransaction(transaction, response.RefID.toString());
+        logger.error(`zarrinpal transaction failed response: ${JSON.stringify(response)}`);
         status = 'failed';
       }
-      void failTransaction(transaction, response.RefID.toString());
       res.redirect(
         301,
         `${process.env.FRONTEND_PAYMENT_CALLBACK}/${status}?orderId=${transaction.orderId}`,
@@ -49,6 +50,7 @@ export async function verifyPayment(req: VerifyPaymentRequest, res: Response): P
     } catch (err) {
       if (err instanceof Error)
         logger.error(`error in payment verification ${err.name} ${err.message} ${err.stack}`);
+      Sentry.captureException(err);
       res.redirect(
         301,
         `${process.env.FRONTEND_PAYMENT_CALLBACK}/failed?orderId=${transaction.orderId}`,
@@ -56,7 +58,7 @@ export async function verifyPayment(req: VerifyPaymentRequest, res: Response): P
     }
   } else {
     logger.error(
-      `transaction because status is not ok Status: ${transactionStatus} , orderId: ${transaction.orderId}`,
+      `transactionStatus is not ok. Status: ${transactionStatus} , orderId: ${transaction.orderId}`,
     );
     void failTransaction(transaction);
     res.redirect(

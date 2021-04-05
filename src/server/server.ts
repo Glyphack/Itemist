@@ -31,6 +31,7 @@ class Server {
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(express.static(path.join(__dirname, '/../public')));
     this.app.use(routes);
+    this.setupErrorHandlers(this.app);
   }
 
   setupErrorHandlers(app: express.Express): void {
@@ -51,9 +52,11 @@ class Server {
         `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
       );
 
-      // render the error page
-      res.status(err.status || 500);
-      res.send('error');
+      res.status(err.status || 500).send({
+        type: err.type || 'Unknown',
+        title: err.title,
+        detail: err.detail,
+      });
     });
   }
 }

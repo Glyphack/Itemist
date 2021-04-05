@@ -48,3 +48,4 @@ export interface IUser extends Document {
 const UserModel: Model<IUser> = model<IUser>('User', userSchema);
 
 export default UserModel;
+export { userSchema };
