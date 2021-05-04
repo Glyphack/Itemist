@@ -5,6 +5,7 @@ import { setupViewEngine } from '../config/view';
 import HttpException from '../common/exceptions/http';
 import logger from '../common/logger/winston';
 import corsOptions from '../config/cors';
+import { basicLimiter } from '../common/middlewares/ratelimit';
 import { NextFunction, Router, Request, Response } from 'express';
 import express from 'express';
 import cors from 'cors';
@@ -26,11 +27,14 @@ class Server {
     initSentry(this.app);
     setupViewEngine(this.app);
     this.app.use(cors(corsOptions));
+    this.app.set('trust proxy', 1);
     this.app.use(morgan('combined'));
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(express.static(path.join(__dirname, '/../public')));
+    this.app.use(basicLimiter);
     this.app.use(routes);
+    this.setupErrorHandlers(this.app);
   }
 
   setupErrorHandlers(app: express.Express): void {
@@ -51,9 +55,11 @@ class Server {
         `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
       );
 
-      // render the error page
-      res.status(err.status || 500);
-      res.send('error');
+      res.status(err.status || 500).send({
+        type: err.type || 'Unknown',
+        title: err.title,
+        detail: err.detail,
+      });
     });
   }
 }

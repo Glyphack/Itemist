@@ -19,6 +19,7 @@
   ],
   "exclude": [
     "node_modules",
-    "*test*",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
   ]
 }

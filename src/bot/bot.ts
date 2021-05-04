@@ -14,6 +14,7 @@ import SteamUser from 'steam-user';
 import SteamTotp from 'steam-totp';
 import SteamCommunity from 'steamcommunity';
 import TradeOfferManager from 'steam-tradeoffer-manager';
+import * as Sentry from '@sentry/node';
 import util from 'util';
 
 const client = new SteamUser();
@@ -49,6 +50,7 @@ client.on('webSession', (sid, cookies) => {
 
 community.on('sessionExpired', (err) => {
   logger.error(`not logged in ${err}`);
+  Sentry.captureException(err);
   client.webLogOn();
 });
 
@@ -73,13 +75,13 @@ async function getBotInventory(
   return getInventoryContentsPromise(appId, contextId, tradableOnly);
 }
 
-function sendDepositTrade(partner: string, assetid: string, callback): void {
-  const offer = manager.createOffer(partner);
-
-  manager.getUserInventoryContents(partner, 570, 2, true, (err, inv) => {
+function sendDepositTrade(steamId: string, tradeUrl: string, assetid: string, callback): void {
+  const offer = manager.createOffer(tradeUrl);
+  client.webLogOn();
+  manager.getUserInventoryContents(steamId, 570, 2, true, (err, inv) => {
     if (err) {
       logger.log(err);
-      return;
+      callback(new Error('Could not get inventory'), false);
     }
     const item = inv.find((i) => i.assetid === assetid);
     if (!item) {
@@ -95,7 +97,7 @@ function sendDepositTrade(partner: string, assetid: string, callback): void {
 
 async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<void> {
   const offer = this.manager.createOffer(tradeUrl);
-
+  client.webLogOn();
   await Promise.all(
     items.map(async (item: TradeOfferItemInfo) => {
       try {
@@ -107,8 +109,7 @@ async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]):
         offer.addMyItem(foundItem);
         offer.setMessage('Itemeto begir boro');
       } catch (err) {
-        if (err instanceof Error)
-          logger.error(`error sending trade offer ${err.name}, ${err.message}`);
+        if (err instanceof Error) logger.error('error sending trade offer', err);
       }
     }),
   );

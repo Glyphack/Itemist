@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import logger from '../../common/logger/winston';
 import mongoose from 'mongoose';
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -23,7 +24,7 @@ async function connectToDatabase(url?: string): Promise<void> {
     await mongoose.connect(await mongoServer.getUri(), mongooseOpts);
     console.info('connected to mongodb');
   } catch (err) {
-    console.info(`could not connect to Database ${err}`);
+    logger.error(`could not connect to Database ${err}`);
   }
 }
 
