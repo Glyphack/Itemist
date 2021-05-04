@@ -77,7 +77,7 @@ async function getBotInventory(
 
 function sendDepositTrade(steamId: string, tradeUrl: string, assetid: string, callback): void {
   const offer = manager.createOffer(tradeUrl);
-
+  client.webLogOn();
   manager.getUserInventoryContents(steamId, 570, 2, true, (err, inv) => {
     if (err) {
       logger.log(err);
@@ -97,7 +97,7 @@ function sendDepositTrade(steamId: string, tradeUrl: string, assetid: string, ca
 
 async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]): Promise<void> {
   const offer = this.manager.createOffer(tradeUrl);
-
+  client.webLogOn();
   await Promise.all(
     items.map(async (item: TradeOfferItemInfo) => {
       try {
@@ -109,8 +109,7 @@ async function sendWithdrawTrade(tradeUrl: string, items: TradeOfferItemInfo[]):
         offer.addMyItem(foundItem);
         offer.setMessage('Itemeto begir boro');
       } catch (err) {
-        if (err instanceof Error)
-          logger.error(`error sending trade offer ${err.name}, ${err.message}`);
+        if (err instanceof Error) logger.error('error sending trade offer', err);
       }
     }),
   );
