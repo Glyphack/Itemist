@@ -21,6 +21,7 @@ router.get(
     res.render('authenticated', {
       jwtToken: token,
       clientUrl: process.env.FRONTEND_URL,
+      redirectPath: '/profile', // path to redirect user to after login
     });
   },
 );

@@ -16,13 +16,10 @@ async function getMongoServerUrl(): Promise<string> {
 async function connectToDatabase(url?: string): Promise<void> {
   const mongooseOpts = {
     useNewUrlParser: true,
-    autoReconnect: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 1000,
+    useUnifiedTopology: true,
   };
   try {
     await mongoose.connect(await mongoServer.getUri(), mongooseOpts);
-    console.info('connected to mongodb');
   } catch (err) {
     logger.error(`could not connect to Database ${err}`);
   }
@@ -37,15 +34,4 @@ async function closeDatabase(): Promise<void> {
   await mongoServer.stop();
 }
 
-/**
- * Remove all the data for all db collections.
- */
-async function clearDatabase(): Promise<void> {
-  // const collections = mongoose.connection.collections;
-  // for (const key in collections) {
-  //   const collection = collections[key];
-  //   await collection.deleteMany({});
-  // }
-}
-
-export { connectToDatabase, clearDatabase, closeDatabase, getMongoServerUrl };
+export { connectToDatabase, closeDatabase, getMongoServerUrl };

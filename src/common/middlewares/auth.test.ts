@@ -1,4 +1,4 @@
-import { connectToDatabase, closeDatabase, clearDatabase } from '../../utils/tests/dbHandler';
+import { connectToDatabase, closeDatabase } from '../../utils/tests/dbHandler';
 import { app } from '../../utils/tests/server';
 import UserModel from '../../server/api/profile/profile.model';
 import supertest from 'supertest';
@@ -9,7 +9,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await clearDatabase();
   await closeDatabase();
 });
 
