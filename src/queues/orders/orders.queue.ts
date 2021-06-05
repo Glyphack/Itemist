@@ -1,12 +1,14 @@
 import { ordersQueueName } from '../../config/orders.queue';
 import logger from '../../common/logger/winston';
+import { host, password, port } from '../../config/redis';
 import { Queue, QueueScheduler } from 'bullmq';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // it is used for delayed jobs in ordersQueue
 class OrdersQueue {
-  readonly redisURL: string = process.env.REDIS_URL;
-  readonly port: number = 6379;
+  readonly redisURL: string = host;
+  readonly port: number = port;
+  readonly password: string = password;
   public static queue: Queue;
   private queueScheduler: QueueScheduler;
 
@@ -21,13 +23,15 @@ class OrdersQueue {
     this.queueScheduler = new QueueScheduler(ordersQueueName, {
       connection: {
         host: this.redisURL,
-        port: 6379,
+        port: this.port,
+        password: this.password,
       },
     });
     OrdersQueue.queue = new Queue(ordersQueueName, {
       connection: {
-        host: process.env.REDIS_URL,
-        port: 6379,
+        host: this.redisURL,
+        port: this.port,
+        password: this.password,
       },
     });
   }
