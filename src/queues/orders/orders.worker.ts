@@ -2,11 +2,13 @@ import { SendProductJob } from './types';
 import { sendWithdrawTrade } from '../../bot/bot';
 import logger from '../../common/logger/winston';
 import { ordersQueueName } from '../../config/orders.queue';
+import { host, password, port } from '../../config/redis';
 import { Worker } from 'bullmq';
 
 class OrdersWorker {
-  readonly redisURL: string = process.env.REDIS_URL;
-  readonly port: number = 6379;
+  readonly redisURL: string = host;
+  readonly port: number = port;
+  readonly password: string = password;
   private sendOrdersProcessor: Worker;
 
   constructor(redisURL?: string) {
@@ -28,8 +30,9 @@ class OrdersWorker {
       },
       {
         connection: {
-          host: process.env.REDIS_URL,
-          port: 6379,
+          host: this.redisURL,
+          port: this.port,
+          password: this.password,
         },
       },
     );
