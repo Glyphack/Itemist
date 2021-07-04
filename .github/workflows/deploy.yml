@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: deploy action step
-        uses: Glyphack/fandogh-service-deploy-action@v1.2.0
+        uses: Glyphack/doprax-deploy-action@v0.1.0-alpha.0
         with:
-          username: ${{ secrets.FANDOGH_USERNAME }}
-          password: ${{ secrets.FANDOGH_PASSWORD }}
-          image_name: itemist
-          path_to_service_file: ./manifests/service.yml
+          email: ${{ secrets.DOPRAX_EMAIL }}
+          password: ${{ secrets.DOPRAX_PASSWORD }}
+          api_key: ${{ secrets.DOPRAX_API_KEY}}
+          project_name: "itemist"
