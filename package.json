@@ -12,6 +12,7 @@
     "@types/body-parser": "^1.19.0",
     "@types/express": "^4.17.8",
     "@types/express-rate-limit": "^5.1.1",
+    "@types/i18n": "^0.13.1",
     "@types/jest": "^26.0.20",
     "@types/mongo-sanitize": "^1.0.0",
     "@types/mongoose": "^5.10.3",
@@ -33,6 +34,7 @@
     "express-rate-limit": "^5.2.6",
     "express-session": "^1.17.1",
     "http-errors": "^1.8.0",
+    "i18n": "^0.13.3",
     "jsonwebtoken": "^8.5.1",
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^5.12.0",
@@ -92,6 +94,6 @@
     "test": "jest --detectOpenHandles"
   },
   "engines": {
-    "node": "~12.18.2"
+    "node": "~12.21.0"
   }
 }
