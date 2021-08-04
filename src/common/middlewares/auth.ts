@@ -12,7 +12,7 @@ const jwtMiddleWare = [
   function (err: Error, req: Request, res: Response, next: NextFunction): void {
     throw new HttpException(
       401,
-      'UnAthenticated',
+      'UnAuthenticated',
       err.message,
       'Login Required',
       'Login to continue',
