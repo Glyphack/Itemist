@@ -1,10 +1,10 @@
-import TransactionModel from './payment.model';
+import SellOrderModel from './sellOrder.model';
 import UserModel from '../../../server/api/profile/profile.model';
 import { closeDatabase, connectToDatabase } from '../../../utils/tests/dbHandler';
 import { getAuthenticationHeader } from '../../../utils/tests/request';
+import { app } from '../../../utils/tests/server';
 import { factory } from 'fakingoose';
 import supertest from 'supertest';
-import { app } from '../../../utils/tests/server';
 
 beforeAll(async () => {
   await connectToDatabase();
@@ -15,19 +15,24 @@ beforeAll(async () => {
       },
     }).generate(),
   );
-  await TransactionModel.create({ user: user, status: 'pending', orderId: 'TEST' });
 });
 
 afterAll(async () => {
   await closeDatabase();
 });
 
-describe('transactionHistory Controller', () => {
-  it('returns list of transactions', async () => {
+describe('editSellOrder Controller', () => {
+  it('returns 400 for not found sell order', async () => {
+    const response = await supertest(app).put('/v1/sell/').set(getAuthenticationHeader('user1'));
+    expect(response.status).toEqual(400);
+  });
+  it('edits a valid sell order', async () => {
+    const sellOrder = await SellOrderModel.create(factory(SellOrderModel, {}).generate());
     const response = await supertest(app)
-      .get('/v1/payment/history')
+      .put('/v1/sell/')
+      .send({ price: 10, id: sellOrder._id })
       .set(getAuthenticationHeader('user1'));
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([{ products: [], status: 'در حال انجام', orderId: 'TEST' }]);
+    expect((await SellOrderModel.findById(sellOrder._id)).price).toEqual(10);
   });
 });

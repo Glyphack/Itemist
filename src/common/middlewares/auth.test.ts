@@ -1,6 +1,6 @@
 import { connectToDatabase, closeDatabase } from '../../utils/tests/dbHandler';
 import { app } from '../../utils/tests/server';
-import { sendAuthenticatedRequest } from '../../utils/tests/request';
+import { getAuthenticationHeader } from '../../utils/tests/request';
 import UserModel from '../../server/api/profile/profile.model';
 import supertest from 'supertest';
 import { factory } from 'fakingoose';
@@ -33,7 +33,7 @@ describe('jwt middleware', () => {
     expect(response.status).toEqual(401);
   });
   it('return OK if request is authenticated', async () => {
-    const response = await sendAuthenticatedRequest('/v1/profile', 'user1');
+    const response = await supertest(app).get('/v1/profile').set(getAuthenticationHeader('user1'));
     expect(response.status).toEqual(200);
   });
 });
