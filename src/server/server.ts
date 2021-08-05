@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { initPassport } from '../config/steam';
-import { initSentry } from '../config/sentry';
-import { setupViewEngine } from '../config/view';
 import HttpException from '../common/exceptions/http';
 import logger from '../common/logger/winston';
-import corsOptions from '../config/cors';
 import { basicLimiter } from '../common/middlewares/ratelimit';
-import { NextFunction, Router, Request, Response } from 'express';
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';
-import createError from 'http-errors';
+import corsOptions from '../config/cors';
+import { initSentry } from '../config/sentry';
+import { initPassport } from '../config/steam';
+import { setupViewEngine } from '../config/view';
+import { i18n } from '../config/i18n';
 import * as Sentry from '@sentry/node';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express, { NextFunction, Request, Response, Router } from 'express';
+import createError from 'http-errors';
+import morgan from 'morgan';
 import path from 'path';
 
 class Server {
@@ -22,7 +22,7 @@ class Server {
   lazy initialization needed to be able to avoid top level await in 
   main file.
   */
-  setup(routes: Router): void {
+  setup(routes: Router, i18nProvider: i18n.I18n): void {
     initPassport(this.app);
     initSentry(this.app);
     setupViewEngine(this.app);
@@ -33,6 +33,7 @@ class Server {
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(express.static(path.join(__dirname, '/../public')));
     this.app.use(basicLimiter);
+    this.app.use(i18nProvider.init);
     this.app.use(routes);
     this.setupErrorHandlers(this.app);
   }

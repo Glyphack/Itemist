@@ -1,6 +1,7 @@
 import editSellOrderPrice from './sell.services';
 import SellOrderModel from './sellOrder.model';
 import { CreateSellOrderRequest } from './sell.schemas';
+import { ISellOrder } from './sellOrder.model';
 import { AuthenticatedRequest } from '../../../types/request';
 import UserModel from '../profile/profile.model';
 import HttpException from '../../../common/exceptions/http';
@@ -21,7 +22,7 @@ async function editSellOrder(req: AuthenticatedRequest, res: Response): Promise<
   const editedSellOrder = await SellOrderModel.findById(req.body.id)
     .populate('seller', 'name')
     .exec();
-  res.json(editedSellOrder);
+  res.json(serializeSellOrderToJson(editedSellOrder, res));
 }
 
 async function getSellOrders(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -33,7 +34,10 @@ async function getSellOrders(req: AuthenticatedRequest, res: Response): Promise<
       select: 'offerId tradeStatus',
     })
     .exec();
-  res.send(sellOrders);
+  const getSellOrdersResponse = sellOrders.map((sellOrder) =>
+    serializeSellOrderToJson(sellOrder, res),
+  );
+  res.json(getSellOrdersResponse);
 }
 
 async function createSellOrder(req: CreateSellOrderRequest, res: Response): Promise<void> {
@@ -51,8 +55,8 @@ async function createSellOrder(req: CreateSellOrderRequest, res: Response): Prom
       500,
       'InternalServerError',
       err,
-      'Something went wrong',
-      'Try again later',
+      res.__('Something went wrong'),
+      res.__('Try again later'),
     );
   }
   const item = inventory.find((i) => i.assetid === assetId);
@@ -73,14 +77,14 @@ async function createSellOrder(req: CreateSellOrderRequest, res: Response): Prom
     user.steamId,
     user.tradeUrl,
     item.assetid,
-    async (err, success: boolean, offerId: string) => {
+    async (err: any, success: boolean, offerId: string) => {
       if (err) {
         logger.error(`sendDepositTradeError : ${err}`);
         Sentry.captureException(err);
         res.status(503).send({
           type: 'SendTradeError',
-          title: 'Could not send Trade offer',
-          detail: 'Try again later',
+          title: res.__('Could not send Trade offer'),
+          detail: res.__('Try again later'),
         });
       }
       sellOrder.tradeOffer = await TradeOfferModel.create({
@@ -89,9 +93,22 @@ async function createSellOrder(req: CreateSellOrderRequest, res: Response): Prom
       });
       await sellOrder.save();
       sellOrder = await sellOrder.populate('tradeOffer').execPopulate();
-      res.json({ sellOrder, success });
+      res.json({ sellOrder: serializeSellOrderToJson(sellOrder, res), success });
     },
   );
+}
+
+function serializeSellOrderToJson(sellOrder: ISellOrder, res: Response) {
+  return {
+    price: sellOrder.price,
+    appId: sellOrder.appId,
+    contextId: sellOrder.contextId,
+    assetId: sellOrder.assetId,
+    tradeOffer: {
+      offerId: sellOrder.tradeOffer.offerId,
+      tradeStatus: res.__(sellOrder.tradeOffer.tradeStatus),
+    },
+  };
 }
 
 export { editSellOrder, getSellOrders, createSellOrder };

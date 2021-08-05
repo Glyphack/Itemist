@@ -8,6 +8,7 @@
                 "assetid",
                 "classid",
                 "contextid",
+                "fakingoose",
                 "instanceid",
                 "personaname",
                 "profileurl",

@@ -77,7 +77,15 @@ async function failTransaction(transaction: ITransaction, refID?: string) {
 
 export async function transactionHistory(req: AuthenticatedRequest, res: Response): Promise<void> {
   const user = await UserModel.findOne({ steamId: req.user.steamId });
-  res.json(await TransactionModel.find({ user }));
+  const transactions = await TransactionModel.find({ user });
+  const transactionHistoryResponse = transactions.map((transaction) => ({
+    products: transaction.products,
+    status: res.__(transaction.status),
+    amount: transaction.amount,
+    orderId: transaction.orderId,
+    created_at: transaction.created_at,
+  }));
+  res.json(transactionHistoryResponse);
 }
 
 function sendProducts(products: IProduct[], userTradeUrl: string): void {

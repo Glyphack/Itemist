@@ -1,0 +1,11 @@
+{
+	"pending": "در حال انجام",
+	"successful": "انجام شد",
+	"failed": "با مشکل مواجه شد",
+	"sold": "فروخته شد",
+	"canceled": "لغو شد",
+	"for-sell": "برای فروش",
+	"Something went wrong": "مشکلی پیش آمده",
+	"Try again later": "دوباره تلاش کنید",
+	"Could not send Trade offer": "درخواست ترید قابل ارسال نمی‌باشد"
+}

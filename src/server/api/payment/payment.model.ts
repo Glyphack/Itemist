@@ -43,6 +43,7 @@ export interface ITransaction extends Document {
   amount: number;
   refId: string;
   orderId: string;
+  created_at: Date;
 }
 
 const TransactionModel: Model<ITransaction> = model<ITransaction>('Transaction', transactionSchema);
