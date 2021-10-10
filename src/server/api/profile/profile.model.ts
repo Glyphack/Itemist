@@ -1,6 +1,6 @@
 import { Document, model, Model, Schema } from 'mongoose';
 
-const userSchema: Schema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -45,7 +45,7 @@ export interface IUser extends Document {
   wallet: IWallet;
 }
 
-const UserModel: Model<IUser> = model<IUser>('User', userSchema);
+const UserModel = model<IUser>('User', userSchema);
 
 export default UserModel;
 export { userSchema };

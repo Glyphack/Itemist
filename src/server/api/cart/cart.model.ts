@@ -1,13 +1,14 @@
-import { IUser } from '../profile/profile.model';
 import { IProduct } from '../products/product.model';
-import mongoose, { model, Model } from 'mongoose';
+import { IUser } from '../profile/profile.model';
+import mongoose, { model, Schema } from 'mongoose';
 
-export interface ICart extends mongoose.Document {
+export interface ICart {
+  _id: string; // TODO: use a proper primary key
   user: IUser;
   products?: IProduct[];
 }
 
-const cartSchema = new mongoose.Schema({
+const cartSchema = new Schema<ICart>({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -17,6 +18,6 @@ const cartSchema = new mongoose.Schema({
     ref: 'Product',
   },
 });
-const CartModel: Model<ICart> = model('Cart', cartSchema);
+const CartModel = model('Cart', cartSchema);
 
 export default CartModel;
